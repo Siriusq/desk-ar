@@ -12,18 +12,6 @@
 </template>
 
 <style scoped>
-.nav {
-  display: flex;
-  gap: 16px;
-  padding: 8px 16px;
-  background: #222;
-}
-
-a {
-  color: #fff;
-  text-decoration: none;
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
