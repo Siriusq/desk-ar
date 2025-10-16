@@ -1,13 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { BApp } from 'bootstrap-vue-next'
+</script>
 
 <template>
   <div id="app">
-    <!-- 页面切换区域 -->
-    <router-view v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
-        <component :is="Component" />
-      </transition>
-    </router-view>
+    <BApp>
+      <!-- 页面切换区域 -->
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </BApp>
   </div>
 </template>
 
