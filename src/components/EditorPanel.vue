@@ -1,21 +1,29 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import HelpModal from './HelpModal.vue'
 
 const isPanelOpen = ref(false)
 
 const togglePanel = () => {
   isPanelOpen.value = !isPanelOpen.value
 }
+
+const isModalOpen = ref(false)
 </script>
 
 <template>
+  <!--悬浮面板-->
   <div class="overlay-panel">
     <button @click="$router.push('/preview')">进入预览页面</button>
     <button @click="$router.push('/')">返回欢迎页面</button>
     <button class="btn btn-primary" type="button" @click="togglePanel">
       <i class="bi bi-list"></i>
     </button>
+    <BButton @click="isModalOpen = true"> 帮助 </BButton>
   </div>
+  <!--帮助面板-->
+  <HelpModal v-model="isModalOpen" />
+  <!--控制面板-->
   <div
     :class="['offcanvas', 'offcanvas-responsive-position', { show: isPanelOpen }]"
     tabindex="-1"
