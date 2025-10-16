@@ -156,4 +156,30 @@ const togglePanel = () => {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px); /* 兼容性 */
 }
+
+/* 滚动条样式 */
+.offcanvas-body {
+  /* 滚动条整体 */
+  &::-webkit-scrollbar {
+    width: 8px; /* 垂直滚动条的宽度 */
+    height: 15px; /* 水平滚动条的高度 */
+    background-color: transparent; /* 背景透明 */
+  }
+
+  /* 滚动条轨道 (背景) */
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  /* 滚动条滑块 (拖动手柄) */
+  &::-webkit-scrollbar-thumb {
+    background-color: #a6a6a6; /* 深灰色滑块 */
+    border-radius: 3em; /* 圆角 */
+  }
+
+  /* 滑块悬停时的样式 */
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #666666; /* 悬停时颜色变深 */
+  }
+}
 </style>
