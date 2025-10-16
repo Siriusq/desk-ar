@@ -13,7 +13,7 @@ const togglePanel = () => {
     <button @click="$router.push('/preview')">进入预览页面</button>
     <button @click="$router.push('/')">返回欢迎页面</button>
     <button class="btn btn-primary" type="button" @click="togglePanel">
-      {{ isPanelOpen ? '关闭面板' : '打开面板' }}
+      <i class="bi bi-list"></i>
     </button>
   </div>
   <div
