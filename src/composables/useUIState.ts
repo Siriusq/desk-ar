@@ -11,6 +11,10 @@ export function useUIState() {
     isControlPanelOpen.value = !isControlPanelOpen.value
   }
 
+  const setControlPanelOpen = (value: boolean) => {
+    isControlPanelOpen.value = value
+  }
+
   // --- Modal 状态逻辑 ---
   const toggleHelpModal = () => {
     isHelpModalOpen.value = !isHelpModalOpen.value
@@ -30,5 +34,7 @@ export function useUIState() {
     setHelpModalOpen: (value: boolean) => {
       isHelpModalOpen.value = value
     },
+
+    setControlPanelOpen,
   }
 }
