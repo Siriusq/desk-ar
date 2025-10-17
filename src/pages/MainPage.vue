@@ -5,13 +5,7 @@ import { useUIState } from '@/composables/useUIState'
 import HelpModal from '@/components/HelpModal.vue'
 
 // 使用 Composable 共享状态
-const {
-  isControlPanelOpen,
-  isHelpModalOpen,
-  toggleControlPanel,
-  setHelpModalOpen,
-  toggleHelpModal,
-} = useUIState()
+const { isControlPanelOpen, isHelpModalOpen, toggleControlPanel, toggleHelpModal } = useUIState()
 </script>
 
 <template>
@@ -35,7 +29,7 @@ const {
     </div>
 
     <!--帮助面板-->
-    <HelpModal :model-value="isHelpModalOpen" @update:model-value="setHelpModalOpen" />
+    <HelpModal v-model="isHelpModalOpen" />
 
     <!--控制面板-->
     <EditorPanel></EditorPanel>

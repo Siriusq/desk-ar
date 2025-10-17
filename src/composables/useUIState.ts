@@ -11,10 +11,6 @@ export function useUIState() {
     isControlPanelOpen.value = !isControlPanelOpen.value
   }
 
-  const setControlPanelOpen = (value: boolean) => {
-    isControlPanelOpen.value = value
-  }
-
   // --- Modal 状态逻辑 ---
   const toggleHelpModal = () => {
     isHelpModalOpen.value = !isHelpModalOpen.value
@@ -22,19 +18,12 @@ export function useUIState() {
 
   // --- 返回状态和方法 ---
   return {
-    // 状态返回为只读 (readonly) 引用，防止组件随意修改
+    // 只读状态
     isControlPanelOpen: readonly(isControlPanelOpen),
     isHelpModalOpen: readonly(isHelpModalOpen),
 
-    // 方法返回给组件使用
+    // 方法
     toggleControlPanel,
     toggleHelpModal,
-
-    // 直接返回设置函数，用于 v-model
-    setHelpModalOpen: (value: boolean) => {
-      isHelpModalOpen.value = value
-    },
-
-    setControlPanelOpen,
   }
 }
