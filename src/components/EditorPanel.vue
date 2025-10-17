@@ -4,7 +4,7 @@ import { useWindowSize } from '@vueuse/core'
 import { computed } from 'vue'
 
 // 使用 Composable 共享状态
-const { isControlPanelOpen } = useUIState()
+const { isControlPanelOpen, toggleControlPanel } = useUIState()
 
 const { width } = useWindowSize()
 // 定义宽屏断点 (Bootstrap lg 断点是 992px)
@@ -19,7 +19,8 @@ const placement = computed(() => {
 <template>
   <!--控制面板-->
   <BOffcanvas
-    v-model="isControlPanelOpen"
+    :model-value="isControlPanelOpen"
+    @update:model-value="toggleControlPanel"
     :placement="placement"
     id="controlOffcanvas"
     title="控制面板"

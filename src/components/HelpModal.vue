@@ -6,7 +6,13 @@ const { isHelpModalOpen, toggleHelpModal } = useUIState()
 </script>
 
 <template>
-  <BModal v-model="isHelpModalOpen" title="帮助说明" size="lg" scrollable>
+  <BModal
+    :model-value="isHelpModalOpen"
+    @update:model-value="toggleHelpModal"
+    title="帮助说明"
+    size="lg"
+    scrollable
+  >
     <p>一些帮助。</p>
 
     <template #footer>
