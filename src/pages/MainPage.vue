@@ -5,7 +5,13 @@ import { useUIState } from '@/composables/useUIState'
 import HelpModal from '@/components/HelpModal.vue'
 
 // 使用 Composable 共享状态
-const { isHelpModalOpen, toggleControlPanel, setHelpModalOpen, toggleHelpModal } = useUIState()
+const {
+  isControlPanelOpen,
+  isHelpModalOpen,
+  toggleControlPanel,
+  setHelpModalOpen,
+  toggleHelpModal,
+} = useUIState()
 </script>
 
 <template>
@@ -16,7 +22,10 @@ const { isHelpModalOpen, toggleControlPanel, setHelpModalOpen, toggleHelpModal }
     <!--悬浮面板-->
     <div class="overlay-panel">
       <BButton variant="primary" @click="toggleControlPanel">
-        <i class="bi bi-list" />
+        <Transition name="icon-fade" mode="out-in">
+          <i v-if="!isControlPanelOpen" key="menu-icon" class="bi bi-list" />
+          <i v-else key="close-icon" class="bi bi-x-lg" />
+        </Transition>
         菜单
       </BButton>
       <BButton @click="toggleHelpModal">
@@ -44,10 +53,22 @@ const { isHelpModalOpen, toggleControlPanel, setHelpModalOpen, toggleHelpModal }
 /* 左上角悬浮按钮 */
 .overlay-panel {
   position: absolute; /* 悬浮在 TresCanvas 上方 */
-  top: 30px; /* 距离顶部 20px */
-  left: 30px; /* 距离左侧 20px */
+  top: 16px; /* 距离顶部 20px */
+  left: 16px; /* 距离左侧 20px */
   display: flex;
   gap: 10px;
   z-index: 10; /* 确保它在 Canvas 上方 (通常 Canvas 的 z-index 较低) */
+}
+
+/* 按钮图标动画 */
+.icon-fade-enter-active,
+.icon-fade-leave-active {
+  transition: all 0.2s ease;
+}
+
+/* 元素进入的起始状态和离开的结束状态 */
+.icon-fade-enter-from,
+.icon-fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -27,23 +27,34 @@ const placement = computed(() => {
     no-backdrop
     no-close-on-backdrop
   >
-    <div class="d-flex flex-column flex-md-row justify-content-between mb-3">
-      <BButton variant="primary" @click="$router.push('/')">
-        <i class="bi bi-plus-lg" />
-        添加
-      </BButton>
-      <BButton variant="success" @click="$router.push('/preview')">
-        <i class="bi bi-badge-ar" />
-        预览
-      </BButton>
-      <BButton variant="warning" @click="$router.push('/')">
-        <i class="bi bi-save" />
-        保存
-      </BButton>
-      <BButton variant="danger" @click="$router.push('/')">
-        <i class="bi bi-escape" />
-        退出
-      </BButton>
+    <div class="row g-2 mb-3">
+      <div class="col-6 col-md-3">
+        <BButton variant="primary" class="w-100" @click="$router.push('/')">
+          <i class="bi bi-plus-lg" />
+          添加
+        </BButton>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <BButton variant="success" class="w-100" @click="$router.push('/preview')">
+          <i class="bi bi-badge-ar" />
+          预览
+        </BButton>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <BButton variant="warning" class="w-100" @click="$router.push('/')">
+          <i class="bi bi-save" />
+          保存
+        </BButton>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <BButton variant="danger" class="w-100" @click="$router.push('/')">
+          <i class="bi bi-escape" />
+          退出
+        </BButton>
+      </div>
     </div>
 
     <h6>What is Lorem Ipsum?</h6>
