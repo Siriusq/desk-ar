@@ -32,6 +32,10 @@
   background-color: rgba(255, 255, 255, 0.5);
 }
 
+.offcanvas-header {
+  padding-bottom: 4px;
+}
+
 /* 滚动条样式 */
 .offcanvas-body {
   /* 滚动条整体 */

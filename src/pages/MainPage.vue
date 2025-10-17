@@ -47,7 +47,7 @@ const { isControlPanelOpen, isHelpModalOpen, toggleControlPanel, toggleHelpModal
 /* 左上角悬浮按钮 */
 .overlay-panel {
   position: absolute; /* 悬浮在 TresCanvas 上方 */
-  top: 16px; /* 距离顶部 20px */
+  top: 8px; /* 距离顶部 20px */
   left: 16px; /* 距离左侧 20px */
   display: flex;
   gap: 10px;
