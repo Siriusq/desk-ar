@@ -15,6 +15,7 @@ const { isControlPanelOpen, isHelpModalOpen, toggleControlPanel, toggleHelpModal
 
     <!--悬浮面板-->
     <div class="overlay-panel">
+      <!--菜单按钮-->
       <BButton variant="primary" @click="toggleControlPanel">
         <Transition name="icon-fade" mode="out-in">
           <i v-if="!isControlPanelOpen" key="menu-icon" class="bi bi-list" />
@@ -22,9 +23,21 @@ const { isControlPanelOpen, isHelpModalOpen, toggleControlPanel, toggleHelpModal
         </Transition>
         菜单
       </BButton>
-      <BButton @click="toggleHelpModal">
-        <i class="bi bi-info-lg" />
-        帮助
+      <!--添加按钮-->
+      <BButton variant="success" @click="toggleHelpModal">
+        <i class="bi bi-plus-lg" />
+      </BButton>
+      <!--删除按钮-->
+      <BButton variant="danger" @click="$router.push('/preview')">
+        <i class="bi bi-trash" />
+      </BButton>
+      <!--撤销按钮-->
+      <BButton variant="warning" @click="$router.push('/')">
+        <i class="bi bi-arrow-counterclockwise" />
+      </BButton>
+      <!--重做按钮-->
+      <BButton variant="info" @click="$router.push('/')">
+        <i class="bi bi-arrow-clockwise" />
       </BButton>
     </div>
 

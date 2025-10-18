@@ -27,28 +27,30 @@ const placement = computed(() => {
     no-backdrop
     no-close-on-backdrop
   >
+    <!--按钮-->
     <div class="row g-2 mb-3">
+      <!--帮助按钮-->
       <div class="col-6 col-md-3">
-        <BButton variant="primary" class="w-100" @click="$router.push('/')">
-          <i class="bi bi-plus-lg" />
-          添加
+        <BButton variant="secondary" class="w-100" @click="$router.push('/')">
+          <i class="bi bi-question-lg" />
+          帮助
         </BButton>
       </div>
-
+      <!--预览按钮-->
       <div class="col-6 col-md-3">
         <BButton variant="success" class="w-100" @click="$router.push('/preview')">
           <i class="bi bi-badge-ar" />
           预览
         </BButton>
       </div>
-
+      <!--保存按钮-->
       <div class="col-6 col-md-3">
         <BButton variant="warning" class="w-100" @click="$router.push('/')">
           <i class="bi bi-save" />
           保存
         </BButton>
       </div>
-
+      <!--退出按钮-->
       <div class="col-6 col-md-3">
         <BButton variant="danger" class="w-100" @click="$router.push('/')">
           <i class="bi bi-escape" />

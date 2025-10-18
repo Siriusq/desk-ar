@@ -9,22 +9,19 @@
   height: auto;
   max-height: 50vh; /* 限制高度，只占屏幕的一半 */
   width: 100vw;
-  transform: translateY(100%);
 }
 
 /* 宽屏幕 大于等于 Bootstrap 的 lg 断点 */
 /* 强制设置为右侧弹出 */
-@media (min-width: 992px) {
-  .offcanvas.offcanvas-end {
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: auto;
-    width: 400px; /* 固定的右侧面板宽度 */
-    height: 100vh;
-    max-height: 100vh;
-    transform: translateX(100%);
-  }
+
+.offcanvas.offcanvas-end {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  width: 40vw; /* 固定的右侧面板宽度 */
+  height: 100vh;
+  max-height: 100vh;
 }
 
 .offcanvas {
