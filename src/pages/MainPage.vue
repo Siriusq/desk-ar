@@ -3,15 +3,40 @@ import SceneCanvas from '@/components/SceneCanvas.vue'
 import EditorPanel from '@/components/EditorPanel.vue'
 import { useUIState } from '@/composables/useUIState'
 import HelpModal from '@/components/HelpModal.vue'
+import { useModelManager } from '@/composables/useModelManager'
+import { ref } from 'vue'
 
 // 使用 Composable 共享状态
-const { isControlPanelOpen, isHelpModalOpen, toggleControlPanel, toggleHelpModal } = useUIState()
+const { isControlPanelOpen, isHelpModalOpen, toggleControlPanel } = useUIState()
+
+// 导入模型管理 Composable
+const { handleFileChange } = useModelManager()
+
+// 文件输入元素的引用
+const fileInput = ref<HTMLInputElement | null>(null)
+
+/**
+ * Triggers the hidden file input click to open the file selection dialog.
+ */
+const triggerFileInput = () => {
+  fileInput.value?.click()
+}
 </script>
 
 <template>
   <div class="canvas-container">
     <!--3D场景-->
     <SceneCanvas></SceneCanvas>
+
+    <!-- 隐藏的文件输入框 -->
+    <!-- 接收 .gltf 或 .glb 文件，并在文件变化时调用 handleFileChange -->
+    <input
+      ref="fileInput"
+      type="file"
+      accept=".gltf,.glb"
+      @change="handleFileChange"
+      style="display: none"
+    />
 
     <!--悬浮面板-->
     <div class="overlay-panel">
@@ -24,7 +49,7 @@ const { isControlPanelOpen, isHelpModalOpen, toggleControlPanel, toggleHelpModal
         菜单
       </BButton>
       <!--添加按钮-->
-      <BButton variant="success" @click="toggleHelpModal">
+      <BButton variant="success" @click="triggerFileInput">
         <i class="bi bi-plus-lg" />
       </BButton>
       <!--删除按钮-->
