@@ -16,9 +16,6 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@tresjs/cientos": "^5.1.0",
-    "@tresjs/core": "^5.1.0",
-    "@tresjs/post-processing": "^3.1.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "bootstrap-vue-next": "^0.40.6",
