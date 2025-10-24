@@ -8,10 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AddModal: typeof import('./src/components/AddModal.vue')['default']
+    AddModelModal: typeof import('./src/components/AddModelModal.vue')['default']
     BButton: typeof import('bootstrap-vue-next/components/BButton')['BButton']
     BModal: typeof import('bootstrap-vue-next/components/BModal')['BModal']
     BOffcanvas: typeof import('bootstrap-vue-next/components/BOffcanvas')['BOffcanvas']
+    BOverlay: typeof import('bootstrap-vue-next/components/BOverlay')['BOverlay']
     EditorPanel: typeof import('./src/components/EditorPanel.vue')['default']
     HelpModal: typeof import('./src/components/HelpModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

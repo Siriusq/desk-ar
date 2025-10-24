@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { useUIState } from '@/composables/useUIState'
+import { addModalCategory, isAddModelModalOpen, useUIState } from '@/composables/useUIState'
 import { useWindowSize } from '@vueuse/core'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
+import { exitToWelcome } from '@/composables/useLayout'
 
 // 使用 Composable 共享状态
-const { isControlPanelOpen, toggleControlPanel } = useUIState()
+const { isControlPanelOpen, toggleControlPanel, toggleHelpModal } = useUIState()
 
 const { width } = useWindowSize()
 // 定义宽屏断点 (Bootstrap lg 断点是 992px)
@@ -13,6 +14,10 @@ const LG_BREAKPOINT = 992
 // 计算属性，决定 OffCanvas 的弹出位置
 const placement = computed(() => {
   return width.value >= LG_BREAKPOINT ? 'end' : 'bottom'
+})
+
+watch(isAddModelModalOpen, (isOpen) => {
+  if (!isOpen) addModalCategory.value = null
 })
 </script>
 
@@ -31,7 +36,7 @@ const placement = computed(() => {
     <div class="row g-2 mb-3">
       <!--帮助按钮-->
       <div class="col-6 col-md-3">
-        <BButton variant="secondary" class="w-100" @click="$router.push('/')">
+        <BButton variant="secondary" class="w-100" @click="toggleHelpModal">
           <i class="bi bi-question-lg" />
           帮助
         </BButton>
@@ -52,7 +57,7 @@ const placement = computed(() => {
       </div>
       <!--退出按钮-->
       <div class="col-6 col-md-3">
-        <BButton variant="danger" class="w-100" @click="$router.push('/')">
+        <BButton variant="danger" class="w-100" @click="exitToWelcome()">
           <i class="bi bi-escape" />
           退出
         </BButton>

@@ -22,6 +22,7 @@ const i18n = createI18n({
   legacy: false, // 必须设置, 使用 Composition API
   locale: getInitialLocale(), // 自动设置语言
   fallbackLocale: 'en', // 回退语言
+  globalInjection: true,
   messages: {
     en,
     zh,
