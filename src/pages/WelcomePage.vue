@@ -2,6 +2,14 @@
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import { createNewLayout, loadLayoutFromFile } from '@/composables/useLayout'
+import { ref } from 'vue'
+
+const fileInput = ref<HTMLInputElement | null>(null)
+const openFile = () => {
+  if (fileInput.value) {
+    fileInput.value.click()
+  }
+}
 </script>
 
 <template>
@@ -15,12 +23,7 @@ import { createNewLayout, loadLayoutFromFile } from '@/composables/useLayout'
           {{ t('welcomeCreate') }}
         </BButton>
         <!--从文件打开布局-->
-        <BButton
-          size="lg"
-          class="fw-bold w-auto"
-          variant="warning"
-          @click="$refs.fileInput.click()"
-        >
+        <BButton size="lg" class="fw-bold w-auto" variant="warning" @click="openFile">
           <i class="bi bi-file-earmark-arrow-up"></i>
           {{ t('welcomeOpen') }}
         </BButton>
