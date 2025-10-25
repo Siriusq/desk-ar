@@ -6,13 +6,18 @@ import HelpModal from '@/components/HelpModal.vue'
 import AddModelModal from '@/components/AddModelModal.vue'
 import { useModelManager } from '@/composables/useImportManager'
 import { ref } from 'vue'
+import { undo, redo, canUndo, canRedo } from '@/composables/useHistory'
+
+defineOptions({
+  name: 'MainPage',
+})
 
 // 使用 Composable 共享状态
 const {
   isControlPanelOpen,
   isHelpModalOpen,
-  toggleControlPanel,
   isAddModelModalOpen,
+  toggleControlPanel,
   toggleAddModelModal,
 } = useUIState()
 
@@ -57,11 +62,11 @@ const fileInput = ref<HTMLInputElement | null>(null)
         <i class="bi bi-trash" />
       </BButton>
       <!--撤销按钮-->
-      <BButton variant="warning" @click="$router.push('/')">
+      <BButton variant="warning" @click="undo" :disabled="!canUndo">
         <i class="bi bi-arrow-counterclockwise" />
       </BButton>
       <!--重做按钮-->
-      <BButton variant="info" @click="$router.push('/')">
+      <BButton variant="info" @click="redo" :disabled="!canRedo">
         <i class="bi bi-arrow-clockwise" />
       </BButton>
     </div>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-import { createNewLayout, loadLayoutFromFile } from '@/composables/useLayout'
-import { ref } from 'vue'
+import { createNewLayout, loadLayoutFromFile, resetApplicationState } from '@/composables/useLayout'
+import { onMounted, ref } from 'vue'
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const openFile = () => {
@@ -10,6 +10,13 @@ const openFile = () => {
     fileInput.value.click()
   }
 }
+
+onMounted(() => {
+  console.log('WelcomePage onMounted: Resetting application state and clearing autosave.')
+  // 任何时候只要到达欢迎页面，就清除所有状态和 localStorage
+  // 确保从 /main 或 /preview 回来时，会话被彻底清除
+  resetApplicationState()
+})
 </script>
 
 <template>
