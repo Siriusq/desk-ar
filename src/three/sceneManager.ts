@@ -12,6 +12,11 @@ export let orbitControls: any, transformControls: any, selectionBox: any
 
 export let mouseDownInfo = { x: 0, y: 0, time: 0 }
 
+// 存储 DOM 元素和事件处理函数，以便稍后移除
+let domElement: HTMLDivElement | null = null
+let handleMouseDown: (e: any) => void
+let handleMouseUp: (e: any) => void
+
 export const handleResize = () => {
   const container = document.getElementById('scene-container')
   if (camera && renderer && container) {
@@ -39,11 +44,14 @@ export const initThree = () => {
     antialias: true,
     alpha: true,
   })
+
+  // 保存 DOM 元素引用
+  domElement = renderer.domElement
   renderer.setSize(container.clientWidth, container.clientHeight)
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.shadowMap.enabled = true
   container.innerHTML = ''
-  container.appendChild(renderer.domElement)
+  container.appendChild(domElement!)
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.7))
   const dLight = new THREE.DirectionalLight(0xffffff, 0.8)
@@ -60,8 +68,8 @@ export const initThree = () => {
   scene.add(ground)
   scene.add(new THREE.GridHelper(100, 100, 0x888888, 0x888888))
 
-  orbitControls = new OrbitControls(camera, renderer.domElement)
-  transformControls = new TransformControls(camera, renderer.domElement)
+  orbitControls = new OrbitControls(camera, domElement!)
+  transformControls = new TransformControls(camera, domElement!)
   transformControls.addEventListener('dragging-changed', (event: { value: boolean }) => {
     isTransformDragging.value = event.value
     orbitControls.enabled = !event.value
@@ -79,7 +87,7 @@ export const initThree = () => {
     dataObj.rotation.y = THREE.MathUtils.radToDeg(obj.rotation.y)
     dataObj.rotation.z = THREE.MathUtils.radToDeg(obj.rotation.z)
   })
-  // scene.add(transformControls.getHelper())
+
   const gizmo = transformControls.getHelper()
   scene.add(gizmo)
 
@@ -91,16 +99,21 @@ export const initThree = () => {
   selectionBox.visible = false
   scene.add(selectionBox)
 
-  renderer.domElement.addEventListener('mousedown', (e: { clientX: number; clientY: number }) => {
+  // 【修改】将事件处理函数保存到模块变量中
+  handleMouseDown = (e: { clientX: number; clientY: number }) => {
     mouseDownInfo = { x: e.clientX, y: e.clientY, time: Date.now() }
-  })
+  }
 
-  renderer.domElement.addEventListener('mouseup', (e: { clientX: number; clientY: number }) => {
+  handleMouseUp = (e: { clientX: number; clientY: number }) => {
     const dx = e.clientX - mouseDownInfo.x
     const dy = e.clientY - mouseDownInfo.y
     const dist = Math.sqrt(dx * dx + dy * dy)
     if (Date.now() - mouseDownInfo.time < 300 && dist < 5) handleSceneClick(e)
-  })
+  }
+
+  // 【修改】使用保存的处理函数
+  domElement!.addEventListener('mousedown', handleMouseDown)
+  domElement!.addEventListener('mouseup', handleMouseUp)
 
   renderer.setAnimationLoop(() => {
     if (selectionBox.visible && sceneObjects.has(selectedObjectId.value)) {
@@ -162,10 +175,72 @@ export const rebuildSceneFromData = () => {
 }
 
 export const disposeScene = () => {
-  scene = null
+  console.log('Disposing Three.js scene and controls...')
+
+  // 1. 停止渲染循环
+  if (renderer) {
+    renderer.setAnimationLoop(null)
+  }
+
+  // 2. 销毁 Controls 和移除它们的监听器
+  if (orbitControls) {
+    orbitControls.dispose()
+    orbitControls = null
+  }
+  if (transformControls) {
+    // 移除 transformControls 自身的监听器
+    transformControls.removeEventListener('dragging-changed')
+    transformControls.removeEventListener('objectChange')
+    transformControls.dispose()
+    transformControls = null
+  }
+
+  // 3. 移除在 initThree 中添加的 DOM 监听器
+  if (domElement) {
+    domElement.removeEventListener('mousedown', handleMouseDown)
+    domElement.removeEventListener('mouseup', handleMouseUp)
+  }
+
+  // 4. 清理和销毁场景中的所有对象（包括静态对象）
+  if (scene) {
+    scene.traverse((object: any) => {
+      if (object.isMesh) {
+        if (object.geometry) {
+          object.geometry.dispose()
+        }
+        if (object.material) {
+          // 处理材质数组
+          if (Array.isArray(object.material)) {
+            object.material.forEach((material: any) => material.dispose())
+          } else {
+            object.material.dispose()
+          }
+        }
+      } else if (object.isLight) {
+        // 灯光也可能需要 dispose (如果它们有 shadow map textures)
+        object.dispose?.()
+      }
+    })
+    sceneObjects.clear() // 清空动态对象map
+    scene = null
+  }
+
+  // 5. 销毁 Renderer
+  if (renderer) {
+    renderer.dispose()
+    renderer = null
+  }
+
+  // 6. 移除 DOM 元素
+  if (domElement) {
+    domElement.remove()
+    domElement = null
+  }
+
+  // 7. 置空其他变量
   camera = null
-  renderer = null
-  orbitControls = null
-  transformControls = null
   selectionBox = null
+  mouseDownInfo = { x: 0, y: 0, time: 0 }
+
+  console.log('Scene disposal complete.')
 }

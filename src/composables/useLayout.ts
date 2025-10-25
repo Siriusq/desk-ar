@@ -1,10 +1,10 @@
 import i18n from '@/locales'
 const { t } = i18n.global
 
-import { disposeScene, renderer, transformControls } from '@/three/sceneManager'
+import { disposeScene } from '@/three/sceneManager'
 import { nextTick, ref } from 'vue'
 import { history, historyIndex, saveState } from './useHistory'
-import { objects, sceneObjects, selectedObjectId } from './useObjects'
+import { objects, selectedObjectId } from './useObjects'
 import { isPreviewing } from './useScene'
 import {
   isAddModelModalOpen,
@@ -17,6 +17,12 @@ import router from '@/router'
 export const layoutLoaded = ref(false)
 export const sceneName = ref('')
 export const isNewlyCreated = ref(false)
+
+// 仅清理 Three.js 相关资源
+export const cleanupThreeResources = () => {
+  // 只需调用这一个函数，它会处理所有 Three.js 相关的清理
+  disposeScene()
+}
 
 export const createNewLayout = () => {
   resetApplicationState()
@@ -52,12 +58,8 @@ export const loadLayoutFromFile = (event: Event) => {
         layoutLoaded.value = true
         isNewlyCreated.value = false
 
-        // 立即将这个新加载的布局保存到 localStorage
-        // 这样如果用户刷新，它也会被保留
         saveState(true) // 强制保存当前状态
-
         console.log('Layout data loaded successfully from file.')
-
         nextTick(() => {
           router.push('/main')
         })
@@ -70,7 +72,7 @@ export const loadLayoutFromFile = (event: Event) => {
   target.value = ''
 }
 
-// 【新增】函数：从 localStorage 加载自动保存的数据
+// 从 localStorage 加载自动保存的数据
 export const loadAutoSaveData = () => {
   const autoSaveData = localStorage.getItem('ar-desk-planner-autosave')
   if (!autoSaveData) {
@@ -128,24 +130,7 @@ export const exitToWelcome = () => {
   router.push('/')
 }
 
-// 【新增】函数：仅清理 Three.js 相关资源
-// 这将在 MainPage.onUnmounted 时被调用
-export const cleanupThreeResources = () => {
-  if (transformControls) {
-    transformControls.detach()
-  }
-  if (renderer) {
-    renderer.dispose()
-    renderer.domElement.remove()
-    // disposeScene 会将 scene, camera, renderer 等变量设为 null
-    disposeScene()
-    sceneObjects.clear()
-    console.log('Three.js resources disposed.')
-  }
-}
-
-// 【新增】函数：重置应用状态和 localStorage
-// 这将在 WelcomePage.onMounted 时被调用
+// 重置应用状态和 localStorage
 export const resetApplicationState = () => {
   localStorage.removeItem('ar-desk-planner-autosave')
   layoutLoaded.value = false
