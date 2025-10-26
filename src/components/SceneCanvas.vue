@@ -22,10 +22,10 @@ onMounted(() => {
       saveState(false) // Load initial state without adding to history
       console.log('Scene Loaded')
     }
+  } else {
+    // 读取 composables 中的 objects 数组并构建3D场景
+    rebuildSceneFromData()
   }
-
-  // 读取 composables 中的 objects 数组并构建3D场景
-  rebuildSceneFromData()
 
   window.addEventListener('resize', handleResize)
   handleResize()

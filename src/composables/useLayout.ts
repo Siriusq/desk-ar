@@ -29,7 +29,7 @@ export const createNewLayout = () => {
   layoutLoaded.value = true
   isNewlyCreated.value = true
   sceneName.value = t('sceneNamePlaceholder')
-  objects.splice(0)
+  objects.value.splice(0)
   nextTick(() => {
     router.push('/main')
   })
@@ -54,7 +54,7 @@ export const loadLayoutFromFile = (event: Event) => {
 
         const data = JSON.parse(result)
         sceneName.value = data.sceneName || t('sceneNamePlaceholder')
-        objects.splice(0, objects.length, ...data.objects)
+        objects.value.splice(0, objects.value.length, ...data.objects)
         layoutLoaded.value = true
         isNewlyCreated.value = false
 
@@ -81,7 +81,7 @@ export const loadAutoSaveData = () => {
   try {
     const data = JSON.parse(autoSaveData)
     sceneName.value = data.sceneName || t('sceneNamePlaceholder')
-    objects.splice(0, objects.length, ...data.objects)
+    objects.value.splice(0, objects.value.length, ...data.objects)
     layoutLoaded.value = true // 标记为已加载
     isNewlyCreated.value = false
     console.log('Auto-save data loaded successfully.')
@@ -115,7 +115,7 @@ export const autoSave = () => {
   if (!layoutLoaded.value) return
   const layoutData = {
     sceneName: sceneName.value,
-    objects: JSON.parse(JSON.stringify(objects)),
+    objects: JSON.parse(JSON.stringify(objects.value)),
   }
   console.log('auto saved!')
   localStorage.setItem('ar-desk-planner-autosave', JSON.stringify(layoutData))
@@ -135,7 +135,7 @@ export const resetApplicationState = () => {
   localStorage.removeItem('ar-desk-planner-autosave')
   layoutLoaded.value = false
   sceneName.value = ''
-  objects.splice(0)
+  objects.value.splice(0)
   selectedObjectId.value = null
   expandedObjectId.value = null
   history.value = []

@@ -6,6 +6,7 @@ import { saveState } from '@/composables/useHistory'
 import { isTransformDragging } from '@/composables/useScene'
 import { handleSceneClick, objects, sceneObjects, selectedObjectId } from '@/composables/useObjects'
 import { createObject3D } from './objectFactory'
+import type { DeskObject } from '@/types/deskObject'
 
 export let scene: any, camera: any, renderer: any
 export let orbitControls: any, transformControls: any, selectionBox: any
@@ -23,6 +24,17 @@ export const handleResize = () => {
     camera.aspect = container.clientWidth / container.clientHeight
     camera.updateProjectionMatrix()
     renderer.setSize(container.clientWidth, container.clientHeight)
+
+    console.log('--- 遍历数组元素类型 ---')
+
+    // 【修改】 element 现在是强类型 DeskObject
+    for (const element of objects.value) {
+      // 假设 objects 是 ref，使用 .value
+      // const type = typeof element // 这只会是 'object'
+
+      // 现在你可以安全地访问属性
+      console.log(`ID: ${element.id} | Type: ${element.type} | Color: ${element.params.color}`)
+    }
   }
 }
 
@@ -78,7 +90,7 @@ export const initThree = () => {
   transformControls.addEventListener('objectChange', () => {
     const obj = transformControls.object
     if (!obj?.userData.id) return
-    const dataObj = objects.find((o: { id: string }) => o.id === obj.userData.id)
+    const dataObj = objects.value.find((o: { id: string }) => o.id === obj.userData.id)
     if (!dataObj) return
     dataObj.position.x = obj.position.x
     dataObj.position.y = obj.position.y
@@ -91,7 +103,7 @@ export const initThree = () => {
   const gizmo = transformControls.getHelper()
   scene.add(gizmo)
 
-  selectionBox = new THREE.BoxHelper()
+  selectionBox = new THREE.BoxHelper(new THREE.Object3D())
   selectionBox.material.color.set(0x007bff)
   selectionBox.material.depthTest = false
   selectionBox.renderOrder = 1
@@ -143,29 +155,38 @@ export const rebuildSceneFromData = () => {
   })
   sceneObjects.clear()
 
-  objects.forEach((data) => {
+  // 【修改】 data 现在是强类型 DeskObject
+  objects.value.forEach((data: DeskObject) => {
+    // 假设 objects 是 ref，使用 .value
     const obj3D = createObject3D(data)
     if (obj3D) sceneObjects.set(data.id, obj3D)
   })
-  const desk3D = sceneObjects.get(
-    objects.find((o: { type: string }) => o.type.startsWith('desk-'))?.id,
-  )
+
+  // 【修改】 data 现在是强类型
+  const deskData = objects.value.find((o: DeskObject) => o.type.startsWith('desk-'))
+  const desk3D = deskData ? sceneObjects.get(deskData.id) : undefined
+
   if (desk3D) {
     scene.add(desk3D)
     desk3D.userData.isDesk = true
   }
 
-  objects.forEach((data) => {
+  // 【修改】 data 现在是强类型
+  objects.value.forEach((data: DeskObject) => {
     const obj3D = sceneObjects.get(data.id)
     if (!obj3D) return
     if (data.mountedToId) {
       const stand3D = sceneObjects.get(data.mountedToId)
       if (stand3D) {
-        const standData = objects.find((o) => o.id === data.mountedToId)
-        const { poleHeight, armLength } = standData.params
-        obj3D.position.set(armLength, poleHeight + 0.02, 0)
-        obj3D.rotation.set(0, 0, 0)
-        stand3D.add(obj3D)
+        // 【修改】 standData 现在是强类型
+        const standData = objects.value.find((o) => o.id === data.mountedToId)
+        // 确保 standData 和 params 存在
+        if (standData && 'poleHeight' in standData.params && 'armLength' in standData.params) {
+          const { poleHeight, armLength } = standData.params
+          obj3D.position.set(armLength, poleHeight + 0.02, 0)
+          obj3D.rotation.set(0, 0, 0)
+          stand3D.add(obj3D)
+        }
       }
     } else if (!data.type.startsWith('desk-')) {
       if (desk3D) desk3D.add(obj3D)
