@@ -14,7 +14,7 @@ import { saveState } from './useHistory'
 import { expandedObjectId } from './useUIState'
 // 【新增】 导入类型和新的辅助函数
 import type { DeskObject } from '@/types/deskObject'
-import { disposeObject3D, replaceObject3D } from '@/three/objectFactory'
+import { disposeObject3D } from '@/three/objectFactory'
 
 // 【修改】 强类型
 export const objects: Ref<DeskObject[]> = ref([]) // 使用 ref 而不是 reactive，以便在 history 中更容易被替换
@@ -27,7 +27,10 @@ export const isDeskInScene = computed(() =>
 
 // 挂载
 export const mountableItems = computed(() =>
-  objects.value.filter((o) => 'isMountable' in o.params && o.params.isMountable && !o.mountedToId),
+  objects.value.filter(
+    (o): o is DeskObject & { params: { isMountable: boolean } } =>
+      'isMountable' in o.params && o.params.isMountable && !o.mountedToId,
+  ),
 )
 
 export const getModelDisplayName = (type: string) => {
@@ -40,38 +43,44 @@ export const getModelDisplayName = (type: string) => {
 
 export const getMountedItem = (itemId: string) => objects.value.find((o) => o.id === itemId)
 
-// 【修改】 update 函数现在会替换 3D 对象
+// 【修改】 updateObjectValue - 不再重建，只更新 3D 变换
 export const updateObjectValue = (
   id: string,
   key: 'position' | 'rotation', // 限制 key
   axis: 'x' | 'y' | 'z', // 限制 axis
-  value: any,
+  value: number,
 ) => {
   const obj = objects.value.find((o) => o.id === id)
   if (obj) {
-    obj[key][axis] = Number(value)
-    // 【修改】 触发 3D 视图更新
-    const newObj3D = replaceObject3D(obj)
-    // 如果更新的是当前选中的对象，重新附加控制器
-    if (newObj3D && selectedObjectId.value === id) {
-      transformControls.attach(newObj3D)
+    // 1. 更新数据
+    obj[key][axis] = value
+
+    // 2. 立即更新 3D 视图
+    const obj3D = sceneObjects.get(id)
+    if (obj3D) {
+      if (key === 'rotation') {
+        obj3D.rotation[axis] = THREE.MathUtils.degToRad(value)
+      } else {
+        obj3D.position[axis] = value
+      }
     }
     saveState() // 保存历史
   }
 }
 
-// 【修改】 update 函数现在会替换 3D 对象
+// 【修改】 updateObjectParam - 必须调用 rebuildSceneFromData
 export const updateObjectParam = (id: string, key: string, value: any) => {
   const obj = objects.value.find((o) => o.id === id)
   if (obj) {
+    // 1. 更新数据
     ;(obj.params as any)[key] = value // 使用 any 来允许动态键
-    // 【修改】 触发 3D 视图更新
-    const newObj3D = replaceObject3D(obj)
-    // 如果更新的是当前选中的对象，重新附加控制器
-    if (newObj3D && selectedObjectId.value === id) {
-      transformControls.attach(newObj3D)
-    }
-    saveState() // 保存历史
+
+    // 2. 保存状态 (这会触发 autosave)
+    saveState()
+
+    // 3. 【重要】 重建整个场景
+    // 这是修复问题 2 (物品消失) 和 4 (showLegs) 的关键
+    rebuildSceneFromData()
   }
 }
 

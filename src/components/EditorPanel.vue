@@ -2,18 +2,23 @@
 import { addModalCategory, isAddModelModalOpen, useUIState } from '@/composables/useUIState'
 import { useWindowSize } from '@vueuse/core'
 import { computed, watch } from 'vue'
-import { exitToWelcome, saveLayoutToFile } from '@/composables/useLayout'
+import { saveLayoutToFile } from '@/composables/useLayout'
 import {
   selectedObjectId,
   objects,
   updateObjectParam,
   updateObjectValue,
   deleteObject,
+  dropObject,
+  getMountedItem,
+  unmountObject,
+  mountObject,
+  mountableItems,
 } from '@/composables/useObjects'
 import type { DeskObject } from '@/types/deskObject'
 
 // 使用 Composable 共享状态
-const { isControlPanelOpen, toggleControlPanel, toggleHelpModal } = useUIState()
+const { isControlPanelOpen, toggleControlPanel, toggleHelpModal, confirmExit } = useUIState()
 
 const { width } = useWindowSize()
 // 定义宽屏断点 (Bootstrap lg 断点是 992px)
@@ -28,16 +33,15 @@ watch(isAddModelModalOpen, (isOpen) => {
   if (!isOpen) addModalCategory.value = null
 })
 
-// --- 【新增】 编辑器逻辑 ---
 // 1. 计算选中的对象数据
 const selectedObject = computed(() => {
   if (!selectedObjectId.value) return null
-  // 假设 objects 是 ref (来自 useObjects.ts)
-  return objects.value.find((o) => o.id === selectedObjectId.value)
+  return objects.value.find((o: DeskObject) => o.id === selectedObjectId.value)
 })
 
 // 2. 简单的名称转换
-const getDisplayName = (type: string) => {
+const getDisplayName = (type: string | undefined) => {
+  if (!type) return 'Item'
   if (type.startsWith('desk-')) return '办公桌'
   if (type === 'monitor') return '显示器'
   if (type === 'macbook') return '笔记本电脑'
@@ -46,7 +50,7 @@ const getDisplayName = (type: string) => {
 }
 
 // 3. 辅助函数，用于 v-for 循环 params
-const getEditableParams = (obj: DeskObject) => {
+const getEditableParams = (obj: DeskObject | null) => {
   if (!obj || !obj.params) return []
   // 过滤掉不希望用户编辑的参数
   return Object.entries(obj.params).filter(
@@ -91,7 +95,7 @@ const getEditableParams = (obj: DeskObject) => {
       </div>
       <!--退出按钮-->
       <div class="col-6 col-md-3">
-        <BButton variant="danger" class="w-100" @click="exitToWelcome()">
+        <BButton variant="danger" class="w-100" @click="confirmExit">
           <i class="bi bi-escape" />
           退出
         </BButton>
@@ -105,21 +109,27 @@ const getEditableParams = (obj: DeskObject) => {
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h5 class="mb-0">编辑 {{ getDisplayName(selectedObject.type) }}</h5>
           <BButton size="sm" variant="outline-secondary" @click="selectedObjectId = null">
-            <i class="bi bi-x-lg" /> 返回列表
+            <i class="bi bi-x-lg" />
+            返回列表
           </BButton>
         </div>
 
         <BAccordion flush>
           <BAccordionItem title="变换 (Transform)" visible>
-            <h6>位置</h6>
+            <h6>位置 (mm)</h6>
             <BInputGroup size="sm" class="mb-2">
               <BInputGroupText>X</BInputGroupText>
               <BFormInput
                 type="number"
-                step="0.01"
-                :model-value="selectedObject.position.x"
+                step="1"
+                :model-value="(selectedObject.position.x * 1000).toFixed(0)"
                 @change="
-                  updateObjectValue(selectedObject.id, 'position', 'x', Number($event.target.value))
+                  updateObjectValue(
+                    selectedObject.id,
+                    'position',
+                    'x',
+                    Number($event.target.value) / 1000,
+                  )
                 "
               />
             </BInputGroup>
@@ -127,10 +137,15 @@ const getEditableParams = (obj: DeskObject) => {
               <BInputGroupText>Y</BInputGroupText>
               <BFormInput
                 type="number"
-                step="0.01"
-                :model-value="selectedObject.position.y"
+                step="1"
+                :model-value="(selectedObject.position.y * 1000).toFixed(0)"
                 @change="
-                  updateObjectValue(selectedObject.id, 'position', 'y', Number($event.target.value))
+                  updateObjectValue(
+                    selectedObject.id,
+                    'position',
+                    'y',
+                    Number($event.target.value) / 1000,
+                  )
                 "
               />
             </BInputGroup>
@@ -138,26 +153,64 @@ const getEditableParams = (obj: DeskObject) => {
               <BInputGroupText>Z</BInputGroupText>
               <BFormInput
                 type="number"
-                step="0.01"
-                :model-value="selectedObject.position.z"
+                step="1"
+                :model-value="(selectedObject.position.z * 1000).toFixed(0)"
                 @change="
-                  updateObjectValue(selectedObject.id, 'position', 'z', Number($event.target.value))
+                  updateObjectValue(
+                    selectedObject.id,
+                    'position',
+                    'z',
+                    Number($event.target.value) / 1000,
+                  )
                 "
               />
             </BInputGroup>
 
-            <h6>旋转</h6>
+            <h6>旋转 (°)</h6>
+            <BInputGroup size="sm" class="mb-2">
+              <BInputGroupText>X°</BInputGroupText>
+              <BFormInput
+                type="number"
+                step="1"
+                :model-value="selectedObject.rotation.x.toFixed(0)"
+                @change="
+                  updateObjectValue(selectedObject.id, 'rotation', 'x', Number($event.target.value))
+                "
+              />
+            </BInputGroup>
             <BInputGroup size="sm" class="mb-2">
               <BInputGroupText>Y°</BInputGroupText>
               <BFormInput
                 type="number"
                 step="1"
-                :model-value="selectedObject.rotation.y"
+                :model-value="selectedObject.rotation.y.toFixed(0)"
                 @change="
                   updateObjectValue(selectedObject.id, 'rotation', 'y', Number($event.target.value))
                 "
               />
             </BInputGroup>
+            <BInputGroup size="sm" class="mb-3">
+              <BInputGroupText>Z°</BInputGroupText>
+              <BFormInput
+                type="number"
+                step="1"
+                :model-value="selectedObject.rotation.z.toFixed(0)"
+                @change="
+                  updateObjectValue(selectedObject.id, 'rotation', 'z', Number($event.target.value))
+                "
+              />
+            </BInputGroup>
+
+            <BButton
+              variant="outline-primary"
+              size="sm"
+              class="w-100"
+              @click="dropObject(selectedObject.id)"
+              :disabled="!!selectedObject.mountedToId"
+            >
+              <i class="bi bi-arrow-down-short" />
+              下落至表面
+            </BButton>
           </BAccordionItem>
 
           <BAccordionItem title="参数 (Parameters)" visible>
@@ -178,7 +231,7 @@ const getEditableParams = (obj: DeskObject) => {
               <BFormCheckbox
                 v-else-if="typeof value === 'boolean'"
                 :checked="value as boolean"
-                @change="updateObjectParam(selectedObject.id, key, $event.target.value)"
+                @change="updateObjectParam(selectedObject.id, key, $event)"
                 switch
               />
               <BFormInput
@@ -196,6 +249,36 @@ const getEditableParams = (obj: DeskObject) => {
                 :model-value="value as string"
                 @change="updateObjectParam(selectedObject.id, key, $event.target.value)"
               />
+            </BFormGroup>
+          </BAccordionItem>
+
+          <BAccordionItem
+            v-if="selectedObject.type === 'universal-stand'"
+            title="挂载 (Mount)"
+            visible
+          >
+            <div
+              v-if="
+                'mountedObjectId' in selectedObject.params && selectedObject.params.mountedObjectId
+              "
+            >
+              <p>
+                已挂载:
+                <strong
+                  >{{ getDisplayName(getMountedItem(selectedObject.params.mountedObjectId)?.type) }}
+                </strong>
+              </p>
+              <BButton variant="outline-danger" size="sm" @click="unmountObject(selectedObject.id)">
+                卸载物品
+              </BButton>
+            </div>
+            <BFormGroup v-else label="选择要挂载的物品">
+              <BFormSelect @change="mountObject(selectedObject.id, $event.target.value)">
+                <BFormSelectOption :value="null">-- 未挂载 --</BFormSelectOption>
+                <BFormSelectOption v-for="item in mountableItems" :key="item.id" :value="item.id">
+                  {{ getDisplayName(item.type) }} (ID: {{ item.id.substring(0, 4) }})
+                </BFormSelectOption>
+              </BFormSelect>
             </BFormGroup>
           </BAccordionItem>
         </BAccordion>
