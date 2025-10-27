@@ -102,8 +102,13 @@ export const unmountObject = (standId: string) => {
     if (item) {
       item.mountedToId = null
       const desk = objects.value.find((o) => o.type.startsWith('desk-'))
+      // 【修复】 添加类型守卫
+      let deskHeight = 0
+      if (desk && (desk.type === 'desk-rect' || desk.type === 'desk-l')) {
+        deskHeight = desk.params.height // 现在可以安全访问 height
+      }
       item.position.x = stand.position.x
-      item.position.y = desk ? desk.params.height : 0
+      item.position.y = deskHeight
       item.position.z = stand.position.z
     }
     stand.params.mountedObjectId = null
@@ -192,7 +197,8 @@ export const handleSceneClick = (event: { clientX: any; clientY: any }) => {
 
   let targetGroup: THREE.Object3D | null = null
   if (intersects.length > 0) {
-    let obj: THREE.Object3D | null = intersects[0]?.object
+    // 【修复】 使用 ?? null 将 undefined 转换为 null
+    let obj: THREE.Object3D | null = intersects[0]?.object ?? null
     while (obj && !obj.userData.id) obj = obj.parent
     if (obj) targetGroup = obj
   }

@@ -36,7 +36,11 @@ export const add3DObjectToScene = (obj3D: THREE.Group, data: DeskObject) => {
 export const addObject = (type: DeskObjectType) => {
   if (type.startsWith('desk-') && isDeskInScene.value) return
   const desk = objects.value.find((o) => o.type.startsWith('desk-'))
-  const yPos = desk ? desk.params.height + (desk.position.y || 0) : 0
+  // 【修复】 添加类型守卫
+  let yPos = 0
+  if (desk && (desk.type === 'desk-rect' || desk.type === 'desk-l')) {
+    yPos = desk.params.height + (desk.position.y || 0) // 类型安全
+  }
 
   let data: DeskObject
   // TypeScript 现在会根据 case 自动推断 data 的类型
@@ -204,14 +208,15 @@ export const addObject = (type: DeskObjectType) => {
 export const disposeObject3D = (obj3D: THREE.Object3D) => {
   if (!obj3D) return
   obj3D.parent?.remove(obj3D)
-  obj3D.traverse((child: any) => {
-    if (child.isMesh) {
-      child.geometry?.dispose()
-      if (child.material) {
-        if (Array.isArray(child.material)) {
-          child.material.forEach((mat: THREE.Material) => mat.dispose())
+  obj3D.traverse((child) => {
+    if ((child as THREE.Mesh).isMesh) {
+      const mesh = child as THREE.Mesh
+      mesh.geometry?.dispose()
+      if (mesh.material) {
+        if (Array.isArray(mesh.material)) {
+          mesh.material.forEach((mat: THREE.Material) => mat.dispose())
         } else {
-          child.material.dispose()
+          mesh.material.dispose()
         }
       }
     }

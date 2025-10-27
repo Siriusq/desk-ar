@@ -128,7 +128,11 @@ export const initThree = () => {
   domElement!.addEventListener('mouseup', handleMouseUp)
 
   renderer.setAnimationLoop(() => {
-    if (selectionBox.visible && sceneObjects.has(selectedObjectId.value)) {
+    if (
+      selectedObjectId.value &&
+      selectionBox.visible &&
+      sceneObjects.has(selectedObjectId.value)
+    ) {
       selectionBox.setFromObject(sceneObjects.get(selectedObjectId.value))
     }
     renderer.render(scene, camera)
@@ -140,18 +144,22 @@ export const rebuildSceneFromData = () => {
   sceneObjects.forEach((obj) => {
     if (transformControls.object === obj) transformControls.detach()
     obj.parent?.remove(obj)
-    obj.traverse(
-      (c: {
-        isMesh: boolean
-        geometry: { dispose: () => void }
-        material: { dispose: () => void }
-      }) => {
-        if (c.isMesh) {
-          c.geometry.dispose()
-          c.material.dispose()
+    obj.traverse((c) => {
+      // 2. 使用类型守卫（as）或属性检查
+      if ((c as THREE.Mesh).isMesh) {
+        const mesh = c as THREE.Mesh // 将其断言为 Mesh
+        mesh.geometry?.dispose() // 安全地调用 geometry.dispose
+
+        // 3. 安全地处理 material
+        if (mesh.material) {
+          if (Array.isArray(mesh.material)) {
+            mesh.material.forEach((mat) => mat.dispose())
+          } else {
+            mesh.material.dispose()
+          }
         }
-      },
-    )
+      }
+    })
   })
   sceneObjects.clear()
 
@@ -181,7 +189,7 @@ export const rebuildSceneFromData = () => {
         // 【修改】 standData 现在是强类型
         const standData = objects.value.find((o) => o.id === data.mountedToId)
         // 确保 standData 和 params 存在
-        if (standData && 'poleHeight' in standData.params && 'armLength' in standData.params) {
+        if (standData && standData.type === 'universal-stand') {
           const { poleHeight, armLength } = standData.params
           obj3D.position.set(armLength, poleHeight + 0.02, 0)
           obj3D.rotation.set(0, 0, 0)
