@@ -7,6 +7,7 @@ import AddModelModal from '@/components/AddModelModal.vue'
 import { useModelManager } from '@/composables/useImportManager'
 import { ref } from 'vue'
 import { undo, redo, canUndo, canRedo } from '@/composables/useHistory'
+import { deleteObject, selectedObjectId } from '@/composables/useObjects'
 
 defineOptions({
   name: 'MainPage',
@@ -26,6 +27,13 @@ const { handleFileChange } = useModelManager()
 
 // 文件输入元素的引用
 const fileInput = ref<HTMLInputElement | null>(null)
+
+const deleteSelectObject = () => {
+  if (selectedObjectId.value) {
+    deleteObject(selectedObjectId.value)
+    selectedObjectId.value = null
+  }
+}
 </script>
 
 <template>
@@ -58,7 +66,7 @@ const fileInput = ref<HTMLInputElement | null>(null)
         <i class="bi bi-plus-lg" />
       </BButton>
       <!--删除按钮-->
-      <BButton variant="danger" @click="$router.push('/preview')">
+      <BButton variant="danger" @click="deleteSelectObject()">
         <i class="bi bi-trash" />
       </BButton>
       <!--撤销按钮-->
