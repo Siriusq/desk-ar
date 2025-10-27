@@ -9,7 +9,17 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AddModelModal: typeof import('./src/components/AddModelModal.vue')['default']
+    BAccordion: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordion']
+    BAccordionItem: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordionItem']
+    BAlert: typeof import('bootstrap-vue-next/components/BAlert')['BAlert']
     BButton: typeof import('bootstrap-vue-next/components/BButton')['BButton']
+    BFormCheckbox: typeof import('bootstrap-vue-next/components/BFormCheckbox')['BFormCheckbox']
+    BFormGroup: typeof import('bootstrap-vue-next/components/BFormGroup')['BFormGroup']
+    BFormInput: typeof import('bootstrap-vue-next/components/BFormInput')['BFormInput']
+    BInputGroup: typeof import('bootstrap-vue-next/components/BInputGroup')['BInputGroup']
+    BInputGroupText: typeof import('bootstrap-vue-next/components/BInputGroup')['BInputGroupText']
+    BListGroup: typeof import('bootstrap-vue-next/components/BListGroup')['BListGroup']
+    BListGroupItem: typeof import('bootstrap-vue-next/components/BListGroup')['BListGroupItem']
     BModal: typeof import('bootstrap-vue-next/components/BModal')['BModal']
     BOffcanvas: typeof import('bootstrap-vue-next/components/BOffcanvas')['BOffcanvas']
     BOverlay: typeof import('bootstrap-vue-next/components/BOverlay')['BOverlay']

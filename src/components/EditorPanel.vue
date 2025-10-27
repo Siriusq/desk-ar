@@ -2,7 +2,15 @@
 import { addModalCategory, isAddModelModalOpen, useUIState } from '@/composables/useUIState'
 import { useWindowSize } from '@vueuse/core'
 import { computed, watch } from 'vue'
-import { exitToWelcome } from '@/composables/useLayout'
+import { exitToWelcome, saveLayoutToFile } from '@/composables/useLayout'
+import {
+  selectedObjectId,
+  objects,
+  updateObjectParam,
+  updateObjectValue,
+  deleteObject,
+} from '@/composables/useObjects'
+import type { DeskObject } from '@/types/deskObject'
 
 // 使用 Composable 共享状态
 const { isControlPanelOpen, toggleControlPanel, toggleHelpModal } = useUIState()
@@ -19,6 +27,32 @@ const placement = computed(() => {
 watch(isAddModelModalOpen, (isOpen) => {
   if (!isOpen) addModalCategory.value = null
 })
+
+// --- 【新增】 编辑器逻辑 ---
+// 1. 计算选中的对象数据
+const selectedObject = computed(() => {
+  if (!selectedObjectId.value) return null
+  // 假设 objects 是 ref (来自 useObjects.ts)
+  return objects.value.find((o) => o.id === selectedObjectId.value)
+})
+
+// 2. 简单的名称转换
+const getDisplayName = (type: string) => {
+  if (type.startsWith('desk-')) return '办公桌'
+  if (type === 'monitor') return '显示器'
+  if (type === 'macbook') return '笔记本电脑'
+  // ...可以继续添加
+  return type
+}
+
+// 3. 辅助函数，用于 v-for 循环 params
+const getEditableParams = (obj: DeskObject) => {
+  if (!obj || !obj.params) return []
+  // 过滤掉不希望用户编辑的参数
+  return Object.entries(obj.params).filter(
+    ([key]) => key !== 'isMountable' && key !== 'mountedObjectId',
+  )
+}
 </script>
 
 <template>
@@ -50,7 +84,7 @@ watch(isAddModelModalOpen, (isOpen) => {
       </div>
       <!--保存按钮-->
       <div class="col-6 col-md-3">
-        <BButton variant="warning" class="w-100" @click="$router.push('/')">
+        <BButton variant="warning" class="w-100" @click="saveLayoutToFile()">
           <i class="bi bi-save" />
           保存
         </BButton>
@@ -64,57 +98,134 @@ watch(isAddModelModalOpen, (isOpen) => {
       </div>
     </div>
 
-    <h6>What is Lorem Ipsum?</h6>
-    <p>
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-      been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-      galley of type and scrambled it to make a type specimen book. It has survived not only five
-      centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It
-      was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-      passages, and more recently with desktop publishing software like Aldus PageMaker including
-      versions of Lorem Ipsum.
-    </p>
-    <h4>Where does it come from?</h4>
-    <p>
-      Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of
-      classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a
-      Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin
-      words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in
-      classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections
-      1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by
-      Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during
-      the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a
-      line in section 1.10.32.
-    </p>
-    <p>
-      The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those
-      interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are
-      also reproduced in their exact original form, accompanied by English versions from the 1914
-      translation by H. Rackham.
-    </p>
-    <h1>Why do we use it?</h1>
-    <p>
-      It is a long established fact that a reader will be distracted by the readable content of a
-      page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less
-      normal distribution of letters, as opposed to using 'Content here, content here', making it
-      look like readable English. Many desktop publishing packages and web page editors now use
-      Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web
-      sites still in their infancy. Various versions have evolved over the years, sometimes by
-      accident, sometimes on purpose (injected humour and the like).
-    </p>
-    <h2>Where can I get some?</h2>
-    <p>
-      There are many variations of passages of Lorem Ipsum available, but the majority have suffered
-      alteration in some form, by injected humour, or randomised words which don't look even
-      slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure
-      there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators
-      on the Internet tend to repeat predefined chunks as necessary, making this the first true
-      generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a
-      handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The
-      generated Lorem Ipsum is therefore always free from repetition, injected humour, or
-      non-characteristic words etc.
-    </p>
+    <hr />
+
+    <div class="dynamic-content">
+      <div v-if="selectedObject">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">编辑 {{ getDisplayName(selectedObject.type) }}</h5>
+          <BButton size="sm" variant="outline-secondary" @click="selectedObjectId = null">
+            <i class="bi bi-x-lg" /> 返回列表
+          </BButton>
+        </div>
+
+        <BAccordion flush>
+          <BAccordionItem title="变换 (Transform)" visible>
+            <h6>位置</h6>
+            <BInputGroup size="sm" class="mb-2">
+              <BInputGroupText>X</BInputGroupText>
+              <BFormInput
+                type="number"
+                step="0.01"
+                :model-value="selectedObject.position.x"
+                @change="
+                  updateObjectValue(selectedObject.id, 'position', 'x', Number($event.target.value))
+                "
+              />
+            </BInputGroup>
+            <BInputGroup size="sm" class="mb-2">
+              <BInputGroupText>Y</BInputGroupText>
+              <BFormInput
+                type="number"
+                step="0.01"
+                :model-value="selectedObject.position.y"
+                @change="
+                  updateObjectValue(selectedObject.id, 'position', 'y', Number($event.target.value))
+                "
+              />
+            </BInputGroup>
+            <BInputGroup size="sm" class="mb-3">
+              <BInputGroupText>Z</BInputGroupText>
+              <BFormInput
+                type="number"
+                step="0.01"
+                :model-value="selectedObject.position.z"
+                @change="
+                  updateObjectValue(selectedObject.id, 'position', 'z', Number($event.target.value))
+                "
+              />
+            </BInputGroup>
+
+            <h6>旋转</h6>
+            <BInputGroup size="sm" class="mb-2">
+              <BInputGroupText>Y°</BInputGroupText>
+              <BFormInput
+                type="number"
+                step="1"
+                :model-value="selectedObject.rotation.y"
+                @change="
+                  updateObjectValue(selectedObject.id, 'rotation', 'y', Number($event.target.value))
+                "
+              />
+            </BInputGroup>
+          </BAccordionItem>
+
+          <BAccordionItem title="参数 (Parameters)" visible>
+            <BFormGroup
+              v-for="[key, value] in getEditableParams(selectedObject)"
+              :key="key"
+              :label="key"
+              label-cols-sm="4"
+              label-align-sm="right"
+              class="mb-3"
+            >
+              <BFormInput
+                v-if="key === 'color'"
+                type="color"
+                :model-value="value as string"
+                @input="updateObjectParam(selectedObject.id, key, $event.target.value)"
+              />
+              <BFormCheckbox
+                v-else-if="typeof value === 'boolean'"
+                :checked="value as boolean"
+                @change="updateObjectParam(selectedObject.id, key, $event.target.value)"
+                switch
+              />
+              <BFormInput
+                v-else-if="typeof value === 'number'"
+                type="range"
+                :model-value="value as number"
+                @input="updateObjectParam(selectedObject.id, key, Number($event.target.value))"
+                min="0.1"
+                max="3"
+                step="0.01"
+              />
+              <BFormInput
+                v-else
+                type="text"
+                :model-value="value as string"
+                @change="updateObjectParam(selectedObject.id, key, $event.target.value)"
+              />
+            </BFormGroup>
+          </BAccordionItem>
+        </BAccordion>
+      </div>
+
+      <div v-else>
+        <h5 class="mb-3">场景对象</h5>
+        <BListGroup v-if="objects.length > 0">
+          <BListGroupItem
+            v-for="obj in objects"
+            :key="obj.id"
+            @click="selectedObjectId = obj.id"
+            button
+            class="d-flex justify-content-between align-items-center"
+          >
+            {{ getDisplayName(obj.type) }}
+            <BButton variant="outline-danger" size="sm" @click.stop="deleteObject(obj.id)">
+              <i class="bi bi-trash" />
+            </BButton>
+          </BListGroupItem>
+        </BListGroup>
+        <BAlert v-else :model-value="true" variant="info">场景为空，请在主菜单中添加物品。</BAlert>
+      </div>
+    </div>
   </BOffcanvas>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* 可选：为平滑切换添加一点过渡 */
+.dynamic-content {
+  transition: opacity 0.2s ease;
+}
+</style>
