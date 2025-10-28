@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useUIState } from '@/composables/useUIState'
-import { isDeskInScene, getModelDisplayName } from '@/composables/useObjects'
-import { availableModels } from '@/models/presetModels'
+import { isDeskInScene } from '@/composables/useObjects'
+import { availableModels } from '@/types/modelLists'
 import { useI18n } from 'vue-i18n'
 import { addObject } from '@/three/objectFactory'
 const { t } = useI18n()
@@ -20,11 +20,11 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
   >
     <template #header="{ close }">
       <div class="d-flex w-100 justify-content-between align-items-center">
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2 align">
           <!--返回按钮-->
           <button
             v-if="addModalCategory"
-            class="plain-icon-button me-2"
+            class="plain-icon-button me-1"
             aria-label="返回"
             @click="addModalCategory = undefined"
           >
@@ -32,7 +32,7 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
           </button>
 
           <!--动态标题-->
-          <h5 class="modal-title">
+          <h5 class="modal-title my-0">
             {{
               addModalCategory
                 ? `${t('add')} ${t('categories.' + addModalCategory)}`
@@ -48,32 +48,41 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
     </template>
 
     <!--目录选择-->
-    <div v-if="!addModalCategory" class="row row-cols-auto gap-3">
-      <BButton
-        v-for="(models, category) in availableModels"
-        :key="category"
-        @click="addModalCategory = category"
-        :disabled="category === 'desks' && isDeskInScene"
-        class="fw-bold w-auto"
-        variant="secondary"
-      >
-        <div class="font-semibold text-lg">
-          {{ t('categories.' + category) }}
-        </div>
-      </BButton>
+    <div v-if="!addModalCategory" class="model-selection-grid">
+      <div v-for="(models, category) in availableModels" :key="category" class="model-item-wrapper">
+        <BButton
+          class="model-button fw-bold"
+          variant="secondary"
+          @click="addModalCategory = category"
+          :disabled="category === 'desks' && isDeskInScene"
+        >
+          <div class="model-icon mb-3">{{ models.icon }}</div>
+          <div>{{ t('categories.' + category) }}</div>
+        </BButton>
+      </div>
+
+      <div class="model-item-wrapper">
+        <BButton class="fw-bold model-button" variant="secondary">
+          <div class="model-icon mb-3">📥</div>
+          <div>导入</div>
+        </BButton>
+      </div>
     </div>
     <!--模型选择-->
-    <div v-else class="row g-2">
+    <div v-else class="model-selection-grid">
       <div
-        v-for="model in availableModels[addModalCategory]"
+        v-for="model in availableModels[addModalCategory].models"
         :key="model.type"
-        @click="(addObject(model.type), (isAddModelModalOpen = false))"
-        class=""
+        class="model-item-wrapper"
       >
-        <div class="text-3xl mb-2">{{ model.icon }}</div>
-        <div class="font-semibold">
-          {{ getModelDisplayName(model.type) }}
-        </div>
+        <BButton
+          class="model-button fw-bold"
+          variant="secondary"
+          @click="(addObject(model.type), (isAddModelModalOpen = false))"
+        >
+          <div class="model-icon mb-3">{{ model.icon }}</div>
+          <div>{{ t('models.' + model.type) }}</div>
+        </BButton>
       </div>
     </div>
   </BModal>
@@ -83,13 +92,72 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
 .plain-icon-button {
   background: none;
   border: none;
-  cursor: pointer; /* 确保有手型光标 */
-  padding: 0; /* 移除内边距 */
-  /* 其他样式调整，如大小和颜色 */
+  cursor: pointer;
+  padding: 0;
   font-size: 1.25rem;
   color: #333;
+  display: inline-flex; /* 使用 inline-flex 保证它和文本流一起 */
+  align-items: center;
+  justify-content: center;
+  /* 关键优化：设置一个固定高度，例如 38px (Bootstrap 常见按钮高度) */
+  height: 20px;
+  width: 20px;
+  /* 消除 line-height 的影响 */
+  line-height: 1;
 }
-.plain-icon-button:hover {
-  opacity: 0.7; /* 悬停效果 */
+
+/* ---------------------------------- */
+/* Modal Body - 模型选择网格样式 */
+/* ---------------------------------- */
+
+.model-selection-grid {
+  /* 🌟 关键修改：使用 Grid 布局 🌟 */
+  display: grid;
+
+  /* 🌟 核心 Grid 属性：实现自适应和左对齐 🌟 */
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+
+  /* 设置按钮之间的间隙 */
+  gap: 16px; /* 行和列都使用 16px 间隙 */
+  padding: 16px;
+}
+
+.model-item-wrapper {
+  /* 在 Grid 布局中，项目不再需要设置 margin/min/max-width */
+  margin: 0;
+  min-width: unset;
+  max-width: unset;
+  /* 确保按钮填充 Grid 单元格 */
+  width: 100%;
+}
+
+.model-button {
+  /* 确保按钮内容是列布局（图标在上，文本在下） */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 图标和文本水平居中 */
+  /* 强制按钮宽度自适应，这里使用 max-width 限制按钮太宽 */
+  min-width: 120px;
+  max-width: 150px;
+  height: 100px; /* 统一高度，使网格整齐 */
+  padding: 10px;
+}
+
+/* 增大 Emoji 图标 */
+.model-icon {
+  font-size: 2.5rem; /* 大图标 */
+  line-height: 1; /* 消除行高对布局的影响 */
+}
+
+/* 按钮名称样式 */
+.model-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  /* 确保文本不溢出 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

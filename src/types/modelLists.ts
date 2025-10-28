@@ -27,7 +27,7 @@ export type CatalogCategoryKey = keyof AvailableModelsMap
 
 export const availableModels: AvailableModelsMap = {
   desks: {
-    icon: '🪑', // 新增：目录图标
+    icon: '🛋️', // 新增：目录图标
     models: [
       { type: 'desk-rect', name: 'desk-rect', icon: '▭' },
       { type: 'desk-l', name: 'desk-l', icon: 'L' },
