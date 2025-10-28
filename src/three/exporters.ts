@@ -1,16 +1,16 @@
 import i18n from '@/locales'
 const { t } = i18n.global
 import * as THREE from 'three'
-import { USDZExporter } from 'three/addons/exporters/USDZExporter.js'
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js'
 import { objects, sceneObjects } from '@/composables/useObjects'
 import { isLoading } from '@/composables/useUIState'
+import { previewModelUrl } from '@/composables/usePreview'
+import router from '@/router'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const exportForAR = async (includeDesk: any) => {
+export const exportForAR = async (includeDesk: boolean) => {
   isLoading.value = true
 
-  const deskData = objects.find((o) => o.type.startsWith('desk-'))
+  const deskData = objects.value.find((o) => o.type.startsWith('desk-'))
   if (!deskData && includeDesk) {
     alert(t('noDeskError'))
     isLoading.value = false
@@ -27,9 +27,13 @@ export const exportForAR = async (includeDesk: any) => {
       objectToExport.add(desk3D.clone(true))
     }
   } else {
+    let deskHeight = 0
+    if (deskData && (deskData.type === 'desk-rect' || deskData.type === 'desk-l')) {
+      deskHeight = deskData.params.height + (deskData.position.y || 0) // 类型安全
+    }
     // If no desk is included, we add all non-desk items.
     // Their positions must be adjusted relative to the floor (y=0).
-    objects.forEach((data) => {
+    objects.value.forEach((data) => {
       if (!data.type.startsWith('desk-')) {
         const item3D = sceneObjects.get(data.id)
         if (item3D) {
@@ -41,7 +45,6 @@ export const exportForAR = async (includeDesk: any) => {
           const worldScale = item3D.getWorldScale(new THREE.Vector3())
 
           // Adjust position relative to the desk height.
-          const deskHeight = deskData ? deskData.params.height : 0
           worldPosition.y -= deskHeight
 
           clone.position.copy(worldPosition)
@@ -56,72 +59,58 @@ export const exportForAR = async (includeDesk: any) => {
 
   // Use a short timeout to let the UI update (show loading spinner)
   setTimeout(async () => {
+    // 【优化】 统一创建 Exporter
+    const exporter = new GLTFExporter()
+    const options = { binary: true }
+
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
     const isAndroid = /Android/.test(navigator.userAgent)
+    const isMobile = isIOS || isAndroid
     const a = document.createElement('a')
     a.style.display = 'none'
     document.body.appendChild(a)
 
     try {
-      if (isIOS) {
-        // iOS requires USDZ
-        const exporter = new USDZExporter()
-        const arrayBuffer = await exporter.parse(objectToExport)
-        const blob = new Blob([arrayBuffer], {
-          type: 'model/vnd.usdz+zip',
-        })
-        a.href = URL.createObjectURL(blob)
-        a.setAttribute('rel', 'ar')
-        a.appendChild(document.createElement('img')) // Required for Quick Look
-        a.download = 'scene.usdz'
-      } else if (isAndroid) {
-        const exporter = new GLTFExporter()
-        exporter.parse(
-          objectToExport,
-          (result) => {
-            const glbBlob = new Blob([result], {
-              type: 'model/gltf-binary',
-            })
-            const glbUrl = URL.createObjectURL(glbBlob)
+      // 【优化】 统一使用 parseAsync
+      const result = await exporter.parseAsync(objectToExport, options)
 
-            // 打开 viewer.html 并传递 blob URL
-            const viewerPage = `mv.html?src=${encodeURIComponent(glbUrl)}`
-            window.open(viewerPage, '_blank')
-          },
-          (error: any) => {
-            console.error('GLTF 导出错误:', error)
-          },
-          { binary: true },
-        )
+      // 【修复】 使用类型断言
+      const glbBlob = new Blob([result as ArrayBuffer], {
+        type: 'model/gltf-binary',
+      })
+
+      if (isMobile) {
+        // --- 移动端逻辑 ---
+        // 在设置新 URL 之前，释放掉可能存在的旧 URL
+        if (previewModelUrl.value) {
+          URL.revokeObjectURL(previewModelUrl.value)
+        }
+        // 1. 创建新的 Blob URL 并存入共享状态
+        const glbUrl = URL.createObjectURL(glbBlob)
+        previewModelUrl.value = glbUrl
+
+        // 2. 使用 Vue Router 导航到预览页
+        router.push({ name: 'preview' })
       } else {
-        // Fallback for desktop: download GLB
-        const exporter = new GLTFExporter()
-        const result = await exporter.parseAsync(objectToExport, {
-          binary: true,
-        })
-        const blob = new Blob([result], {
-          type: 'model/gltf-binary',
-        })
-        a.href = URL.createObjectURL(blob)
+        // --- 桌面端逻辑 ---
+        a.href = URL.createObjectURL(glbBlob)
         a.download = 'scene.glb'
-      }
-
-      if (!isAndroid) {
         a.click()
         if (a.href.startsWith('blob:')) {
           URL.revokeObjectURL(a.href)
         }
-        document.body.removeChild(a)
       }
     } catch (error) {
       console.error('An error happened during AR export:', error)
     } finally {
+      // 【优化】 现在 finally 对两个分支都有效，因为都用了 await
       isLoading.value = false
+      document.body.removeChild(a) // 总是移除 a 标签
     }
   }, 100)
 }
 
-GLTFExporter.prototype.parseAsync = function (input: any, options: any) {
+GLTFExporter.prototype.parseAsync = function (input, options) {
   return new Promise((resolve, reject) => {
     this.parse(input, resolve, reject, options)
   })
