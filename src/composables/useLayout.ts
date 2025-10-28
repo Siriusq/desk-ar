@@ -18,12 +18,6 @@ export const layoutLoaded = ref(false)
 export const sceneName = ref('')
 export const isNewlyCreated = ref(false)
 
-// 仅清理 Three.js 相关资源
-export const cleanupThreeResources = () => {
-  // 只需调用这一个函数，它会处理所有 Three.js 相关的清理
-  disposeScene()
-}
-
 export const createNewLayout = () => {
   resetApplicationState()
   layoutLoaded.value = true
@@ -123,7 +117,7 @@ export const autoSave = () => {
 
 export const exitToWelcome = () => {
   // 1. 清理 3D 资源
-  cleanupThreeResources()
+  disposeScene()
   // 2. 清理状态和 localStorage
   resetApplicationState()
   // 3. 导航

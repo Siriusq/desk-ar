@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as THREE from 'three'
 import { computed, nextTick, ref, watch, type Ref } from 'vue'
-import { availableModels } from '@/models/presetModels'
 import {
   camera,
   rebuildSceneFromData,
@@ -32,14 +31,6 @@ export const mountableItems = computed(() =>
       'isMountable' in o.params && o.params.isMountable && !o.mountedToId,
   ),
 )
-
-export const getModelDisplayName = (type: string) => {
-  for (const category of Object.values(availableModels)) {
-    const model = category.find((m: { type: string }) => m.type === type)
-    if (model) return model.name
-  }
-  return 'Unknown'
-}
 
 export const getMountedItem = (itemId: string) => objects.value.find((o) => o.id === itemId)
 

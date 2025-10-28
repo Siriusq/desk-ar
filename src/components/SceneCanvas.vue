@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { saveState } from '@/composables/useHistory'
-import { cleanupThreeResources, isNewlyCreated, loadAutoSaveData } from '@/composables/useLayout'
+import { isNewlyCreated, loadAutoSaveData } from '@/composables/useLayout'
 import { addObject } from '@/three/objectFactory'
-import { handleResize, initThree, rebuildSceneFromData } from '@/three/sceneManager'
+import { disposeScene, handleResize, initThree, rebuildSceneFromData } from '@/three/sceneManager'
 import { onMounted, onUnmounted } from 'vue'
 
 onMounted(() => {
@@ -36,7 +36,7 @@ onUnmounted(() => {
   console.log('MainPage onUnmounted: Cleaning up Three.js resources...')
   // 离开此页面时都销毁 Three.js 资源
   // 状态和 localStorage 不会在这里被清除
-  cleanupThreeResources()
+  disposeScene()
 })
 </script>
 
