@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useUIState } from '@/composables/useUIState'
-import { isDeskInScene } from '@/composables/useObjects'
+import { isDeskInScene, getModelDisplayName } from '@/composables/useObjects'
 import { availableModels } from '@/models/presetModels'
 import { useI18n } from 'vue-i18n'
+import { addObject } from '@/three/objectFactory'
 const { t } = useI18n()
 
 // 使用 Composable 共享状态
@@ -25,7 +26,7 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
             v-if="addModalCategory"
             class="plain-icon-button me-2"
             aria-label="返回"
-            @click="addModalCategory = null"
+            @click="addModalCategory = undefined"
           >
             <i class="bi bi-arrow-left" />
           </button>
@@ -60,6 +61,20 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
           {{ t('categories.' + category) }}
         </div>
       </BButton>
+    </div>
+    <!--模型选择-->
+    <div v-else class="row g-2">
+      <div
+        v-for="model in availableModels[addModalCategory]"
+        :key="model.type"
+        @click="(addObject(model.type), (isAddModelModalOpen = false))"
+        class=""
+      >
+        <div class="text-3xl mb-2">{{ model.icon }}</div>
+        <div class="font-semibold">
+          {{ getModelDisplayName(model.type) }}
+        </div>
+      </div>
     </div>
   </BModal>
 </template>

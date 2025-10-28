@@ -142,7 +142,7 @@ export const resetApplicationState = () => {
   historyIndex.value = -1
   isAddModelModalOpen.value = false
   isHelpModalOpen.value = false
-  addModalCategory.value = null
+  addModalCategory.value = undefined
   isPreviewing.value = false
   isNewlyCreated.value = false
   console.log('Application state reset and autosave cleared.')

@@ -35,7 +35,7 @@ export const mountableItems = computed(() =>
 
 export const getModelDisplayName = (type: string) => {
   for (const category of Object.values(availableModels)) {
-    const model = category.find((m) => m.type === type)
+    const model = category.find((m: { type: string }) => m.type === type)
     if (model) return model.name
   }
   return 'Unknown'

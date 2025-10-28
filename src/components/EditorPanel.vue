@@ -36,7 +36,7 @@ const placement = computed(() => {
 })
 
 watch(isAddModelModalOpen, (isOpen) => {
-  if (!isOpen) addModalCategory.value = null
+  if (!isOpen) addModalCategory.value = undefined
 })
 
 // 1. 计算选中的对象数据

@@ -1,4 +1,19 @@
-export const availableModels = {
+// 1. 定义 availableModels 的键的联合类型
+
+import type { AvailableModelItem } from '@/types/modelList'
+
+// 注意：这些是目录名
+export type CatalogCategoryKey = 'desks' | 'devices' | 'accessories' | 'others'
+
+// 2. 定义整个 availableModels 对象的结构
+export interface AvailableModelsMap {
+  desks: AvailableModelItem[]
+  devices: AvailableModelItem[]
+  accessories: AvailableModelItem[]
+  others: AvailableModelItem[]
+}
+
+export const availableModels: AvailableModelsMap = {
   desks: [
     { type: 'desk-rect', name: 'desk-rect', icon: '▭' },
     { type: 'desk-l', name: 'desk-l', icon: 'L' },

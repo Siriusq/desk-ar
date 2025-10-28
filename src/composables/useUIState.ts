@@ -3,6 +3,7 @@ const { t } = i18n.global
 import { ref } from 'vue'
 
 import { exitToWelcome } from './useLayout'
+import type { CatalogCategoryKey } from '@/models/presetModels'
 
 // 共享状态
 export const isControlPanelOpen = ref(false)
@@ -10,7 +11,7 @@ export const isHelpModalOpen = ref(false)
 export const isAddModelModalOpen = ref(false)
 export const isPreviewOptionModalOpen = ref(false)
 export const isLoading = ref(false)
-export const addModalCategory = ref()
+export const addModalCategory = ref<CatalogCategoryKey>()
 
 export const expandedObjectId = ref()
 
