@@ -57,7 +57,6 @@ export const addObject = (type: DeskObjectType) => {
           depth: 0.6,
           height: 0.75,
           color: '#8B4513',
-          showLegs: true,
         },
       }
       break
@@ -75,7 +74,6 @@ export const addObject = (type: DeskObjectType) => {
           depthB: 0.7,
           height: 0.75,
           color: '#8B4513',
-          showLegs: true,
         },
       }
       break
@@ -248,11 +246,11 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
   })
   switch (data.type) {
     case 'desk-rect': {
-      const { width, depth, height, showLegs } = data.params
+      const { width, depth, height } = data.params
       const top = new THREE.Mesh(new THREE.BoxGeometry(width, 0.04, depth), mat)
       top.position.y = height - 0.02
       group.add(top)
-      if (showLegs) {
+      if (true) {
         const legGeom = new THREE.CylinderGeometry(0.03, 0.03, height - 0.04, 16)
         ;[
           [width / 2 - 0.05, depth / 2 - 0.05],
@@ -268,7 +266,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'desk-l': {
-      const { widthA, depthA, widthB, depthB, height, showLegs } = data.params
+      const { widthA, depthA, widthB, depthB, height } = data.params
       const shape = new THREE.Shape()
       shape.moveTo(-widthA / 2, -depthA / 2)
       shape.lineTo(widthA / 2, -depthA / 2)
@@ -283,7 +281,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       top.rotation.x = -Math.PI / 2
       top.position.y = height
       group.add(top)
-      if (showLegs) {
+      if (true) {
         /* simplified legs */
       }
       break

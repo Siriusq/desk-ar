@@ -17,7 +17,6 @@ export interface DeskRectParams {
   depth: number
   height: number
   color: string
-  showLegs: boolean
 }
 export interface DeskRectObject extends BaseObject {
   type: 'desk-rect'
@@ -31,7 +30,6 @@ export interface DeskLParams {
   depthB: number
   height: number
   color: string
-  showLegs: boolean
 }
 export interface DeskLObject extends BaseObject {
   type: 'desk-l'
