@@ -3,7 +3,7 @@ const { t } = i18n.global
 import { ref } from 'vue'
 
 import { exitToWelcome } from './useLayout'
-import type { CatalogCategoryKey } from '@/models/presetModels'
+import type { CatalogCategoryKey } from '@/types/modelLists'
 
 // 共享状态
 export const isControlPanelOpen = ref(false)
