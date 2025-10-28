@@ -96,7 +96,7 @@ export const loadAutoSaveData = () => {
 export const saveLayoutToFile = () => {
   const layoutData = {
     sceneName: sceneName.value,
-    objects: JSON.parse(JSON.stringify(objects)),
+    objects: JSON.parse(JSON.stringify(objects.value)),
   }
   const blob = new Blob([JSON.stringify(layoutData, null, 2)], {
     type: 'application/json',
