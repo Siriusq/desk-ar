@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import SceneCanvas from '@/components/SceneCanvas.vue'
 import EditorPanel from '@/components/EditorPanel.vue'
-import { useUIState } from '@/composables/useUIState'
+import { isPreviewOptionModalOpen, useUIState } from '@/composables/useUIState'
 import HelpModal from '@/components/HelpModal.vue'
 import AddModelModal from '@/components/AddModelModal.vue'
 import { useModelManager } from '@/composables/useImportManager'
 import { ref } from 'vue'
 import { undo, redo, canUndo, canRedo } from '@/composables/useHistory'
 import { deleteObject, selectedObjectId } from '@/composables/useObjects'
+import PreviewOptionModal from '@/components/PreviewOptionModal.vue'
 
 defineOptions({
   name: 'MainPage',
@@ -84,6 +85,9 @@ const deleteSelectObject = () => {
 
     <!--添加模型面板-->
     <AddModelModal v-model="isAddModelModalOpen" />
+
+    <!--导出选项面板-->
+    <PreviewOptionModal v-model="isPreviewOptionModalOpen" />
 
     <!--控制面板-->
     <EditorPanel></EditorPanel>

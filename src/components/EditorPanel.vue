@@ -16,10 +16,15 @@ import {
   mountableItems,
 } from '@/composables/useObjects'
 import type { DeskObject } from '@/types/deskObject'
-import { exportForAR } from '@/three/exporters'
 
 // 使用 Composable 共享状态
-const { isControlPanelOpen, toggleControlPanel, toggleHelpModal, confirmExit } = useUIState()
+const {
+  isControlPanelOpen,
+  toggleControlPanel,
+  toggleHelpModal,
+  confirmExit,
+  togglePreviewOptionModal,
+} = useUIState()
 
 const { width } = useWindowSize()
 // 定义宽屏断点 (Bootstrap lg 断点是 992px)
@@ -82,7 +87,7 @@ const getEditableParams = (obj: DeskObject | null) => {
       </div>
       <!--预览按钮-->
       <div class="col-6 col-md-3">
-        <BButton variant="success" class="w-100" @click="exportForAR(true)">
+        <BButton variant="success" class="w-100" @click="togglePreviewOptionModal">
           <i class="bi bi-badge-ar" />
           预览
         </BButton>

@@ -8,6 +8,7 @@ import { exitToWelcome } from './useLayout'
 export const isControlPanelOpen = ref(false)
 export const isHelpModalOpen = ref(false)
 export const isAddModelModalOpen = ref(false)
+export const isPreviewOptionModalOpen = ref(false)
 export const isLoading = ref(false)
 export const addModalCategory = ref()
 
@@ -33,6 +34,10 @@ export function useUIState() {
     isAddModelModalOpen.value = !isAddModelModalOpen.value
   }
 
+  const togglePreviewOptionModal = () => {
+    isPreviewOptionModalOpen.value = !isPreviewOptionModalOpen.value
+  }
+
   const confirmExit = () => {
     if (window.confirm(t('exitConfirm'))) {
       exitToWelcome()
@@ -53,6 +58,7 @@ export function useUIState() {
     isControlPanelOpen,
     isHelpModalOpen,
     isAddModelModalOpen,
+    isPreviewOptionModalOpen,
     isLoading,
     addModalCategory,
 
@@ -63,5 +69,6 @@ export function useUIState() {
     confirmExit,
     toggleObjectExpansion,
     toggleMountDropdown,
+    togglePreviewOptionModal,
   }
 }

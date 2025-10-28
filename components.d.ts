@@ -27,6 +27,7 @@ declare module 'vue' {
     BOverlay: typeof import('bootstrap-vue-next/components/BOverlay')['BOverlay']
     EditorPanel: typeof import('./src/components/EditorPanel.vue')['default']
     HelpModal: typeof import('./src/components/HelpModal.vue')['default']
+    PreviewOptionModal: typeof import('./src/components/PreviewOptionModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SceneCanvas: typeof import('./src/components/SceneCanvas.vue')['default']
