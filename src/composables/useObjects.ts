@@ -149,35 +149,61 @@ export const deleteObject = (id: string) => {
   }
 }
 
-// 【修改】 dropObject 必须更新 3D 视图
+// 【修改】 dropObject 函数以正确计算底部位置
 export const dropObject = (id: string) => {
   const dataObj = objects.value.find((o) => o.id === id)
   const obj3D = sceneObjects.get(id)
   if (!dataObj || !obj3D || dataObj.mountedToId) return
 
-  // ... (Raycaster 逻辑保持不变)
   const collidableObjects = Array.from(sceneObjects.values()).filter((o) => o.userData.id !== id)
   if (collidableObjects.length === 0) return
+
   const raycaster = new THREE.Raycaster()
-  const objPosition = new THREE.Vector3()
-  obj3D.getWorldPosition(objPosition)
-  raycaster.set(objPosition, new THREE.Vector3(0, -1, 0))
+
+  // 1. 获取对象当前的世界坐标（原点）
+  const objWorldPosition = new THREE.Vector3()
+  obj3D.getWorldPosition(objWorldPosition)
+
+  // 【新增】 2. 计算对象的世界边界框
+  // setFromObject 会考虑所有子对象、旋转和缩放
+  const box = new THREE.Box3().setFromObject(obj3D)
+
+  // 【新增】 3. 计算原点到对象最底部的垂直偏移量（在世界空间中）
+  //    objWorldPosition.y 是原点的 Y
+  //    box.min.y 是旋转后模型的最底部的 Y
+  const worldOffset = objWorldPosition.y - box.min.y
+
+  // 4. 从原点向下投射射线以找到表面
+  raycaster.set(objWorldPosition, new THREE.Vector3(0, -1, 0))
   const intersects = raycaster.intersectObjects(collidableObjects, true)
 
   if (intersects.length > 0) {
-    const firstHitPoint = intersects[0]?.point
+    // 5. 获取表面在世界坐标中的 Y 值
+    const surfaceWorldY = intersects[0]!.point.y
+
+    // 【新增】 6. 计算对象原点的新世界坐标 Y
+    //    新 Y = 表面 Y + 偏移量
+    const newWorldOriginY = surfaceWorldY! + worldOffset
+
+    // 7. 获取父对象的逆矩阵，以便将世界坐标转回局部坐标
     const parent = obj3D.parent
     const parentInverse = new THREE.Matrix4()
     if (parent) {
       parent.updateWorldMatrix(true, false)
       parentInverse.copy(parent.matrixWorld).invert()
-      firstHitPoint?.applyMatrix4(parentInverse)
     }
-    // 【修改】 同时更新数据和 3D 视图
-    if (firstHitPoint) {
-      dataObj.position.y = firstHitPoint.y
-      obj3D.position.y = firstHitPoint.y // 立即更新 3D 视图
-    }
+
+    // 8. 创建新的世界坐标向量
+    const newWorldPosition = objWorldPosition.clone() // 从当前世界坐标开始
+    newWorldPosition.y = newWorldOriginY // 仅修改 Y 值
+
+    // 9. 将新的世界坐标转换回父对象的局部坐标
+    newWorldPosition.applyMatrix4(parentInverse)
+
+    // 【修复】 10. 更新数据和 3D 视图，使用 newWorldPosition.y（新的局部 Y）
+    dataObj.position.y = newWorldPosition.y
+    obj3D.position.y = newWorldPosition.y
+
     saveState()
   }
 }
