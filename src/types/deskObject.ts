@@ -119,6 +119,17 @@ export interface CustomBoxObject extends BaseObject {
   params: CustomBoxParams
 }
 
+// 【新增】 导入的模型类型
+export interface ImportedModelParams {
+  fileName: string
+  dataUrl: string // 存储模型的 Base64 Data URL
+  color: string // 占位符，以满足 createObject3D 和 sceneManager 的要求
+}
+export interface ImportedModelObject extends BaseObject {
+  type: 'imported-model'
+  params: ImportedModelParams
+}
+
 // 3. 导出最终的联合类型
 export type DeskObject =
   | DeskRectObject
@@ -130,6 +141,18 @@ export type DeskObject =
   | MouseObject
   | UniversalStandObject
   | CustomBoxObject
+  | ImportedModelObject // 【新增】
 
 // 4. 导出 Type 字符串的联合类型，用于 addObject
-export type DeskObjectType = DeskObject['type']
+// 【注意】 我们 *不* 在这里添加 'imported-model'
+// 这可以防止它出现在 AddModelModal 的预设列表中
+export type DeskObjectType =
+  | 'desk-rect'
+  | 'desk-l'
+  | 'monitor'
+  | 'macbook'
+  | 'iphone'
+  | 'keyboard'
+  | 'mouse'
+  | 'universal-stand'
+  | 'custom-box'

@@ -2,11 +2,49 @@ import { saveState } from '@/composables/useHistory'
 import { isDeskInScene, objects, sceneObjects, selectedObjectId } from '@/composables/useObjects'
 import { expandedObjectId } from '@/composables/useUIState'
 import * as THREE from 'three'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import type { DeskObject, DeskObjectType } from '@/types/deskObject'
-import { scene } from './sceneManager'
+import { rebuildSceneFromData, scene } from './sceneManager'
 
-// 【新增】 辅助函数：根据数据将3D对象添加到场景
-// (这是从 rebuildSceneFromData 提取的逻辑)
+// 【新增】 创建一个全局共享的 loader 实例
+const gltfLoader = new GLTFLoader()
+
+// 【新增】 用于从 useModelImporter 调用的函数
+export const addImportedObject = (fileName: string, dataUrl: string) => {
+  const desk = objects.value.find((o) => o.type.startsWith('desk-'))
+  let yPos = 0
+  if (desk && (desk.type === 'desk-rect' || desk.type === 'desk-l')) {
+    yPos = desk.params.height + (desk.position.y || 0)
+  }
+
+  // 1. 创建数据对象
+  const data: DeskObject = {
+    id: THREE.MathUtils.generateUUID(),
+    type: 'imported-model',
+    position: { x: 0, y: yPos, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    mountedToId: null,
+    params: {
+      fileName: fileName,
+      dataUrl: dataUrl,
+      color: '#FFFFFF', // 占位符颜色，满足 TS 类型
+    },
+  }
+
+  // 2. 更新数据层
+  objects.value.push(data)
+
+  // 3. 更新 UI 和历史记录
+  selectedObjectId.value = data.id
+  expandedObjectId.value = data.id
+  saveState() // 保存状态
+
+  // 4. 【重要】 触发场景重建
+  // GLTFLoader 是异步的，rebuild 是最稳妥的集成方式
+  rebuildSceneFromData()
+}
+
+// 辅助函数：根据数据将3D对象添加到场景
 export const add3DObjectToScene = (obj3D: THREE.Group, data: DeskObject) => {
   if (!scene) return
   sceneObjects.set(data.id, obj3D)
@@ -240,12 +278,14 @@ export const replaceObject3D = (data: DeskObject) => {
 export const createObject3D = (data: DeskObject): THREE.Group | null => {
   const group = new THREE.Group()
   group.userData.id = data.id
-  const mat = new THREE.MeshStandardMaterial({
-    color: data.params.color || 0xffffff,
-    roughness: 0.7,
-  })
+
+  // 【修改】 将 mat 的创建移入 switch
+  // 因为 'imported-model' 会自带材质
+  let mat: THREE.MeshStandardMaterial
+
   switch (data.type) {
     case 'desk-rect': {
+      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
       const { width, depth, height } = data.params
       const top = new THREE.Mesh(new THREE.BoxGeometry(width, 0.04, depth), mat)
       top.position.y = height - 0.02
@@ -266,6 +306,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'desk-l': {
+      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
       const { widthA, depthA, widthB, depthB, height } = data.params
       const shape = new THREE.Shape()
       shape.moveTo(-widthA / 2, -depthA / 2)
@@ -287,6 +328,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'monitor': {
+      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
       const { width, height } = data.params
       const screen = new THREE.Mesh(new THREE.BoxGeometry(width, height, 0.01), mat)
       screen.position.y = height / 2 + 0.1
@@ -297,6 +339,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'macbook': {
+      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
       const { width, height, depth } = data.params
       const body = new THREE.Group()
       const base = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
@@ -310,6 +353,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'universal-stand': {
+      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
       const { baseSize, poleHeight, armLength } = data.params
       const base = new THREE.Mesh(
         new THREE.CylinderGeometry(baseSize / 2, baseSize / 2, 0.02, 32),
@@ -326,6 +370,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'custom-box': {
+      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
       const { width, height, depth } = data.params
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
       mesh.position.y = height / 2
@@ -333,6 +378,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'keyboard': {
+      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
       const { width, height, depth } = data.params
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
       mesh.position.y = height / 2
@@ -340,6 +386,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'mouse': {
+      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
       const { width, height, depth } = data.params
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
       mesh.position.y = height / 2
@@ -347,15 +394,41 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'iphone': {
+      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
       const { width, height, depth } = data.params
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
       mesh.position.y = height / 2
       group.add(mesh)
       break
     }
+    // 【新增】 处理导入的模型
+    case 'imported-model': {
+      const { dataUrl } = data.params
+      // 异步加载
+      gltfLoader.load(
+        dataUrl,
+        (gltf) => {
+          // 加载成功后，填充 placeholder group
+          gltf.scene.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh) {
+              child.castShadow = true
+              child.receiveShadow = true
+            }
+          })
+          group.add(gltf.scene)
+        },
+        undefined, // onProgress
+        (error) => {
+          console.error(`加载模型 ${data.params.fileName} 失败:`, error)
+        },
+      )
+      // 立即返回 group，它将作为异步加载的容器
+      break
+    }
   }
 
-  if (group.children.length > 0) {
+  // 【修改】 调整 if 条件，以允许 'imported-model' 的空 group 通过
+  if (group.children.length > 0 || data.type === 'imported-model') {
     if (!data.mountedToId) {
       group.position.set(data.position.x, data.position.y, data.position.z)
       group.rotation.set(

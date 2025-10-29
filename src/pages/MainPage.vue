@@ -4,8 +4,6 @@ import EditorPanel from '@/components/EditorPanel.vue'
 import { isPreviewOptionModalOpen, useUIState } from '@/composables/useUIState'
 import HelpModal from '@/components/HelpModal.vue'
 import AddModelModal from '@/components/AddModelModal.vue'
-import { useModelManager } from '@/composables/useImportManager'
-import { ref } from 'vue'
 import { undo, redo, canUndo, canRedo } from '@/composables/useHistory'
 import { deleteObject, selectedObjectId } from '@/composables/useObjects'
 import PreviewOptionModal from '@/components/PreviewOptionModal.vue'
@@ -23,12 +21,6 @@ const {
   toggleAddModelModal,
 } = useUIState()
 
-// 导入模型管理 Composable
-const { handleFileChange } = useModelManager()
-
-// 文件输入元素的引用
-const fileInput = ref<HTMLInputElement | null>(null)
-
 const deleteSelectObject = () => {
   if (selectedObjectId.value) {
     deleteObject(selectedObjectId.value)
@@ -41,16 +33,6 @@ const deleteSelectObject = () => {
   <div class="canvas-container">
     <!--3D场景-->
     <SceneCanvas></SceneCanvas>
-
-    <!-- 隐藏的文件输入框 -->
-    <!-- 接收 .gltf 或 .glb 文件，并在文件变化时调用 handleFileChange -->
-    <input
-      ref="fileInput"
-      type="file"
-      accept=".gltf,.glb"
-      @change="handleFileChange"
-      style="display: none"
-    />
 
     <!--悬浮面板-->
     <div class="overlay-panel">

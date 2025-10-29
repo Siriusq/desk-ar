@@ -5,6 +5,8 @@ import { availableModels } from '@/types/modelLists'
 import { useI18n } from 'vue-i18n'
 import { addObject } from '@/three/objectFactory'
 const { t } = useI18n()
+import { useModelImporter } from '@/composables/useModelImporter'
+const { fileInput, openImportDialog, handleFileChange } = useModelImporter()
 
 // 使用 Composable 共享状态
 const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIState()
@@ -17,7 +19,13 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
     size="lg"
     scrollable
     no-footer
-  >
+    ><input
+      type="file"
+      ref="fileInput"
+      @change="handleFileChange"
+      class="d-none"
+      accept=".glb,.gltf"
+    />
     <template #header="{ close }">
       <div class="d-flex w-100 justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-2 align">
@@ -62,7 +70,7 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
       </div>
 
       <div class="model-item-wrapper">
-        <BButton class="fw-bold model-button" variant="secondary">
+        <BButton class="fw-bold model-button" variant="secondary" @click="openImportDialog">
           <div class="model-icon mb-3">📥</div>
           <div>导入</div>
         </BButton>

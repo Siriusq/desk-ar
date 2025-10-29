@@ -219,7 +219,11 @@ const getEditableParams = (obj: DeskObject | null) => {
             </BButton>
           </BAccordionItem>
 
-          <BAccordionItem title="参数 (Parameters)" visible>
+          <BAccordionItem
+            v-if="selectedObject.type !== 'imported-model'"
+            title="参数 (Parameters)"
+            visible
+          >
             <BFormGroup
               v-for="[key, value] in getEditableParams(selectedObject)"
               :key="key"
