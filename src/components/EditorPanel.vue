@@ -46,9 +46,12 @@ const selectedObject = computed(() => {
 })
 
 // 2. 简单的名称转换
-const getDisplayName = (type: string | undefined) => {
+const getDisplayName = (obj: DeskObject | undefined) => {
+  if (!obj) return 'Unknown'
+  const type = obj.type
   if (!type) return 'Item'
   if (type.startsWith('desk-')) return '办公桌'
+  if (type == 'imported-model') return obj.params.fileName
   if (type === 'monitor') return '显示器'
   if (type === 'macbook') return '笔记本电脑'
   // ...可以继续添加
@@ -113,7 +116,7 @@ const getEditableParams = (obj: DeskObject | null) => {
     <div class="dynamic-content">
       <div v-if="selectedObject">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0">编辑 {{ getDisplayName(selectedObject.type) }}</h5>
+          <h5 class="mb-0">编辑 {{ getDisplayName(selectedObject) }}</h5>
           <BButton size="sm" variant="outline-secondary" @click="selectedObjectId = null">
             <i class="bi bi-x-lg" />
             返回列表
@@ -208,6 +211,7 @@ const getEditableParams = (obj: DeskObject | null) => {
             </BInputGroup>
 
             <BButton
+              v-if="selectedObject.type !== 'imported-model'"
               variant="outline-primary"
               size="sm"
               class="w-100"
@@ -275,7 +279,7 @@ const getEditableParams = (obj: DeskObject | null) => {
               <p>
                 已挂载:
                 <strong
-                  >{{ getDisplayName(getMountedItem(selectedObject.params.mountedObjectId)?.type) }}
+                  >{{ getDisplayName(getMountedItem(selectedObject.params.mountedObjectId)) }}
                 </strong>
               </p>
               <BButton variant="outline-danger" size="sm" @click="unmountObject(selectedObject.id)">
@@ -286,7 +290,7 @@ const getEditableParams = (obj: DeskObject | null) => {
               <BFormSelect @change="mountObject(selectedObject.id, $event.target.value)">
                 <BFormSelectOption :value="null">-- 未挂载 --</BFormSelectOption>
                 <BFormSelectOption v-for="item in mountableItems" :key="item.id" :value="item.id">
-                  {{ getDisplayName(item.type) }} (ID: {{ item.id.substring(0, 4) }})
+                  {{ getDisplayName(item) }} (ID: {{ item.id.substring(0, 4) }})
                 </BFormSelectOption>
               </BFormSelect>
             </BFormGroup>
@@ -304,7 +308,7 @@ const getEditableParams = (obj: DeskObject | null) => {
             button
             class="d-flex justify-content-between align-items-center"
           >
-            {{ getDisplayName(obj.type) }}
+            {{ getDisplayName(obj) }}
             <BButton variant="outline-danger" size="sm" @click.stop="deleteObject(obj.id)">
               <i class="bi bi-trash" />
             </BButton>
