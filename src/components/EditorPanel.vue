@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { addModalCategory, isAddModelModalOpen, useUIState } from '@/composables/useUIState'
+import {
+  addModalCategory,
+  isAddModelModalOpen,
+  useUIState,
+  isEditingName,
+  tempSceneName,
+  handleEditNameToggle,
+} from '@/composables/useUIState'
 import { useWindowSize } from '@vueuse/core'
 import { computed, watch } from 'vue'
-import { saveLayoutToFile } from '@/composables/useLayout'
+import { saveLayoutToFile, sceneName } from '@/composables/useLayout'
 import {
   selectedObjectId,
   objects,
@@ -88,10 +95,33 @@ const getUnitForParam = (key: string) => {
     @update:model-value="toggleControlPanel"
     :placement="placement"
     id="controlOffcanvas"
-    title="编辑面板"
     no-backdrop
     no-close-on-backdrop
   >
+    <!--场景名称编辑-->
+    <template #title>
+      <div class="d-flex flex-grow-1 align-items-center justify-content-between w-100">
+        <BFormInput
+          v-if="isEditingName"
+          v-model="tempSceneName"
+          size="sm"
+          class="me-2"
+          @keyup.enter="handleEditNameToggle"
+        />
+        <h5 v-else class="mb-0 offcanvas-title">{{ sceneName }}</h5>
+
+        <div
+          class="ms-2"
+          style="cursor: pointer"
+          @click="handleEditNameToggle"
+          :title="isEditingName ? '保存名称' : '编辑名称'"
+        >
+          <i v-if="isEditingName" class="bi bi-check2-square" />
+          <i v-else class="bi bi-pencil-square" />
+        </div>
+      </div>
+    </template>
+
     <!--按钮-->
     <div class="row g-2 mb-3">
       <!--帮助按钮-->
