@@ -16,6 +16,8 @@ import {
   mountableItems,
 } from '@/composables/useObjects'
 import type { DeskObject } from '@/types/deskObject'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 // 使用 Composable 共享状态
 const {
@@ -66,16 +68,27 @@ const getEditableParams = (obj: DeskObject | null) => {
     ([key]) => key !== 'isMountable' && key !== 'mountedObjectId',
   )
 }
+
+const getUnitForParam = (key: string) => {
+  // 示例逻辑：您可以根据 key 返回不同的单位
+  if (key === 'opacity') {
+    return '%'
+  } else if (key === 'size') {
+    return 'm' // 米
+  }
+  // 默认单位
+  return 'mm'
+}
 </script>
 
 <template>
-  <!--控制面板-->
+  <!--编辑面板-->
   <BOffcanvas
     :model-value="isControlPanelOpen"
     @update:model-value="toggleControlPanel"
     :placement="placement"
     id="controlOffcanvas"
-    title="控制面板"
+    title="编辑面板"
     no-backdrop
     no-close-on-backdrop
   >
@@ -116,186 +129,267 @@ const getEditableParams = (obj: DeskObject | null) => {
     <div class="dynamic-content">
       <div v-if="selectedObject">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0">编辑 {{ getDisplayName(selectedObject) }}</h5>
-          <BButton size="sm" variant="outline-secondary" @click="selectedObjectId = null">
+          <h5 class="mb-0">{{ getDisplayName(selectedObject) }}</h5>
+          <BButton size="sm" variant="secondary" @click="selectedObjectId = null">
             <i class="bi bi-x-lg" />
             返回列表
           </BButton>
         </div>
 
-        <BAccordion flush>
-          <BAccordionItem title="变换 (Transform)" visible>
-            <h6>位置 (mm)</h6>
-            <BInputGroup size="sm" class="mb-2">
-              <BInputGroupText>X</BInputGroupText>
-              <BFormInput
-                type="number"
-                step="1"
-                :model-value="(selectedObject.position.x * 1000).toFixed(0)"
-                @change="
-                  updateObjectValue(
-                    selectedObject.id,
-                    'position',
-                    'x',
-                    Number($event.target.value) / 1000,
-                  )
-                "
-              />
-            </BInputGroup>
-            <BInputGroup size="sm" class="mb-2">
-              <BInputGroupText>Y</BInputGroupText>
-              <BFormInput
-                type="number"
-                step="1"
-                :model-value="(selectedObject.position.y * 1000).toFixed(0)"
-                @change="
-                  updateObjectValue(
-                    selectedObject.id,
-                    'position',
-                    'y',
-                    Number($event.target.value) / 1000,
-                  )
-                "
-              />
-            </BInputGroup>
-            <BInputGroup size="sm" class="mb-3">
-              <BInputGroupText>Z</BInputGroupText>
-              <BFormInput
-                type="number"
-                step="1"
-                :model-value="(selectedObject.position.z * 1000).toFixed(0)"
-                @change="
-                  updateObjectValue(
-                    selectedObject.id,
-                    'position',
-                    'z',
-                    Number($event.target.value) / 1000,
-                  )
-                "
-              />
-            </BInputGroup>
+        <!--变换-->
+        <div class="transform-section">
+          <!--标题-->
+          <BRow class="mb-2">
+            <BCol>位置 (mm)</BCol>
+            <BCol>旋转 (°)</BCol>
+          </BRow>
 
-            <h6>旋转 (°)</h6>
-            <BInputGroup size="sm" class="mb-2">
-              <BInputGroupText>X°</BInputGroupText>
-              <BFormInput
-                type="number"
-                step="1"
-                :model-value="selectedObject.rotation.x.toFixed(0)"
-                @change="
-                  updateObjectValue(selectedObject.id, 'rotation', 'x', Number($event.target.value))
-                "
-              />
-            </BInputGroup>
-            <BInputGroup size="sm" class="mb-2">
-              <BInputGroupText>Y°</BInputGroupText>
-              <BFormInput
-                type="number"
-                step="1"
-                :model-value="selectedObject.rotation.y.toFixed(0)"
-                @change="
-                  updateObjectValue(selectedObject.id, 'rotation', 'y', Number($event.target.value))
-                "
-              />
-            </BInputGroup>
-            <BInputGroup size="sm" class="mb-3">
-              <BInputGroupText>Z°</BInputGroupText>
-              <BFormInput
-                type="number"
-                step="1"
-                :model-value="selectedObject.rotation.z.toFixed(0)"
-                @change="
-                  updateObjectValue(selectedObject.id, 'rotation', 'z', Number($event.target.value))
-                "
-              />
-            </BInputGroup>
+          <!--x轴-->
+          <BRow>
+            <BCol>
+              <BInputGroup size="sm" class="mb-2">
+                <BInputGroupText>X</BInputGroupText>
+                <BFormInput
+                  type="number"
+                  step="1"
+                  :model-value="(selectedObject.position.x * 1000).toFixed(0)"
+                  @change="
+                    updateObjectValue(
+                      selectedObject.id,
+                      'position',
+                      'x',
+                      Number($event.target.value) / 1000,
+                    )
+                  "
+                />
+              </BInputGroup>
+            </BCol>
+            <BCol
+              ><BInputGroup size="sm" class="mb-2">
+                <BInputGroupText>X°</BInputGroupText>
+                <BFormInput
+                  type="number"
+                  step="1"
+                  :model-value="selectedObject.rotation.x.toFixed(0)"
+                  @change="
+                    updateObjectValue(
+                      selectedObject.id,
+                      'rotation',
+                      'x',
+                      Number($event.target.value),
+                    )
+                  "
+                />
+              </BInputGroup>
+            </BCol>
+          </BRow>
 
-            <BButton
-              v-if="selectedObject.type !== 'imported-model'"
-              variant="outline-primary"
-              size="sm"
-              class="w-100"
-              @click="dropObject(selectedObject.id)"
-              :disabled="!!selectedObject.mountedToId"
-            >
-              <i class="bi bi-arrow-down-short" />
-              下落至表面
-            </BButton>
-          </BAccordionItem>
+          <!--y轴-->
+          <BRow>
+            <BCol>
+              <BInputGroup size="sm" class="mb-2">
+                <BInputGroupText>Y</BInputGroupText>
+                <BFormInput
+                  type="number"
+                  step="1"
+                  :model-value="(selectedObject.position.y * 1000).toFixed(0)"
+                  @change="
+                    updateObjectValue(
+                      selectedObject.id,
+                      'position',
+                      'y',
+                      Number($event.target.value) / 1000,
+                    )
+                  "
+                />
+              </BInputGroup>
+            </BCol>
+            <BCol>
+              <BInputGroup size="sm" class="mb-2">
+                <BInputGroupText>Y°</BInputGroupText>
+                <BFormInput
+                  type="number"
+                  step="1"
+                  :model-value="selectedObject.rotation.y.toFixed(0)"
+                  @change="
+                    updateObjectValue(
+                      selectedObject.id,
+                      'rotation',
+                      'y',
+                      Number($event.target.value),
+                    )
+                  "
+                />
+              </BInputGroup>
+            </BCol>
+          </BRow>
 
-          <BAccordionItem
+          <!--z轴-->
+          <BRow>
+            <BCol>
+              <BInputGroup size="sm" class="mb-3">
+                <BInputGroupText>Z</BInputGroupText>
+                <BFormInput
+                  type="number"
+                  step="1"
+                  :model-value="(selectedObject.position.z * 1000).toFixed(0)"
+                  @change="
+                    updateObjectValue(
+                      selectedObject.id,
+                      'position',
+                      'z',
+                      Number($event.target.value) / 1000,
+                    )
+                  "
+                />
+              </BInputGroup>
+            </BCol>
+            <BCol>
+              <BInputGroup size="sm" class="mb-3">
+                <BInputGroupText>Z°</BInputGroupText>
+                <BFormInput
+                  type="number"
+                  step="1"
+                  :model-value="selectedObject.rotation.z.toFixed(0)"
+                  @change="
+                    updateObjectValue(
+                      selectedObject.id,
+                      'rotation',
+                      'z',
+                      Number($event.target.value),
+                    )
+                  "
+                />
+              </BInputGroup>
+            </BCol>
+          </BRow>
+
+          <!--下落按钮-->
+          <BButton
             v-if="selectedObject.type !== 'imported-model'"
-            title="参数 (Parameters)"
-            visible
+            variant="primary"
+            size="sm"
+            class="w-100"
+            @click="dropObject(selectedObject.id)"
+            :disabled="!!selectedObject.mountedToId"
           >
-            <BFormGroup
-              v-for="[key, value] in getEditableParams(selectedObject)"
-              :key="key"
-              :label="key"
-              label-cols-sm="4"
-              label-align-sm="right"
-              class="mb-3"
-            >
-              <BFormInput
-                v-if="key === 'color'"
-                type="color"
-                :model-value="value as string"
-                @input="updateObjectParam(selectedObject.id, key, $event.target.value)"
-              />
-              <BFormCheckbox
-                v-else-if="typeof value === 'boolean'"
-                :checked="value as boolean"
-                @change="updateObjectParam(selectedObject.id, key, $event)"
-                switch
-              />
-              <BFormInput
-                v-else-if="typeof value === 'number'"
-                type="range"
-                :model-value="value as number"
-                @input="updateObjectParam(selectedObject.id, key, Number($event.target.value))"
-                min="0.1"
-                max="3"
-                step="0.01"
-              />
-              <BFormInput
-                v-else
-                type="text"
-                :model-value="value as string"
-                @change="updateObjectParam(selectedObject.id, key, $event.target.value)"
-              />
-            </BFormGroup>
-          </BAccordionItem>
+            <i class="bi bi-arrow-down-short" />
+            下落至表面
+          </BButton>
+        </div>
 
-          <BAccordionItem
-            v-if="selectedObject.type === 'universal-stand'"
-            title="挂载 (Mount)"
-            visible
+        <!--物品参数调整-->
+        <div v-if="selectedObject.type !== 'imported-model'">
+          <hr />
+          <BFormGroup
+            v-for="[key, value] in getEditableParams(selectedObject)"
+            :key="key"
+            :label="t(key)"
+            class="mb-3 align-items-center"
+            label-class="py-0"
           >
-            <div
-              v-if="
-                'mountedObjectId' in selectedObject.params && selectedObject.params.mountedObjectId
-              "
-            >
-              <p>
-                已挂载:
-                <strong
-                  >{{ getDisplayName(getMountedItem(selectedObject.params.mountedObjectId)) }}
-                </strong>
-              </p>
-              <BButton variant="outline-danger" size="sm" @click="unmountObject(selectedObject.id)">
-                卸载物品
-              </BButton>
-            </div>
-            <BFormGroup v-else label="选择要挂载的物品">
-              <BFormSelect @change="mountObject(selectedObject.id, $event.target.value)">
-                <BFormSelectOption :value="null">-- 未挂载 --</BFormSelectOption>
-                <BFormSelectOption v-for="item in mountableItems" :key="item.id" :value="item.id">
-                  {{ getDisplayName(item) }} (ID: {{ item.id.substring(0, 4) }})
-                </BFormSelectOption>
-              </BFormSelect>
-            </BFormGroup>
-          </BAccordionItem>
-        </BAccordion>
+            <!--数字-->
+            <BRow v-if="typeof value === 'number'" align-v="end">
+              <BCol cols="6">
+                <BInputGroup size="sm">
+                  <BFormInput
+                    type="number"
+                    :model-value="((value as number) * 1000).toFixed(0)"
+                    @change="
+                      updateObjectParam(selectedObject.id, key, Number($event.target.value) / 1000)
+                    "
+                    :min="1"
+                    :max="3000"
+                    :step="1"
+                  />
+                  <BInputGroupText>{{ getUnitForParam(key) }}</BInputGroupText>
+                </BInputGroup>
+              </BCol>
+              <BCol cols="6">
+                <BFormInput
+                  type="range"
+                  :model-value="((value as number) * 1000).toFixed(0)"
+                  @input="
+                    updateObjectParam(selectedObject.id, key, Number($event.target.value) / 1000)
+                  "
+                  min="1"
+                  max="3000"
+                  step="1"
+                />
+              </BCol>
+            </BRow>
+
+            <!--颜色-->
+            <BRow v-else-if="key === 'color'" align-v="end">
+              <BCol cols="6">
+                <BInputGroup size="sm">
+                  <BFormInput
+                    type="text"
+                    :model-value="value as string"
+                    @change="updateObjectParam(selectedObject.id, key, $event.target.value)"
+                    placeholder="#RRGGBB"
+                    maxlength="7"
+                  />
+                  <BInputGroupText>HEX</BInputGroupText>
+                </BInputGroup>
+              </BCol>
+              <BCol cols="6">
+                <BFormInput
+                  size="sm"
+                  class="w-100"
+                  type="color"
+                  :model-value="value as string"
+                  @input="updateObjectParam(selectedObject.id, key, $event.target.value)"
+                />
+              </BCol>
+            </BRow>
+
+            <!--开关-->
+            <BFormCheckbox
+              v-else-if="typeof value === 'boolean'"
+              size="sm"
+              :checked="value as boolean"
+              @change="updateObjectParam(selectedObject.id, key, $event)"
+              switch
+            />
+
+            <!--文本-->
+            <BFormInput
+              v-else
+              type="text"
+              size="sm"
+              :model-value="value as string"
+              @change="updateObjectParam(selectedObject.id, key, $event.target.value)"
+            />
+          </BFormGroup>
+        </div>
+
+        <div v-if="selectedObject.type === 'universal-stand'">
+          <hr />
+          <div
+            v-if="
+              'mountedObjectId' in selectedObject.params && selectedObject.params.mountedObjectId
+            "
+          >
+            <p>
+              已挂载:
+              <strong
+                >{{ getDisplayName(getMountedItem(selectedObject.params.mountedObjectId)) }}
+              </strong>
+            </p>
+            <BButton variant="outline-danger" size="sm" @click="unmountObject(selectedObject.id)">
+              卸载物品
+            </BButton>
+          </div>
+          <BFormGroup v-else label="挂载物品">
+            <BFormSelect @change="mountObject(selectedObject.id, $event.target.value)" size="sm">
+              <BFormSelectOption :value="null">-- 未挂载 --</BFormSelectOption>
+              <BFormSelectOption v-for="item in mountableItems" :key="item.id" :value="item.id">
+                {{ getDisplayName(item) }} (ID: {{ item.id.substring(0, 4) }})
+              </BFormSelectOption>
+            </BFormSelect>
+          </BFormGroup>
+        </div>
       </div>
 
       <div v-else>
