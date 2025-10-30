@@ -11,6 +11,10 @@ import type { DeskObject } from '@/types/deskObject'
 export let scene: any, camera: any, renderer: any
 export let orbitControls: any, transformControls: any, selectionBox: any
 
+// 【新增】 存储对两个相机的引用
+let perspectiveCamera: THREE.PerspectiveCamera
+let orthoCamera: THREE.OrthographicCamera
+
 export let mouseDownInfo = { x: 0, y: 0, time: 0 }
 
 // 存储 DOM 元素和事件处理函数，以便稍后移除
@@ -21,20 +25,19 @@ let handleMouseUp: (e: any) => void
 export const handleResize = () => {
   const container = document.getElementById('scene-container')
   if (camera && renderer && container) {
-    camera.aspect = container.clientWidth / container.clientHeight
+    const aspect = container.clientWidth / container.clientHeight
+
+    if (camera.isPerspectiveCamera) {
+      camera.aspect = aspect
+    } else if (camera.isOrthographicCamera) {
+      // 保持正交相机的视口高度，根据宽高比调整宽度
+      const frustumHeight = camera.top - camera.bottom
+      camera.left = (-frustumHeight * aspect) / 2
+      camera.right = (frustumHeight * aspect) / 2
+    }
+
     camera.updateProjectionMatrix()
     renderer.setSize(container.clientWidth, container.clientHeight)
-
-    console.log('--- 遍历数组元素类型 ---')
-
-    // 【修改】 element 现在是强类型 DeskObject
-    for (const element of objects.value) {
-      // 假设 objects 是 ref，使用 .value
-      // const type = typeof element // 这只会是 'object'
-
-      // 现在你可以安全地访问属性
-      console.log(`ID: ${element.id} | Type: ${element.type} | Color: ${element.params.color}`)
-    }
   }
 }
 
@@ -44,13 +47,32 @@ export const initThree = () => {
   scene.background = new THREE.Color(0xf0f0f0)
   scene.fog = new THREE.Fog(0xf0f0f0, 10, 50)
 
-  camera = new THREE.PerspectiveCamera(
+  // 【修改】 1. 创建透视相机
+  perspectiveCamera = new THREE.PerspectiveCamera(
     70,
     container.clientWidth / container.clientHeight,
     0.01,
     100,
   )
-  camera.position.set(2, 2, 3)
+  perspectiveCamera.position.set(2, 2, 3)
+
+  // 【新增】 2. 创建正交相机
+  const aspect = container.clientWidth / container.clientHeight
+  const frustumSize = 5 // 视口高度
+  orthoCamera = new THREE.OrthographicCamera(
+    (-frustumSize * aspect) / 2,
+    (frustumSize * aspect) / 2,
+    frustumSize / 2,
+    -frustumSize / 2,
+    0.1,
+    100,
+  )
+  // 为正交相机设置一个良好的默认 3/4 视角
+  orthoCamera.position.set(5, 5, 5)
+  orthoCamera.lookAt(0, 0, 0)
+
+  // 【修改】 3. 设置默认激活的相机
+  camera = perspectiveCamera
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -267,9 +289,63 @@ export const disposeScene = () => {
   }
 
   // 7. 置空其他变量
-  camera = null
+  camera = null!
+  perspectiveCamera = null!
+  orthoCamera = null!
   selectionBox = null
   mouseDownInfo = { x: 0, y: 0, time: 0 }
 
   console.log('Scene disposal complete.')
+}
+
+// 【新增】 切换投影模式
+export const setCameraProjection = (projection: 'perspective' | 'orthographic') => {
+  if (projection === 'perspective' && camera !== perspectiveCamera) {
+    // 切换到透视
+    camera = perspectiveCamera
+  } else if (projection === 'orthographic' && camera !== orthoCamera) {
+    // 切换到正交
+    // 从当前透视相机的角度同步位置
+    orthoCamera.position.copy(perspectiveCamera.position)
+    orthoCamera.quaternion.copy(perspectiveCamera.quaternion)
+    orthoCamera.zoom = 1 // 重置缩放
+    camera = orthoCamera
+  }
+
+  // 更新控制器
+  orbitControls.camera = camera
+  transformControls.camera = camera
+
+  // 更新相机投影矩阵
+  handleResize()
+  orbitControls.update()
+}
+
+// 【新增】 切换预设视图（仅限透视）
+export const setCameraView = (view: 'default' | 'top' | 'front' | 'side') => {
+  // 切换视图时，强制恢复到透视模式
+  setCameraProjection('perspective')
+
+  // (这里可以使用补间动画库如 TWEEN.js 来实现平滑过渡)
+  // (为简单起见，我们直接设置位置)
+
+  switch (view) {
+    case 'top':
+      perspectiveCamera.position.set(0, 5, 0.01) // 避免万向节锁
+      break
+    case 'front':
+      perspectiveCamera.position.set(0, 1.5, 5)
+      break
+    case 'side':
+      perspectiveCamera.position.set(5, 1.5, 0)
+      break
+    case 'default':
+    default:
+      perspectiveCamera.position.set(2, 2, 3)
+      break
+  }
+
+  // 确保控制器看向原点
+  orbitControls.target.set(0, 0, 0)
+  orbitControls.update()
 }

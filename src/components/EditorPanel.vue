@@ -25,6 +25,7 @@ import {
 import type { DeskObject } from '@/types/deskObject'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
+import { setCameraView, setCameraProjection } from '@/three/sceneManager'
 
 // 使用 Composable 共享状态
 const {
@@ -151,6 +152,28 @@ const getUnitForParam = (key: string) => {
           <i class="bi bi-escape" />
           退出
         </BButton>
+      </div>
+      <!--视角按钮-->
+      <div class="col-6 col-md-3">
+        <BDropdown variant="info" class="w-100" toggle-class="w-100" text="视角">
+          <template #button-content> <i class="bi bi-camera" /> 视角 </template>
+          <BDropdownItem @click="setCameraView('default')">
+            <i class="bi bi-camera-video" /> 默认透视
+          </BDropdownItem>
+          <BDropdownItem @click="setCameraView('top')">
+            <i class="bi bi-arrow-down-square" /> 鸟瞰 (顶)
+          </BDropdownItem>
+          <BDropdownItem @click="setCameraView('front')">
+            <i class="bi bi-aspect-ratio" /> 正面 (前)
+          </BDropdownItem>
+          <BDropdownItem @click="setCameraView('side')">
+            <i class="bi bi-layout-sidebar-inset" /> 侧面 (左)
+          </BDropdownItem>
+          <BDropdownDivider />
+          <BDropdownItem @click="setCameraProjection('orthographic')">
+            <i class="bi bi-box" /> 切换正交
+          </BDropdownItem>
+        </BDropdown>
       </div>
     </div>
 
