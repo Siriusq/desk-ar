@@ -26,6 +26,8 @@ import type { DeskObject } from '@/types/deskObject'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import { setCameraView, setCameraProjection } from '@/three/sceneManager'
+// 【新增】 导入测量状态和切换函数
+import { isMeasuring, toggleMeasurementMode } from '@/composables/useMeasurement'
 
 // 使用 Composable 共享状态
 const {
@@ -174,6 +176,20 @@ const getUnitForParam = (key: string) => {
             <i class="bi bi-box" /> 切换正交
           </BDropdownItem>
         </BDropdown>
+      </div>
+      <!--测量按钮-->
+      <div class="col-6 col-md-3">
+        <BButton
+          class="w-100"
+          :variant="isMeasuring ? 'danger' : 'secondary'"
+          @click="toggleMeasurementMode"
+        >
+          <Transition name="icon-fade" mode="out-in">
+            <i v-if="isMeasuring" key="close-icon" class="bi bi-x-lg" />
+            <i v-else key="measure-icon" class="bi bi-rulers" />
+          </Transition>
+          {{ isMeasuring ? '结束' : '测量' }}
+        </BButton>
       </div>
     </div>
 

@@ -7,6 +7,12 @@ import { isTransformDragging } from '@/composables/useScene'
 import { handleSceneClick, objects, sceneObjects, selectedObjectId } from '@/composables/useObjects'
 import { createObject3D } from './objectFactory'
 import type { DeskObject } from '@/types/deskObject'
+import {
+  initMeasurement,
+  renderMeasurement,
+  resizeMeasurement,
+  cleanupMeasurement,
+} from '@/composables/useMeasurement'
 
 export let scene: any, camera: any, renderer: any
 export let orbitControls: any, transformControls: any, selectionBox: any
@@ -38,6 +44,9 @@ export const handleResize = () => {
 
     camera.updateProjectionMatrix()
     renderer.setSize(container.clientWidth, container.clientHeight)
+
+    // 【新增】
+    resizeMeasurement()
   }
 }
 
@@ -86,6 +95,9 @@ export const initThree = () => {
   renderer.shadowMap.enabled = true
   container.innerHTML = ''
   container.appendChild(domElement!)
+
+  // 【新增】 在此处初始化 CSS2DRenderer
+  initMeasurement(container)
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.7))
   const dLight = new THREE.DirectionalLight(0xffffff, 0.8)
@@ -158,6 +170,9 @@ export const initThree = () => {
       selectionBox.setFromObject(sceneObjects.get(selectedObjectId.value))
     }
     renderer.render(scene, camera)
+
+    // 【新增】 渲染 2D 标签
+    renderMeasurement()
   })
 }
 
@@ -287,6 +302,9 @@ export const disposeScene = () => {
     domElement.remove()
     domElement = null
   }
+
+  // 【新增】 清理 2D 渲染器
+  cleanupMeasurement()
 
   // 7. 置空其他变量
   camera = null!

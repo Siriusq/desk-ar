@@ -14,6 +14,8 @@ import { expandedObjectId } from './useUIState'
 // 【新增】 导入类型和新的辅助函数
 import type { DeskObject } from '@/types/deskObject'
 import { disposeObject3D } from '@/three/objectFactory'
+// 【新增】 导入测量状态和处理函数
+import { isMeasuring, handleMeasurementClick } from '@/composables/useMeasurement'
 
 // 【修改】 强类型
 export const objects: Ref<DeskObject[]> = ref([]) // 使用 ref 而不是 reactive，以便在 history 中更容易被替换
@@ -221,29 +223,41 @@ export const handleSceneClick = (event: { clientX: any; clientY: any }) => {
   raycaster.setFromCamera(mouse, camera)
   const intersects = raycaster.intersectObjects(Array.from(sceneObjects.values()), true)
 
-  let targetGroup: THREE.Object3D | null = null
-  if (intersects.length > 0) {
-    // 【修复】 使用 ?? null 将 undefined 转换为 null
-    let obj: THREE.Object3D | null = intersects[0]?.object ?? null
-    while (obj && !obj.userData.id) obj = obj.parent
-    if (obj) targetGroup = obj
-  }
-
-  if (targetGroup) {
-    const targetId = targetGroup.userData.id as string
-    if (selectedObjectId.value === targetId) {
-      transformMode.value = transformMode.value === 'translate' ? 'rotate' : 'translate'
-    } else {
-      selectedObjectId.value = targetId
-      transformMode.value = 'translate'
+  // 【新增】 模式分流
+  if (isMeasuring.value) {
+    // --- 测量模式 ---
+    if (intersects.length > 0) {
+      const point: THREE.Vector3 = intersects[0]!.point
+      // 传递精确的 3D 命中点
+      handleMeasurementClick(point)
     }
   } else {
-    selectedObjectId.value = null
+    // --- 选择模式 (原始逻辑) ---
+    if (isTransformDragging.value) return
+
+    let targetGroup: THREE.Object3D | null = null
+    if (intersects.length > 0) {
+      let obj: THREE.Object3D | null = intersects[0]?.object ?? null
+      while (obj && !obj.userData.id) obj = obj.parent
+      if (obj) targetGroup = obj
+    }
+
+    if (targetGroup) {
+      const targetId = targetGroup.userData.id as string
+      if (selectedObjectId.value === targetId) {
+        transformMode.value = transformMode.value === 'translate' ? 'rotate' : 'translate'
+      } else {
+        selectedObjectId.value = targetId
+        transformMode.value = 'translate'
+      }
+    } else {
+      selectedObjectId.value = null
+    }
   }
 }
 
 watch(selectedObjectId, (newId) => {
-  if (newId) {
+  if (newId && !isMeasuring.value) {
     const obj3D = sceneObjects.get(newId)
     if (obj3D) {
       transformControls.attach(obj3D)

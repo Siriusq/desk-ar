@@ -1,0 +1,182 @@
+// src/composables/useMeasurement.ts
+import { ref, watch } from 'vue'
+import * as THREE from 'three'
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js'
+import { scene, camera, renderer, transformControls, orbitControls } from '@/three/sceneManager'
+import { selectedObjectId } from './useObjects'
+
+// --- 状态 ---
+/** 切换测量模式 */
+export const isMeasuring = ref(false)
+/** 测量的第一个点 (世界坐标) */
+const point1 = ref<THREE.Vector3 | null>(null)
+/** 测量的第二个点 (世界坐标) */
+const point2 = ref<THREE.Vector3 | null>(null)
+
+// --- 3D/2D UI 对象 ---
+/** 2D 标签的渲染器 */
+let cssRenderer: CSS2DRenderer
+/** 场景中的测量线 */
+let measurementLine: THREE.Line | null = null
+/** 场景中的距离标签 */
+let measurementLabel: CSS2DObject | null = null
+
+// --- Three.js 生命周期集成 ---
+
+/**
+ * [在 sceneManager.initThree 中调用]
+ * 初始化 CSS2DRenderer 用于显示 HTML 标签
+ * @param container 渲染器的 DOM 容器
+ */
+export const initMeasurement = (container: HTMLElement) => {
+  cssRenderer = new CSS2DRenderer()
+  cssRenderer.setSize(container.clientWidth, container.clientHeight)
+  cssRenderer.domElement.style.position = 'absolute'
+  cssRenderer.domElement.style.top = '0px'
+  cssRenderer.domElement.style.pointerEvents = 'none' // 允许点击穿透
+  container.appendChild(cssRenderer.domElement)
+}
+
+/**
+ * [在 sceneManager.setAnimationLoop 中调用]
+ * 渲染 2D 标签
+ */
+export const renderMeasurement = () => {
+  if (cssRenderer) {
+    cssRenderer.render(scene, camera)
+  }
+}
+
+/**
+ * [在 sceneManager.handleResize 中调用]
+ * 调整 2D 渲染器的大小
+ */
+export const resizeMeasurement = () => {
+  if (cssRenderer && renderer) {
+    cssRenderer.setSize(renderer.domElement.clientWidth, renderer.domElement.clientHeight)
+  }
+}
+
+/**
+ * [在 sceneManager.disposeScene 中调用]
+ * 清理 2D 渲染器
+ */
+export const cleanupMeasurement = () => {
+  if (cssRenderer) {
+    cssRenderer.domElement.remove()
+  }
+}
+
+/**
+ * 清理场景中的测量 UI 元素
+ * [垃圾回收]
+ */
+const clearMeasurementUI = () => {
+  // 清理 Line
+  if (measurementLine) {
+    scene.remove(measurementLine)
+    measurementLine.geometry.dispose()
+    ;(measurementLine.material as THREE.Material).dispose()
+    measurementLine = null
+  }
+  // 清理 Label
+  if (measurementLabel) {
+    scene.remove(measurementLabel)
+    if (measurementLabel.element.parentNode) {
+      measurementLabel.element.parentNode.removeChild(measurementLabel.element)
+    }
+    measurementLabel = null
+  }
+}
+
+/**
+ * 绘制线和标签
+ */
+const drawMeasurement = () => {
+  if (!point1.value || !point2.value) return
+
+  // 1. 清理旧的 UI
+  clearMeasurementUI()
+
+  // 2. 绘制 3D 线
+  const material = new THREE.LineBasicMaterial({
+    color: 0xff0000,
+    linewidth: 2,
+    depthTest: false, // 始终在最前
+  })
+  const geometry = new THREE.BufferGeometry().setFromPoints([point1.value, point2.value])
+  measurementLine = new THREE.Line(geometry, material)
+  measurementLine.renderOrder = 999 // 确保在最前
+  scene.add(measurementLine)
+
+  // 3. 计算距离和中点
+  const distance = point1.value.distanceTo(point2.value)
+  const midPoint = new THREE.Vector3().lerpVectors(point1.value, point2.value, 0.5)
+
+  // 4. 创建 HTML 标签
+  const labelDiv = document.createElement('div')
+  labelDiv.className = 'measurement-label'
+  labelDiv.textContent = `${(distance * 1000).toFixed(0)} mm` // 转换为 mm
+  labelDiv.style.color = '#fff'
+  labelDiv.style.background = 'rgba(0, 0, 0, 0.7)'
+  labelDiv.style.padding = '2px 5px'
+  labelDiv.style.borderRadius = '3px'
+  labelDiv.style.fontSize = '12px'
+
+  // 5. 创建 2D 对象并添加到场景
+  measurementLabel = new CSS2DObject(labelDiv)
+  measurementLabel.position.copy(midPoint)
+  scene.add(measurementLabel)
+}
+
+// --- 核心功能 ---
+
+/**
+ * [在 useObjects.handleSceneClick 中调用]
+ * 处理测量模式下的点击
+ * @param point 射线命中的世界坐标点
+ */
+export const handleMeasurementClick = (point: THREE.Vector3) => {
+  if (!isMeasuring.value) return
+
+  if (!point1.value) {
+    // 第一次点击：设置起点
+    point1.value = point
+    // (可选：在这里可以添加一个 3D 'dot' 来标记起点)
+  } else if (!point2.value) {
+    // 第二次点击：设置终点并绘制
+    point2.value = point
+    drawMeasurement()
+  } else {
+    // 第三次点击：重置并开始新的测量
+    clearMeasurementUI()
+    point1.value = point
+    point2.value = null
+  }
+}
+
+/**
+ * [在 MainPage.vue 中调用]
+ * 切换测量模式的开/关
+ */
+export const toggleMeasurementMode = () => {
+  isMeasuring.value = !isMeasuring.value
+}
+
+// 监听测量模式状态
+watch(isMeasuring, (isActive) => {
+  if (isActive) {
+    // 进入测量模式
+    orbitControls.enabled = false // 禁用相机旋转
+    if (transformControls.object) {
+      transformControls.detach() // 禁用变换控制器
+    }
+    selectedObjectId.value = null // 取消选中
+  } else {
+    // 退出测量模式
+    orbitControls.enabled = true // 恢复相机
+    clearMeasurementUI() // [垃圾回收]
+    point1.value = null
+    point2.value = null
+  }
+})
