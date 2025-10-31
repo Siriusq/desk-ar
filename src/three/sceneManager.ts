@@ -23,7 +23,13 @@ import {
 // 【新增】 导入 PMREMGenerator 和 RGBELoader
 import { PMREMGenerator } from 'three/src/extras/PMREMGenerator.js'
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js'
-import { isLoading } from '@/composables/useUIState'
+import {
+  isAddModelModalOpen,
+  isControlPanelOpen,
+  isHelpModalOpen,
+  isLoading,
+  isPreviewOptionModalOpen,
+} from '@/composables/useUIState'
 
 export let scene: any, camera: any, renderer: any
 export let orbitControls: any, transformControls: any, selectionBox: any
@@ -69,7 +75,6 @@ export const handleResize = () => {
 }
 
 export const initThree = () => {
-  isLoading.value = true
   const container = document.getElementById('scene-container')!
   scene = new THREE.Scene()
 
@@ -422,6 +427,10 @@ export const disposeScene = () => {
   orthoCamera = null!
   selectionBox = null
   mouseDownInfo = { x: 0, y: 0, time: 0 }
+  isControlPanelOpen.value = false
+  isHelpModalOpen.value = false
+  isAddModelModalOpen.value = false
+  isPreviewOptionModalOpen.value = false
 
   console.log('Scene disposal complete.')
 }

@@ -37,6 +37,15 @@ export const handleEditNameToggle = () => {
   isEditingName.value = !isEditingName.value
 }
 
+/**
+ * 暂停函数执行指定毫秒数
+ * @param ms 延迟的毫秒数 (例如，300ms)
+ * @returns 一个在延迟后解决的 Promise
+ */
+export function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 // 封装 UI 状态管理，用于控制 OffCanvas 和 Modal 的显示/隐藏。
 export function useUIState() {
   // --- OffCanvas 状态逻辑 ---

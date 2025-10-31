@@ -6,7 +6,7 @@ import { isLoading } from '@/composables/useUIState'
 <template>
   <div id="app">
     <BApp>
-      <BOverlay :show="isLoading">
+      <BOverlay :show="isLoading" :opacity="0.5">
         <!-- 页面切换区域 -->
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">

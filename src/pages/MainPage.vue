@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import SceneCanvas from '@/components/SceneCanvas.vue'
 import EditorPanel from '@/components/EditorPanel.vue'
-import { isPreviewOptionModalOpen, useUIState } from '@/composables/useUIState'
+import { delay, isLoading, isPreviewOptionModalOpen, useUIState } from '@/composables/useUIState'
 import HelpModal from '@/components/HelpModal.vue'
 import AddModelModal from '@/components/AddModelModal.vue'
 import { undo, redo, canUndo, canRedo } from '@/composables/useHistory'
 import { deleteObject, selectedObjectId } from '@/composables/useObjects'
 import PreviewOptionModal from '@/components/PreviewOptionModal.vue'
 import { measurementHint } from '@/composables/useMeasurement'
+import { onMounted } from 'vue'
 
 defineOptions({
   name: 'MainPage',
@@ -28,6 +29,16 @@ const deleteSelectObject = () => {
     selectedObjectId.value = null
   }
 }
+
+onMounted(async () => {
+  // 1. 设置加载状态
+  isLoading.value = true
+
+  // 2. 在此等待 300 毫秒
+  await delay(300)
+
+  console.log('MainPage onMounted: Initializing Three.js...')
+})
 </script>
 
 <template>

@@ -128,35 +128,35 @@ const getUnitForParam = (key: string) => {
     <!--按钮-->
     <div class="row g-2 mb-3">
       <!--帮助按钮-->
-      <div class="col-6 col-md-3">
-        <BButton variant="secondary" class="w-100" @click="toggleHelpModal">
+      <div class="col-4 col-md-3">
+        <BButton variant="primary" class="w-100" @click="toggleHelpModal">
           <i class="bi bi-question-lg" />
           帮助
         </BButton>
       </div>
       <!--预览按钮-->
-      <div class="col-6 col-md-3">
+      <div class="col-4 col-md-3">
         <BButton variant="success" class="w-100" @click="togglePreviewOptionModal">
           <i class="bi bi-badge-ar" />
           预览
         </BButton>
       </div>
       <!--保存按钮-->
-      <div class="col-6 col-md-3">
+      <div class="col-4 col-md-3">
         <BButton variant="warning" class="w-100" @click="saveLayoutToFile()">
           <i class="bi bi-save" />
           保存
         </BButton>
       </div>
       <!--退出按钮-->
-      <div class="col-6 col-md-3">
+      <div class="col-4 col-md-3">
         <BButton variant="danger" class="w-100" @click="confirmExit">
           <i class="bi bi-escape" />
           退出
         </BButton>
       </div>
       <!--视角按钮-->
-      <div class="col-6 col-md-3">
+      <div class="col-4 col-md-3">
         <BDropdown variant="info" class="w-100" toggle-class="w-100" text="视角">
           <template #button-content> <i class="bi bi-camera" /> 视角 </template>
           <BDropdownItem @click="setCameraView('default')">
@@ -178,7 +178,7 @@ const getUnitForParam = (key: string) => {
         </BDropdown>
       </div>
       <!--测量按钮-->
-      <div class="col-6 col-md-3">
+      <div class="col-4 col-md-3">
         <BButton
           class="w-100"
           :variant="isMeasuring ? 'danger' : 'secondary'"
