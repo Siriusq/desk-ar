@@ -7,6 +7,7 @@ import AddModelModal from '@/components/AddModelModal.vue'
 import { undo, redo, canUndo, canRedo } from '@/composables/useHistory'
 import { deleteObject, selectedObjectId } from '@/composables/useObjects'
 import PreviewOptionModal from '@/components/PreviewOptionModal.vue'
+import { measurementHint } from '@/composables/useMeasurement'
 
 defineOptions({
   name: 'MainPage',
@@ -33,6 +34,10 @@ const deleteSelectObject = () => {
   <div class="canvas-container">
     <!--3D场景-->
     <SceneCanvas></SceneCanvas>
+
+    <div v-if="measurementHint" class="measurement-hint">
+      {{ measurementHint }}
+    </div>
 
     <!--悬浮面板-->
     <div class="overlay-panel">
@@ -104,5 +109,21 @@ const deleteSelectObject = () => {
 .icon-fade-enter-from,
 .icon-fade-leave-to {
   opacity: 0;
+}
+
+/* 【新增】 测量提示样式 */
+.measurement-hint {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  z-index: 10;
+  pointer-events: none; /* 不妨碍点击 */
+  font-size: 14px;
+  white-space: nowrap;
 }
 </style>

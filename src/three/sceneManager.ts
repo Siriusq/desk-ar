@@ -12,6 +12,10 @@ import {
   renderMeasurement,
   resizeMeasurement,
   cleanupMeasurement,
+  // 【新增】 导入悬停逻辑
+  isMeasuring,
+  updateHoverMarker,
+  hideHoverMarker,
 } from '@/composables/useMeasurement'
 
 export let scene: any, camera: any, renderer: any
@@ -27,6 +31,9 @@ export let mouseDownInfo = { x: 0, y: 0, time: 0 }
 let domElement: HTMLDivElement | null = null
 let handleMouseDown: (e: any) => void
 let handleMouseUp: (e: any) => void
+// 【新增】 悬停事件处理
+let handleMouseMove: (e: MouseEvent) => void
+let handleMouseOut: (e: MouseEvent) => void
 
 export const handleResize = () => {
   const container = document.getElementById('scene-container')
@@ -157,9 +164,40 @@ export const initThree = () => {
     if (Date.now() - mouseDownInfo.time < 300 && dist < 5) handleSceneClick(e)
   }
 
+  // 【新增】 定义悬停事件处理 (请求 1)
+  handleMouseMove = (event: MouseEvent) => {
+    if (!isMeasuring.value) return // 仅在测量时运行
+
+    // 射线检测逻辑 (复制自 handleSceneClick)
+    const rect = renderer.domElement.getBoundingClientRect()
+    const mouse = new THREE.Vector2(
+      ((event.clientX - rect.left) / rect.width) * 2 - 1,
+      -((event.clientY - rect.top) / rect.height) * 2 + 1,
+    )
+    const raycaster = new THREE.Raycaster()
+    raycaster.setFromCamera(mouse, camera)
+    const intersects = raycaster.intersectObjects(Array.from(sceneObjects.values()), true)
+
+    if (intersects.length > 0) {
+      const point: THREE.Vector3 = intersects[0]!.point
+      // 找到了物体，更新悬停标记
+      updateHoverMarker(point)
+    } else {
+      // 没找到，隐藏
+      hideHoverMarker()
+    }
+  }
+
+  handleMouseOut = () => {
+    // 鼠标移出画布，隐藏
+    hideHoverMarker()
+  }
+
   // 【修改】使用保存的处理函数
   domElement!.addEventListener('mousedown', handleMouseDown)
   domElement!.addEventListener('mouseup', handleMouseUp)
+  domElement!.addEventListener('mousemove', handleMouseMove) // 【新增】
+  domElement!.addEventListener('mouseout', handleMouseOut) // 【新增】
 
   renderer.setAnimationLoop(() => {
     if (
@@ -265,6 +303,8 @@ export const disposeScene = () => {
   if (domElement) {
     domElement.removeEventListener('mousedown', handleMouseDown)
     domElement.removeEventListener('mouseup', handleMouseUp)
+    domElement.removeEventListener('mousemove', handleMouseMove) // 【新增】
+    domElement.removeEventListener('mouseout', handleMouseOut) // 【新增】
   }
 
   // 4. 清理和销毁场景中的所有对象（包括静态对象）

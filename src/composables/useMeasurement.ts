@@ -1,5 +1,5 @@
 // src/composables/useMeasurement.ts
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import * as THREE from 'three'
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js'
 import { scene, camera, renderer, transformControls, orbitControls } from '@/three/sceneManager'
@@ -13,6 +13,14 @@ const point1 = ref<THREE.Vector3 | null>(null)
 /** 测量的第二个点 (世界坐标) */
 const point2 = ref<THREE.Vector3 | null>(null)
 
+// 【新增】 UI 提示状态 (请求 3)
+export const measurementHint = computed(() => {
+  if (!isMeasuring.value) return ''
+  if (!point1.value) return '请选择第一个端点'
+  if (!point2.value) return '请选择第二个端点'
+  return '再次单击以重新选择端点'
+})
+
 // --- 3D/2D UI 对象 ---
 /** 2D 标签的渲染器 */
 let cssRenderer: CSS2DRenderer
@@ -20,6 +28,14 @@ let cssRenderer: CSS2DRenderer
 let measurementLine: THREE.Line | null = null
 /** 场景中的距离标签 */
 let measurementLabel: CSS2DObject | null = null
+
+// 【新增】 高亮标记 (请求 1 & 2)
+let hoverMarker: THREE.Mesh | null = null
+let point1Marker: THREE.Mesh | null = null
+let point2Marker: THREE.Mesh | null = null
+let markerGeometry: THREE.SphereGeometry | null = null
+let hoverMaterial: THREE.MeshBasicMaterial | null = null
+let selectMaterial: THREE.MeshBasicMaterial | null = null
 
 // --- Three.js 生命周期集成 ---
 
@@ -35,6 +51,35 @@ export const initMeasurement = (container: HTMLElement) => {
   cssRenderer.domElement.style.top = '0px'
   cssRenderer.domElement.style.pointerEvents = 'none' // 允许点击穿透
   container.appendChild(cssRenderer.domElement)
+
+  // 【新增】 初始化高亮标记
+  markerGeometry = new THREE.SphereGeometry(0.015, 16, 16) // 1.5cm 小球
+  hoverMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffcf26,
+    transparent: true,
+    opacity: 0.5,
+    depthTest: false,
+  })
+  selectMaterial = new THREE.MeshBasicMaterial({
+    color: 0xf77c7c,
+    transparent: true,
+    opacity: 0.5,
+    depthTest: false,
+  })
+
+  hoverMarker = new THREE.Mesh(markerGeometry, hoverMaterial)
+  hoverMarker.visible = false
+  hoverMarker.renderOrder = 1000 // 始终在最前
+
+  point1Marker = new THREE.Mesh(markerGeometry, selectMaterial)
+  point1Marker.visible = false
+  point1Marker.renderOrder = 1000
+
+  point2Marker = new THREE.Mesh(markerGeometry, selectMaterial)
+  point2Marker.visible = false
+  point2Marker.renderOrder = 1000
+
+  scene.add(hoverMarker, point1Marker, point2Marker)
 }
 
 /**
@@ -65,6 +110,11 @@ export const cleanupMeasurement = () => {
   if (cssRenderer) {
     cssRenderer.domElement.remove()
   }
+
+  // 【新增】 释放标记的几何体和材质
+  markerGeometry?.dispose()
+  hoverMaterial?.dispose()
+  selectMaterial?.dispose()
 }
 
 /**
@@ -87,6 +137,10 @@ const clearMeasurementUI = () => {
     }
     measurementLabel = null
   }
+
+  // 【新增】 隐藏选中的标记
+  if (point1Marker) point1Marker.visible = false
+  if (point2Marker) point2Marker.visible = false
 }
 
 /**
@@ -100,7 +154,7 @@ const drawMeasurement = () => {
 
   // 2. 绘制 3D 线
   const material = new THREE.LineBasicMaterial({
-    color: 0xff0000,
+    color: 0xf77c7c,
     linewidth: 2,
     depthTest: false, // 始终在最前
   })
@@ -142,16 +196,30 @@ export const handleMeasurementClick = (point: THREE.Vector3) => {
   if (!point1.value) {
     // 第一次点击：设置起点
     point1.value = point
-    // (可选：在这里可以添加一个 3D 'dot' 来标记起点)
+    // 【新增】 显示高亮标记 2
+    if (point1Marker) {
+      point1Marker.position.copy(point)
+      point1Marker.visible = true
+    }
   } else if (!point2.value) {
     // 第二次点击：设置终点并绘制
     point2.value = point
+    // 【新增】 显示高亮标记 2
+    if (point2Marker) {
+      point2Marker.position.copy(point)
+      point2Marker.visible = true
+    }
     drawMeasurement()
   } else {
     // 第三次点击：重置并开始新的测量
     clearMeasurementUI()
     point1.value = point
     point2.value = null
+    // 【新增】 显示高亮标记 1
+    if (point1Marker) {
+      point1Marker.position.copy(point)
+      point1Marker.visible = true
+    }
   }
 }
 
@@ -161,6 +229,21 @@ export const handleMeasurementClick = (point: THREE.Vector3) => {
  */
 export const toggleMeasurementMode = () => {
   isMeasuring.value = !isMeasuring.value
+}
+
+// 【新增】 更新悬停标记 (请求 1)
+export const updateHoverMarker = (point: THREE.Vector3) => {
+  if (hoverMarker && isMeasuring.value) {
+    hoverMarker.position.copy(point)
+    hoverMarker.visible = true
+  }
+}
+
+// 【新增】 隐藏悬停标记 (请求 1)
+export const hideHoverMarker = () => {
+  if (hoverMarker) {
+    hoverMarker.visible = false
+  }
 }
 
 // 监听测量模式状态
@@ -178,5 +261,7 @@ watch(isMeasuring, (isActive) => {
     clearMeasurementUI() // [垃圾回收]
     point1.value = null
     point2.value = null
+    // 【新增】 确保悬停标记被隐藏
+    hideHoverMarker()
   }
 })
