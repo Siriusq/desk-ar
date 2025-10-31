@@ -2,16 +2,16 @@
 import { ref, watch, computed } from 'vue'
 import * as THREE from 'three'
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js'
-import { scene, camera, renderer, transformControls, orbitControls } from '@/three/sceneManager'
+import { scene, camera, renderer, transformControls } from '@/three/sceneManager'
 import { selectedObjectId } from './useObjects'
 
 // --- 状态 ---
 /** 切换测量模式 */
 export const isMeasuring = ref(false)
 /** 测量的第一个点 (世界坐标) */
-const point1 = ref<THREE.Vector3 | null>(null)
+export const point1 = ref<THREE.Vector3 | null>(null)
 /** 测量的第二个点 (世界坐标) */
-const point2 = ref<THREE.Vector3 | null>(null)
+export const point2 = ref<THREE.Vector3 | null>(null)
 
 // 【新增】 UI 提示状态 (请求 3)
 export const measurementHint = computed(() => {
@@ -33,7 +33,7 @@ let measurementLabel: CSS2DObject | null = null
 let hoverMarker: THREE.Mesh | null = null
 let point1Marker: THREE.Mesh | null = null
 let point2Marker: THREE.Mesh | null = null
-let markerGeometry: THREE.SphereGeometry | null = null
+let markerGeometry: THREE.RingGeometry | null = null
 let hoverMaterial: THREE.MeshBasicMaterial | null = null
 let selectMaterial: THREE.MeshBasicMaterial | null = null
 
@@ -52,18 +52,17 @@ export const initMeasurement = (container: HTMLElement) => {
   cssRenderer.domElement.style.pointerEvents = 'none' // 允许点击穿透
   container.appendChild(cssRenderer.domElement)
 
-  // 【新增】 初始化高亮标记
-  markerGeometry = new THREE.SphereGeometry(0.015, 16, 16) // 1.5cm 小球
+  // 【修改】 初始化高亮标记为圆环
+  markerGeometry = new THREE.RingGeometry(0.015, 0.02, 32) // 1.5cm - 2cm 环
+  // 【修改】 旋转几何体，使其“平躺”在 XZ 平面上，默认法线为 (0, 1, 0)
+  markerGeometry.rotateX(-Math.PI / 2)
+
   hoverMaterial = new THREE.MeshBasicMaterial({
     color: 0xffcf26,
-    transparent: true,
-    opacity: 0.5,
     depthTest: false,
   })
   selectMaterial = new THREE.MeshBasicMaterial({
     color: 0xf77c7c,
-    transparent: true,
-    opacity: 0.5,
     depthTest: false,
   })
 
@@ -110,8 +109,7 @@ export const cleanupMeasurement = () => {
   if (cssRenderer) {
     cssRenderer.domElement.remove()
   }
-
-  // 【新增】 释放标记的几何体和材质
+  // 【修改】 释放标记的几何体
   markerGeometry?.dispose()
   hoverMaterial?.dispose()
   selectMaterial?.dispose()
@@ -121,7 +119,7 @@ export const cleanupMeasurement = () => {
  * 清理场景中的测量 UI 元素
  * [垃圾回收]
  */
-const clearMeasurementUI = () => {
+export const clearMeasurementUI = () => {
   // 清理 Line
   if (measurementLine) {
     scene.remove(measurementLine)
@@ -186,27 +184,32 @@ const drawMeasurement = () => {
 // --- 核心功能 ---
 
 /**
- * [在 useObjects.handleSceneClick 中调用]
- * 处理测量模式下的点击
+ * 【修改】 接收 point 和 normal
  * @param point 射线命中的世界坐标点
+ * @param normal 命中点的世界法线
  */
-export const handleMeasurementClick = (point: THREE.Vector3) => {
+export const handleMeasurementClick = (point: THREE.Vector3, normal: THREE.Vector3) => {
   if (!isMeasuring.value) return
+
+  // 定义圆环的默认“向上”法线
+  const defaultNormal = new THREE.Vector3(0, 1, 0)
 
   if (!point1.value) {
     // 第一次点击：设置起点
     point1.value = point
-    // 【新增】 显示高亮标记 2
     if (point1Marker) {
       point1Marker.position.copy(point)
+      // 【新增】 设置旋转
+      point1Marker.quaternion.setFromUnitVectors(defaultNormal, normal)
       point1Marker.visible = true
     }
   } else if (!point2.value) {
     // 第二次点击：设置终点并绘制
     point2.value = point
-    // 【新增】 显示高亮标记 2
     if (point2Marker) {
       point2Marker.position.copy(point)
+      // 【新增】 设置旋转
+      point2Marker.quaternion.setFromUnitVectors(defaultNormal, normal)
       point2Marker.visible = true
     }
     drawMeasurement()
@@ -215,9 +218,10 @@ export const handleMeasurementClick = (point: THREE.Vector3) => {
     clearMeasurementUI()
     point1.value = point
     point2.value = null
-    // 【新增】 显示高亮标记 1
     if (point1Marker) {
       point1Marker.position.copy(point)
+      // 【新增】 设置旋转
+      point1Marker.quaternion.setFromUnitVectors(defaultNormal, normal)
       point1Marker.visible = true
     }
   }
@@ -231,10 +235,17 @@ export const toggleMeasurementMode = () => {
   isMeasuring.value = !isMeasuring.value
 }
 
-// 【新增】 更新悬停标记 (请求 1)
-export const updateHoverMarker = (point: THREE.Vector3) => {
+/**
+ * 【修改】 接收 point 和 normal
+ * @param point 射线命中的世界坐标点
+ * @param normal 命中点的世界法线
+ */
+export const updateHoverMarker = (point: THREE.Vector3, normal: THREE.Vector3) => {
   if (hoverMarker && isMeasuring.value) {
     hoverMarker.position.copy(point)
+    // 【新增】 设置旋转
+    const defaultNormal = new THREE.Vector3(0, 1, 0)
+    hoverMarker.quaternion.setFromUnitVectors(defaultNormal, normal)
     hoverMarker.visible = true
   }
 }
@@ -250,14 +261,14 @@ export const hideHoverMarker = () => {
 watch(isMeasuring, (isActive) => {
   if (isActive) {
     // 进入测量模式
-    orbitControls.enabled = false // 禁用相机旋转
+    //orbitControls.enabled = false // 禁用相机旋转
     if (transformControls.object) {
       transformControls.detach() // 禁用变换控制器
     }
     selectedObjectId.value = null // 取消选中
   } else {
     // 退出测量模式
-    orbitControls.enabled = true // 恢复相机
+    //orbitControls.enabled = true // 恢复相机
     clearMeasurementUI() // [垃圾回收]
     point1.value = null
     point2.value = null

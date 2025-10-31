@@ -210,10 +210,9 @@ export const dropObject = (id: string) => {
   }
 }
 
-// 【修改】 handleSceneClick 强类型
+// 【修改】 handleSceneClick 以支持测量
 export const handleSceneClick = (event: { clientX: any; clientY: any }) => {
-  if (isTransformDragging.value) return
-  // ... (Raycaster 逻辑保持不变)
+  // 射线和相交逻辑
   const rect = renderer.domElement.getBoundingClientRect()
   const mouse = new THREE.Vector2(
     ((event.clientX - rect.left) / rect.width) * 2 - 1,
@@ -223,13 +222,19 @@ export const handleSceneClick = (event: { clientX: any; clientY: any }) => {
   raycaster.setFromCamera(mouse, camera)
   const intersects = raycaster.intersectObjects(Array.from(sceneObjects.values()), true)
 
-  // 【新增】 模式分流
+  // 【修改】 模式分流
   if (isMeasuring.value) {
     // --- 测量模式 ---
     if (intersects.length > 0) {
-      const point: THREE.Vector3 = intersects[0]!.point
-      // 传递精确的 3D 命中点
-      handleMeasurementClick(point)
+      const intersect = intersects[0]!
+      // 【新增】 计算世界法线
+      if (intersect.face) {
+        const worldNormal = intersect.face.normal
+          .clone()
+          .transformDirection(intersect.object.matrixWorld)
+        // 传递精确的 3D 命中点和法线
+        handleMeasurementClick(intersect.point, worldNormal)
+      }
     }
   } else {
     // --- 选择模式 (原始逻辑) ---

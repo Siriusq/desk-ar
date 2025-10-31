@@ -16,6 +16,9 @@ import {
   isMeasuring,
   updateHoverMarker,
   hideHoverMarker,
+  clearMeasurementUI,
+  point1,
+  point2,
 } from '@/composables/useMeasurement'
 
 export let scene: any, camera: any, renderer: any
@@ -164,11 +167,11 @@ export const initThree = () => {
     if (Date.now() - mouseDownInfo.time < 300 && dist < 5) handleSceneClick(e)
   }
 
-  // 【新增】 定义悬停事件处理 (请求 1)
+  // 【修改】 定义悬停事件处理
   handleMouseMove = (event: MouseEvent) => {
     if (!isMeasuring.value) return // 仅在测量时运行
 
-    // 射线检测逻辑 (复制自 handleSceneClick)
+    // 射线检测逻辑
     const rect = renderer.domElement.getBoundingClientRect()
     const mouse = new THREE.Vector2(
       ((event.clientX - rect.left) / rect.width) * 2 - 1,
@@ -179,9 +182,16 @@ export const initThree = () => {
     const intersects = raycaster.intersectObjects(Array.from(sceneObjects.values()), true)
 
     if (intersects.length > 0) {
-      const point: THREE.Vector3 = intersects[0]!.point
+      const intersect = intersects[0]!
+
+      // 【新增】 计算世界法线
+      if (intersect.face) {
+        const worldNormal = intersect.face.normal
+          .clone()
+          .transformDirection(intersect.object.matrixWorld)
       // 找到了物体，更新悬停标记
-      updateHoverMarker(point)
+        updateHoverMarker(intersect.point, worldNormal)
+      }
     } else {
       // 没找到，隐藏
       hideHoverMarker()
@@ -284,6 +294,15 @@ export const disposeScene = () => {
   // 1. 停止渲染循环
   if (renderer) {
     renderer.setAnimationLoop(null)
+  }
+
+  //销毁测量相关
+  if (isMeasuring.value) {
+    clearMeasurementUI()
+    point1.value = null
+    point2.value = null
+    hideHoverMarker()
+    isMeasuring.value = false
   }
 
   // 2. 销毁 Controls 和移除它们的监听器
