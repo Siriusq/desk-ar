@@ -20,6 +20,10 @@ import {
   point1,
   point2,
 } from '@/composables/useMeasurement'
+// 【新增】 导入 PMREMGenerator 和 RGBELoader
+import { PMREMGenerator } from 'three/src/extras/PMREMGenerator.js'
+import { HDRLoader } from 'three/addons/loaders/HDRLoader.js'
+import { isLoading } from '@/composables/useUIState'
 
 export let scene: any, camera: any, renderer: any
 export let orbitControls: any, transformControls: any, selectionBox: any
@@ -37,6 +41,10 @@ let handleMouseUp: (e: any) => void
 // 【新增】 悬停事件处理
 let handleMouseMove: (e: MouseEvent) => void
 let handleMouseOut: (e: MouseEvent) => void
+
+// 【新增】 HDR 相关的变量
+let pmremGenerator: PMREMGenerator | null = null
+let environmentTexture: THREE.DataTexture | null = null
 
 export const handleResize = () => {
   const container = document.getElementById('scene-container')
@@ -61,10 +69,9 @@ export const handleResize = () => {
 }
 
 export const initThree = () => {
+  isLoading.value = true
   const container = document.getElementById('scene-container')!
   scene = new THREE.Scene()
-  scene.background = new THREE.Color(0xf0f0f0)
-  scene.fog = new THREE.Fog(0xf0f0f0, 10, 50)
 
   // 【修改】 1. 创建透视相机
   perspectiveCamera = new THREE.PerspectiveCamera(
@@ -98,6 +105,11 @@ export const initThree = () => {
     alpha: true,
   })
 
+  // 【新增】 PBR & HDR 渲染器设置
+  renderer.outputColorSpace = THREE.SRGBColorSpace // (或 outputEncoding = sRGBEncoding)
+  renderer.toneMapping = THREE.ACESFilmicToneMapping
+  renderer.toneMappingExposure = 1.0 // 调整曝光
+
   // 保存 DOM 元素引用
   domElement = renderer.domElement
   renderer.setSize(container.clientWidth, container.clientHeight)
@@ -109,20 +121,49 @@ export const initThree = () => {
   // 【新增】 在此处初始化 CSS2DRenderer
   initMeasurement(container)
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.7))
-  const dLight = new THREE.DirectionalLight(0xffffff, 0.8)
+  // 【新增】 初始化 PMREMGenerator 并加载 HDR
+  pmremGenerator = new PMREMGenerator(renderer)
+  pmremGenerator.compileEquirectangularShader()
+
+  new HDRLoader().load(
+    '/hdri/qwantani_dusk_2_puresky_2k.hdr', // public/ 目录下的 HDR 文件路径
+    (texture) => {
+      // 1. 处理贴图以用于环境光
+      environmentTexture = pmremGenerator!.fromEquirectangular(texture).texture as THREE.DataTexture
+
+      // 2. 设置为场景背景和环境光
+      scene.background = environmentTexture
+      scene.environment = environmentTexture // 这将自动为所有 MeshStandardMaterial 提供光照
+
+      // 3. 清理原始贴图
+      texture.dispose()
+
+      // 4. 【修复点】 贴图加载和环境光设置完成后，隐藏遮罩
+      isLoading.value = false
+    },
+    undefined, // onProgress
+    (error) => {
+      console.error('无法加载 HDR:', error)
+      // 回退到纯色背景
+      scene.background = new THREE.Color(0xf0f0f0)
+      isLoading.value = false // 无论成功还是失败，都应解除加载状态
+    },
+  )
+
+  // scene.add(new THREE.AmbientLight(0xffffff, 0.7))
+  const dLight = new THREE.DirectionalLight(0xffffff, 0.5)
   dLight.position.set(5, 10, 7.5)
   dLight.castShadow = true
   scene.add(dLight)
 
   const ground = new THREE.Mesh(
     new THREE.PlaneGeometry(100, 100),
-    new THREE.MeshStandardMaterial({ color: 0xcccccc }),
+    new THREE.ShadowMaterial({ opacity: 0.3 }),
   )
   ground.rotation.x = -Math.PI / 2
   ground.receiveShadow = true
   scene.add(ground)
-  scene.add(new THREE.GridHelper(100, 100, 0x888888, 0x888888))
+  //scene.add(new THREE.GridHelper(100, 100, 0x888888, 0x888888))
 
   orbitControls = new OrbitControls(camera, domElement!)
   transformControls = new TransformControls(camera, domElement!)
@@ -189,7 +230,7 @@ export const initThree = () => {
         const worldNormal = intersect.face.normal
           .clone()
           .transformDirection(intersect.object.matrixWorld)
-      // 找到了物体，更新悬停标记
+        // 找到了物体，更新悬停标记
         updateHoverMarker(intersect.point, worldNormal)
       }
     } else {
@@ -365,7 +406,17 @@ export const disposeScene = () => {
   // 【新增】 清理 2D 渲染器
   cleanupMeasurement()
 
-  // 7. 置空其他变量
+  // 【新增】 7. 清理 HDR 资源
+  if (pmremGenerator) {
+    pmremGenerator.dispose()
+    pmremGenerator = null
+  }
+  if (environmentTexture) {
+    environmentTexture.dispose()
+    environmentTexture = null
+  }
+
+  // 8. 置空其他变量
   camera = null!
   perspectiveCamera = null!
   orthoCamera = null!
