@@ -101,7 +101,7 @@ onMounted(() => {
   z-index: 1; /* 位于内容下方 */
 }
 
-/*网格图案*/
+/* 网格图案，源自 https://patterncraft.fun/ */
 .dashed-grid-overlay {
   background-image:
     /* 1. 水平实线 (0deg) */

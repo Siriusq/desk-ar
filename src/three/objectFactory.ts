@@ -8,6 +8,8 @@ import { rebuildSceneFromData, scene } from './sceneManager'
 
 // 【新增】 创建一个全局共享的 loader 实例
 const gltfLoader = new GLTFLoader()
+// 【新增】 创建一个全局共享的贴图加载器
+const textureLoader = new THREE.TextureLoader()
 
 // 【新增】 用于从 useModelImporter 调用的函数
 export const addImportedObject = (fileName: string, dataUrl: string) => {
@@ -285,7 +287,11 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
 
   switch (data.type) {
     case 'desk-rect': {
-      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
+      mat = new THREE.MeshStandardMaterial({
+        color: data.params.color,
+        roughness: 0.7,
+        metalness: 0.0,
+      })
       const { width, depth, height } = data.params
       const top = new THREE.Mesh(new THREE.BoxGeometry(width, 0.04, depth), mat)
       top.position.y = height - 0.02
@@ -378,9 +384,39 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       break
     }
     case 'keyboard': {
-      mat = new THREE.MeshStandardMaterial({ color: data.params.color, roughness: 0.7 })
-      const { width, height, depth } = data.params
-      const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
+      const { width, height, depth, color } = data.params
+
+      // 1. 为侧面和底部创建金属材质
+      //    (使用 data.params.color 作为金属颜色)
+      const metalMaterial = new THREE.MeshStandardMaterial({
+        color: color,
+        metalness: 0.8, // 表现为金属
+        roughness: 0.4, // 轻微粗糙的金属
+      })
+
+      // 2. 为顶部创建贴图材质
+      //    (确保贴图在 /public/textures/keyboard_layout.jpg)
+      const topTexture = textureLoader.load('/textures/keyboard-vector-diffuse-1-HD.jpg')
+      topTexture.colorSpace = THREE.SRGBColorSpace // 确保颜色正确
+      const textureMaterial = new THREE.MeshStandardMaterial({
+        map: topTexture,
+        metalness: 0.2, // 顶部通常是塑料
+        roughness: 0.7,
+      })
+
+      // 3. 按 BoxGeometry 的顺序创建材质数组
+      //    顺序: [右 (px), 左 (nx), 顶 (py), 底 (ny), 前 (pz), 后 (nz)]
+      const materials = [
+        metalMaterial, // 右
+        metalMaterial, // 左
+        textureMaterial, // 顶
+        metalMaterial, // 底
+        metalMaterial, // 前
+        metalMaterial, // 后
+      ]
+
+      // 4. 创建使用材质数组的 Mesh
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), materials)
       mesh.position.y = height / 2
       group.add(mesh)
       break
