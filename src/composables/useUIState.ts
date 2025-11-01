@@ -6,6 +6,9 @@ import { exitToWelcome, sceneName } from './useLayout'
 import type { CatalogCategoryKey } from '@/types/modelLists'
 
 // 共享状态
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+const isAndroid = /Android/.test(navigator.userAgent)
+export const isMobile = isIOS || isAndroid
 export const isControlPanelOpen = ref(false)
 export const isHelpModalOpen = ref(false)
 export const isAddModelModalOpen = ref(false)

@@ -28,6 +28,7 @@ import {
   isControlPanelOpen,
   isHelpModalOpen,
   isLoading,
+  isMobile,
   isPreviewOptionModalOpen,
 } from '@/composables/useUIState'
 
@@ -130,8 +131,12 @@ export const initThree = () => {
   pmremGenerator = new PMREMGenerator(renderer)
   pmremGenerator.compileEquirectangularShader()
 
+  const hdriPath = isMobile
+    ? '/hdri/qwantani_dusk_2_puresky_1k.hdr'
+    : '/hdri/qwantani_dusk_2_puresky_2k.hdr'
+
   new HDRLoader().load(
-    '/hdri/qwantani_dusk_2_puresky_2k.hdr', // public/ 目录下的 HDR 文件路径
+    hdriPath, // public/ 目录下的 HDR 文件路径
     (texture) => {
       // 1. 处理贴图以用于环境光
       environmentTexture = pmremGenerator!.fromEquirectangular(texture).texture as THREE.DataTexture
