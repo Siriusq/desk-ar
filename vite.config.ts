@@ -10,7 +10,15 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      // 添加这一段配置
+      template: {
+        compilerOptions: {
+          // 自定义元素
+          isCustomElement: (tag) => tag === 'model-viewer',
+        },
+      },
+    }),
     vueDevTools(),
     basicSsl(),
     Components({
