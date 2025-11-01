@@ -63,9 +63,6 @@ export const exportForAR = async (includeDesk: boolean) => {
     const exporter = new GLTFExporter()
     const options = { binary: true }
 
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    const isAndroid = /Android/.test(navigator.userAgent)
-    const isMobile = isIOS || isAndroid
     const a = document.createElement('a')
     a.style.display = 'none'
     document.body.appendChild(a)
@@ -79,31 +76,19 @@ export const exportForAR = async (includeDesk: boolean) => {
         type: 'model/gltf-binary',
       })
 
-      if (isMobile) {
-        // --- 移动端逻辑 ---
-        // 在设置新 URL 之前，释放掉可能存在的旧 URL
-        if (previewModelUrl.value) {
-          URL.revokeObjectURL(previewModelUrl.value)
-        }
-        // 1. 创建新的 Blob URL 并存入共享状态
-        const glbUrl = URL.createObjectURL(glbBlob)
-        previewModelUrl.value = glbUrl
-
-        // 2. 使用 Vue Router 导航到预览页
-        router.push({ name: 'preview' })
-      } else {
-        // --- 桌面端逻辑 ---
-        a.href = URL.createObjectURL(glbBlob)
-        a.download = 'scene.glb'
-        a.click()
-        if (a.href.startsWith('blob:')) {
-          URL.revokeObjectURL(a.href)
-        }
+      // 在设置新 URL 之前，释放掉可能存在的旧 URL
+      if (previewModelUrl.value) {
+        URL.revokeObjectURL(previewModelUrl.value)
       }
+      // 1. 创建新的 Blob URL 并存入共享状态
+      const glbUrl = URL.createObjectURL(glbBlob)
+      previewModelUrl.value = glbUrl
+
+      // 2. 使用 Vue Router 导航到预览页
+      router.push({ name: 'preview' })
     } catch (error) {
       console.error('An error happened during AR export:', error)
     } finally {
-      // 【优化】 现在 finally 对两个分支都有效，因为都用了 await
       isLoading.value = false
       document.body.removeChild(a) // 总是移除 a 标签
     }
