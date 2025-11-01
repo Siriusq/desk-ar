@@ -20,14 +20,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="d-flex align-items-center text-bg-light min-vh-100 welcome-page-bg relative-parent">
-    <!--网格背景，暂时隐藏-->
-    <!-- <div class="absolute-fill dashed-grid-overlay"></div> -->
+  <div class="d-flex align-items-center text-bg-light min-vh-100 relative-parent">
+    <!--网格背景-->
+    <div class="absolute-fill dashed-grid-overlay"></div>
 
     <div class="welcome-container w-100 p-3 mx-auto text-center z-index-content">
-      <h1 class="mb-4">{{ t('welcomeTitle') }}</h1>
+      <h1 class="mb-4 mt-3">{{ t('welcomeTitle') }}</h1>
       <!--创建新布局-->
-      <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+      <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mb-3">
         <BButton size="lg" class="fw-bold w-auto" variant="primary" @click="createNewLayout">
           <i class="bi bi-plus-square"></i>
           {{ t('welcomeCreate') }}
@@ -56,14 +56,14 @@ onMounted(() => {
 .z-index-content {
   position: relative;
   z-index: 10;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 3rem;
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 /* ---------------------------------- */
-/* 1. 外部容器：【移除所有渐变和光晕样式】 */
+/* 渐变背景 */
 /* ---------------------------------- */
 .welcome-page-bg {
   position: relative;
@@ -101,8 +101,8 @@ onMounted(() => {
   z-index: 1; /* 位于内容下方 */
 }
 
+/*网格图案*/
 .dashed-grid-overlay {
-  /* 您的新的电路板图案样式 */
   background-image:
     /* 1. 水平实线 (0deg) */
     repeating-linear-gradient(
@@ -147,5 +147,6 @@ onMounted(() => {
 
 .welcome-container {
   max-width: 32em;
+  align-content: center;
 }
 </style>
