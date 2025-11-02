@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { previewModelUrl } from '@/composables/usePreview'
-import { isLoading } from '@/composables/useUIState'
+import { isLoading, isMobile } from '@/composables/useUIState'
 
 // 动态导入 model-viewer，因为它只在此页面使用
 import '@google/model-viewer'
 
 const modelSrc = ref<string | null>(null)
 const infoText = ref('加载中...')
+const viewerRef = ref<HTMLModelViewerElement | null>(null)
 
 // 1. 页面加载时：从共享状态获取 URL
 onMounted(() => {
@@ -29,18 +30,28 @@ onUnmounted(() => {
     previewModelUrl.value = null // 清空共享状态
   }
 })
+
+const startAR = () => {
+  if (viewerRef.value) {
+    viewerRef.value.activateAR()
+  } else {
+    console.warn('AR 按钮点击无效，未找到 model-viewer 实例。')
+  }
+}
 </script>
 
 <template>
   <div class="preview-page-wrapper">
     <div id="toolbar">
       <button id="backBtn" @click="$router.back">← 返回</button>
+      <button v-if="isMobile && modelSrc" id="arBtn" @click="startAR">AR 模式</button>
       <div class="info">{{ infoText }}</div>
     </div>
 
     <model-viewer
       v-if="modelSrc"
       id="viewer"
+      ref="viewerRef"
       :src="modelSrc"
       ar
       ar-modes="webxr scene-viewer quick-look"
@@ -86,7 +97,8 @@ model-viewer {
 }
 
 /* 顶部返回按钮 */
-#backBtn {
+#backBtn,
+#arBtn {
   border: none;
   background: #1976d2;
   color: white;
