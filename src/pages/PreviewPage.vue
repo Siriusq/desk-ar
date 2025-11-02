@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { previewModelUrl } from '@/composables/usePreview'
-import { isLoading, isMobile } from '@/composables/useUIState'
+import { isLoading } from '@/composables/useUIState'
 
 // 动态导入 model-viewer，因为它只在此页面使用
 import '@google/model-viewer'
@@ -9,6 +9,7 @@ import '@google/model-viewer'
 const modelSrc = ref<string | null>(null)
 const infoText = ref('加载中...')
 const viewerRef = ref<HTMLModelViewerElement | null>(null)
+const isARSupported = ref(false)
 
 // 1. 页面加载时：从共享状态获取 URL
 onMounted(() => {
@@ -31,11 +32,21 @@ onUnmounted(() => {
   }
 })
 
+// 3. 自定义 AR 按钮的点击事件
 const startAR = () => {
   if (viewerRef.value) {
     viewerRef.value.activateAR()
   } else {
     console.warn('AR 按钮点击无效，未找到 model-viewer 实例。')
+  }
+}
+
+// 4. model-viewer 的 @load 事件处理函数
+const onModelLoad = () => {
+  if (viewerRef.value) {
+    // 此时 canActivateAR 属性已经是准确的
+    isARSupported.value = viewerRef.value.canActivateAR
+    console.log('Model loaded. AR Supported:', isARSupported.value)
   }
 }
 </script>
@@ -44,7 +55,7 @@ const startAR = () => {
   <div class="preview-page-wrapper">
     <div id="toolbar">
       <button id="backBtn" @click="$router.back">← 返回</button>
-      <button v-if="isMobile && modelSrc" id="arBtn" @click="startAR">AR 模式</button>
+      <button v-if="isARSupported && modelSrc" id="arBtn" @click="startAR">AR 模式</button>
       <div class="info">{{ infoText }}</div>
     </div>
 
@@ -60,6 +71,7 @@ const startAR = () => {
       shadow-intensity="1"
       environment-image="neutral"
       alt="3D 模型预览"
+      @load="onModelLoad"
     >
     </model-viewer>
   </div>

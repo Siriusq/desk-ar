@@ -8,6 +8,7 @@ declare namespace JSX {
 declare global {
   interface HTMLModelViewerElement extends HTMLElement {
     activateAR: () => void
+    canActivateAR: boolean
   }
 }
 
