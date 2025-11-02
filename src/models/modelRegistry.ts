@@ -1,6 +1,6 @@
 // src/three/modelRegistry.ts
 import * as THREE from 'three'
-import type { DeskObject, DeskObjectType } from '@/types/deskObject'
+import type { DeskObject, DeskObjectType } from '@/models/deskObject'
 
 // 1. 定义贴图加载器（因为它只在这里被使用）
 const textureLoader = new THREE.TextureLoader()

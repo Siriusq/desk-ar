@@ -3,9 +3,9 @@ import { isDeskInScene, objects, sceneObjects, selectedObjectId } from '@/compos
 import { expandedObjectId } from '@/composables/useUIState'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import type { DeskObject, DeskObjectType } from '@/types/deskObject'
+import type { DeskObject, DeskObjectType } from '@/models/deskObject'
 import { rebuildSceneFromData, scene } from './sceneManager'
-import { modelRegistry } from './modelRegistry'
+import { modelRegistry } from '../models/modelRegistry'
 const gltfLoader = new GLTFLoader()
 
 // 【新增】 用于从 useModelImporter 调用的函数

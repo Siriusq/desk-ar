@@ -12,7 +12,7 @@ import { isTransformDragging, transformMode } from '@/composables/useScene'
 import { saveState } from './useHistory'
 import { expandedObjectId } from './useUIState'
 // 【新增】 导入类型和新的辅助函数
-import type { DeskObject } from '@/types/deskObject'
+import type { DeskObject } from '@/models/deskObject'
 import { disposeObject3D } from '@/three/objectFactory'
 // 【新增】 导入测量状态和处理函数
 import { isMeasuring, handleMeasurementClick } from '@/composables/useMeasurement'

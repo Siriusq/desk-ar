@@ -6,7 +6,7 @@ import { saveState } from '@/composables/useHistory'
 import { isTransformDragging } from '@/composables/useScene'
 import { handleSceneClick, objects, sceneObjects, selectedObjectId } from '@/composables/useObjects'
 import { createObject3D } from './objectFactory'
-import type { DeskObject } from '@/types/deskObject'
+import type { DeskObject } from '@/models/deskObject'
 import {
   initMeasurement,
   renderMeasurement,

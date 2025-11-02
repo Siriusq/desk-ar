@@ -2,7 +2,7 @@ import { computed, ref, type Ref } from 'vue'
 import { autoSave, sceneName } from './useLayout'
 import { objects } from '@/composables/useObjects'
 import { rebuildSceneFromData } from '@/three/sceneManager'
-import type { DeskObject } from '@/types/deskObject'
+import type { DeskObject } from '@/models/deskObject'
 
 // 【新增】 为历史状态定义一个接口
 interface HistoryState {
