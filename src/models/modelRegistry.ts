@@ -78,10 +78,10 @@ export const modelRegistry: Record<DeskObjectType, ModelDefinition> = {
       rotation: { x: 0, y: 0, z: 0 },
       mountedToId: null,
       params: {
-        widthA: 1.5,
-        depthA: 0.7,
-        widthB: 1.5,
-        depthB: 0.7,
+        widthA: 1.2,
+        depthA: 0.6,
+        widthB: 0.8,
+        depthB: 0.5,
         height: 0.75,
         color: '#8B4513',
       },
@@ -97,24 +97,42 @@ export const modelRegistry: Record<DeskObjectType, ModelDefinition> = {
           color: string
         }
       const mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.7 })
-      const shape = new THREE.Shape()
-      shape.moveTo(-widthA / 2, -depthA / 2)
-      shape.lineTo(widthA / 2, -depthA / 2)
-      shape.lineTo(widthA / 2, depthA / 2 - depthB)
-      shape.lineTo(widthA / 2 - widthB, depthA / 2 - depthB)
-      shape.lineTo(widthA / 2 - widthB, depthA / 2)
-      shape.lineTo(-widthA / 2, depthA / 2)
-      shape.closePath()
-      const extrudeSettings = { depth: 0.04, bevelEnabled: false }
-      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings)
-      const top = new THREE.Mesh(geometry, mat)
-      top.rotation.x = -Math.PI / 2
-      top.position.y = height
-      group.add(top)
-      // 腿部逻辑
-      if (true) {
-        /* simplified legs */
-      }
+      const y = height - 0.02 // 桌板中心Y高度
+
+      // === 主桌面 ===
+      const topA = new THREE.Mesh(new THREE.BoxGeometry(widthA, 0.04, depthA), mat)
+      // 以直角点为基准，主桌向 X 轴正方向延伸
+      topA.position.set(widthA / 2, y, depthA / 2)
+      group.add(topA)
+
+      // === 副桌面 ===
+      const topB = new THREE.Mesh(new THREE.BoxGeometry(depthB, 0.04, widthB), mat)
+      // 以直角点为基准，副桌向 Z 轴正方向延伸
+      topB.position.set(depthB / 2, y, widthB / 2)
+      group.add(topB)
+
+      // === 桌腿 ===
+      const legThickness = 0.04 // 立板厚度
+      const legHeight = height - 0.04
+      const yLegMid = (height - 0.04) / 2
+
+      // 主桌右端整块腿（与主桌宽度一致）
+      const legA = new THREE.Mesh(new THREE.BoxGeometry(legThickness, legHeight, depthA), mat)
+      legA.position.set(widthA - legThickness / 2, yLegMid, depthA / 2)
+      group.add(legA)
+
+      // 副桌远端整块腿（与副桌宽度一致）
+      const legB = new THREE.Mesh(new THREE.BoxGeometry(depthB, legHeight, legThickness), mat)
+      legB.position.set(depthB / 2, yLegMid, widthB - legThickness / 2)
+      group.add(legB)
+
+      // 转角支撑板（可选）
+      const legCorner = new THREE.Mesh(
+        new THREE.BoxGeometry(legThickness, legHeight, legThickness),
+        mat,
+      )
+      legCorner.position.set(legThickness / 2, yLegMid, legThickness / 2)
+      group.add(legCorner)
     },
   },
 
