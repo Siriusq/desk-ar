@@ -58,6 +58,8 @@ export const updateObjectValue = (
       }
     }
     saveState() // 保存历史
+
+    transformControls.attach(obj3D)
   }
 }
 
@@ -74,6 +76,9 @@ export const updateObjectParam = (id: string, key: string, value: any) => {
     // 3. 【重要】 重建整个场景
     // 这是修复问题 2 (物品消失) 和 4 (showLegs) 的关键
     rebuildSceneFromData()
+
+    const obj3D = sceneObjects.get(id)
+    transformControls.attach(obj3D)
   }
 }
 
