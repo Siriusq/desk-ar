@@ -44,7 +44,11 @@ export const availableModels: AvailableModelsMap = {
   accessories: {
     icon: '⌨️', // 新增：目录图标
     models: [
-      { type: 'keyboard', name: 'keyboard', icon: '⌨️' },
+      // 【修改】 替换 'keyboard' 为具体的尺寸选项
+      { type: 'keyboard-108', name: 'keyboard-108', icon: '⌨️' },
+      { type: 'keyboard-87', name: 'keyboard-87', icon: '⌨️' },
+      { type: 'keyboard-68', name: 'keyboard-68', icon: '⌨️' },
+      { type: 'keyboard-60', name: 'keyboard-60', icon: '⌨️' },
       { type: 'mouse', name: 'mouse', icon: '🖱️' },
       { type: 'universal-stand', name: 'universal-stand', icon: '🔩' },
     ],

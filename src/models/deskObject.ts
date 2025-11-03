@@ -77,10 +77,11 @@ export interface KeyboardParams {
   width: number
   height: number
   depth: number
-  color: string
+  isBlack: boolean
 }
+// 【修改】 将 KeyboardObject 的 type 扩展为联合类型
 export interface KeyboardObject extends BaseObject {
-  type: 'keyboard'
+  type: 'keyboard-108' | 'keyboard-87' | 'keyboard-68' | 'keyboard-60'
   params: KeyboardParams
 }
 
@@ -141,7 +142,7 @@ export type DeskObject =
   | MouseObject
   | UniversalStandObject
   | CustomBoxObject
-  | ImportedModelObject // 【新增】
+  | ImportedModelObject
 
 // 4. 导出 Type 字符串的联合类型，用于 addObject
 // 【注意】 我们 *不* 在这里添加 'imported-model'
@@ -152,7 +153,10 @@ export type DeskObjectType =
   | 'monitor'
   | 'macbook'
   | 'iphone'
-  | 'keyboard'
+  | 'keyboard-108'
+  | 'keyboard-87'
+  | 'keyboard-68'
+  | 'keyboard-60'
   | 'mouse'
   | 'universal-stand'
   | 'custom-box'

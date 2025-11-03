@@ -62,12 +62,8 @@ const getDisplayName = (obj: DeskObject | undefined) => {
   if (!obj) return 'Unknown'
   const type = obj.type
   if (!type) return 'Item'
-  if (type.startsWith('desk-')) return '办公桌'
   if (type == 'imported-model') return obj.params.fileName
-  if (type === 'monitor') return '显示器'
-  if (type === 'macbook') return '笔记本电脑'
-  // ...可以继续添加
-  return type
+  return t('models.' + type)
 }
 
 // 3. 辅助函数，用于 v-for 循环 params
@@ -416,9 +412,8 @@ const getUnitForParam = (key: string) => {
             <!--开关-->
             <BFormCheckbox
               v-else-if="typeof value === 'boolean'"
-              size="sm"
-              :checked="value as boolean"
-              @change="updateObjectParam(selectedObject.id, key, $event)"
+              :modelValue="value"
+              @update:modelValue="updateObjectParam(selectedObject.id, key, $event)"
               switch
             />
 
