@@ -40,7 +40,17 @@ export interface DeskLObject extends BaseObject {
 export interface MonitorParams {
   width: number
   height: number
+  depth: number
   color: string
+  baseWidth: number
+  baseDepth: number
+  baseHeight: number
+  standWidth: number
+  standDepth: number
+  standHeight: number
+  standRotationY: number
+  screenSlideY: number
+  screenTiltX: number
   isMountable: boolean
 }
 export interface MonitorObject extends BaseObject {

@@ -1,6 +1,6 @@
 // src/three/modelRegistry.ts
 import * as THREE from 'three'
-import type { DeskObject, DeskObjectType } from '@/models/deskObject'
+import type { DeskObject, DeskObjectType, MonitorObject } from '@/models/deskObject'
 
 // 1. 定义贴图加载器（因为它只在这里被使用）
 const textureLoader = new THREE.TextureLoader()
@@ -139,31 +139,147 @@ export const modelRegistry: Record<DeskObjectType, ModelDefinition> = {
   // --- MONITOR ---
   monitor: {
     createData: (id, yPos) => ({
-      id: id,
+      id,
       type: 'monitor',
       position: { x: 0, y: yPos, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
       mountedToId: null,
       params: {
-        width: 0.55,
-        height: 0.32,
-        color: '#222222',
+        width: 0.55, // 屏幕整体宽度
+        height: 0.32, // 屏幕整体高度
+        depth: 0.03, // 屏幕厚度
+        color: '#333333', // 外壳颜色
+
+        baseWidth: 0.25,
+        baseDepth: 0.2,
+        baseHeight: 0.02,
+
+        standWidth: 0.03,
+        standDepth: 0.03,
+        standHeight: 0.3,
+
+        standRotationY: 0, // 支架旋转（Y轴）
+        screenTiltX: 0, // 屏幕俯仰角（X轴）
+        screenSlideY: 0.05, // 屏幕上下滑动距离（正数=向上）
+
         isMountable: true,
       },
     }),
+
     buildGeometry: (group, data) => {
-      const { width, height, color } = data.params as DeskObject['params'] & {
-        width: number
-        height: number
-        color: string
-      }
-      const mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.7 })
-      const screen = new THREE.Mesh(new THREE.BoxGeometry(width, height, 0.01), mat)
-      screen.position.y = height / 2 + 0.1
-      const standBase = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.01, 0.2), mat)
-      const standPole = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.1), mat)
-      standPole.position.y = 0.05
-      group.add(screen, standBase, standPole)
+      const {
+        width,
+        height,
+        depth,
+        color,
+        baseWidth,
+        baseDepth,
+        baseHeight,
+        standWidth,
+        standDepth,
+        standHeight,
+        standRotationY,
+        screenSlideY,
+        screenTiltX,
+      } = data.params as MonitorObject['params']
+
+      const border = 0.015
+      const panelDepth = 0.002
+      const pivotBlockDepth = 0.015
+      const pivotBlockHeight = 0.03
+
+      const matBody = new THREE.MeshStandardMaterial({ color, roughness: 0.6, metalness: 0.1 })
+      const matPanel = new THREE.MeshStandardMaterial({
+        color: 0x111111,
+        roughness: 0.2,
+        metalness: 0.8,
+      })
+
+      while (group.children.length) group.remove(group.children[0]!)
+
+      // === 底座 ===
+      const base = new THREE.Mesh(new THREE.BoxGeometry(baseWidth, baseHeight, baseDepth), matBody)
+      base.position.y = baseHeight / 2
+      group.add(base)
+
+      // === 支架 ===
+      const stand = new THREE.Mesh(
+        new THREE.BoxGeometry(standWidth, standHeight, standDepth),
+        matBody,
+      )
+      stand.position.y = baseHeight + standHeight / 2
+      stand.position.z = -baseDepth / 2 + standDepth / 2
+      stand.rotation.y = standRotationY
+      group.add(stand)
+
+      // === pivotGroup（连接件 + 滑动 + 俯仰）===
+      const pivotGroup = new THREE.Group()
+      pivotGroup.position.set(0, baseHeight + standHeight, stand.position.z)
+      pivotGroup.rotation.y = standRotationY
+      group.add(pivotGroup)
+
+      // 连接件（pivot block）
+      const pivotBlock = new THREE.Mesh(
+        new THREE.BoxGeometry(standWidth * 1.4, pivotBlockHeight, pivotBlockDepth),
+        matBody,
+      )
+      pivotBlock.position.set(0, -pivotBlockHeight / 2, standDepth / 2 + pivotBlockDepth / 2)
+      pivotGroup.add(pivotBlock)
+
+      // === 屏幕滑动组 ===
+      const slideGroup = new THREE.Group()
+      slideGroup.position.y = screenSlideY // 直接控制屏幕上下滑动
+      pivotGroup.add(slideGroup)
+
+      // === 屏幕组（可俯仰） ===
+      const screenGroup = new THREE.Group()
+      slideGroup.add(screenGroup)
+
+      // 俯仰角
+      screenGroup.rotation.x = screenTiltX
+
+      // 位置：贴在pivotBlock前面
+      screenGroup.position.set(
+        0,
+        -pivotBlockHeight / 2,
+        pivotBlock.position.z + pivotBlockDepth / 2 + depth / 2,
+      )
+
+      // === 屏幕结构 ===
+      const back = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), matBody)
+      back.position.z = -panelDepth
+      screenGroup.add(back)
+
+      const topFrame = new THREE.Mesh(new THREE.BoxGeometry(width, border, depth), matBody)
+      topFrame.position.y = height / 2 - border / 2
+      screenGroup.add(topFrame)
+
+      const bottomFrame = new THREE.Mesh(new THREE.BoxGeometry(width, border, depth), matBody)
+      bottomFrame.position.y = -height / 2 + border / 2
+      screenGroup.add(bottomFrame)
+
+      const leftFrame = new THREE.Mesh(
+        new THREE.BoxGeometry(border, height - 2 * border, depth),
+        matBody,
+      )
+      leftFrame.position.x = -width / 2 + border / 2
+      screenGroup.add(leftFrame)
+
+      const rightFrame = new THREE.Mesh(
+        new THREE.BoxGeometry(border, height - 2 * border, depth),
+        matBody,
+      )
+      rightFrame.position.x = width / 2 - border / 2
+      screenGroup.add(rightFrame)
+
+      const panel = new THREE.Mesh(
+        new THREE.BoxGeometry(width - 2 * border, height - 2 * border, panelDepth),
+        matPanel,
+      )
+      panel.position.z = depth / 2 - panelDepth / 2 - 0.001
+      screenGroup.add(panel)
+
+      group.position.y = 0
     },
   },
 
