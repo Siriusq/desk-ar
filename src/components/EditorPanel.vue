@@ -374,7 +374,7 @@ const getUnitForParam = (key: string) => {
                 <BButtonGroup size="sm" class="d-flex w-100">
                   <BButton
                     variant="outline-secondary"
-                    @click="updateObjectParam(selectedObject.id, key, value - 0.01)"
+                    @click="updateObjectParam(selectedObject.id, key, value - 0.1)"
                     class="flex-fill pe-0 ps-0 me-0 ms-0"
                     >-100</BButton
                   >
@@ -386,13 +386,13 @@ const getUnitForParam = (key: string) => {
                   >
                   <BButton
                     variant="outline-secondary"
-                    @click="updateObjectParam(selectedObject.id, key, value - 0.01)"
+                    @click="updateObjectParam(selectedObject.id, key, value + 0.01)"
                     class="flex-fill pe-0 ps-0 me-0 ms-0"
                     >+10</BButton
                   >
                   <BButton
                     variant="outline-secondary"
-                    @click="updateObjectParam(selectedObject.id, key, value - 0.01)"
+                    @click="updateObjectParam(selectedObject.id, key, value + 0.1)"
                     class="flex-fill pe-0 ps-0 me-0 ms-0"
                     >+100</BButton
                   >

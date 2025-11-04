@@ -162,6 +162,8 @@ export const modelRegistry: Record<DeskObjectType, ModelDefinition> = {
         screenTiltX: 0, // 屏幕俯仰角（X轴）
         screenSlideY: 0.05, // 屏幕上下滑动距离（正数=向上）
 
+        curvatureR: 0,
+
         isMountable: true,
       },
     }),
@@ -181,12 +183,13 @@ export const modelRegistry: Record<DeskObjectType, ModelDefinition> = {
         standRotationY,
         screenSlideY,
         screenTiltX,
+        curvatureR,
       } = data.params as MonitorObject['params']
 
       const border = 0.015
-      const panelDepth = 0.002
       const pivotBlockDepth = 0.015
       const pivotBlockHeight = 0.03
+      const panelSubdivisions = 90
 
       const matBody = new THREE.MeshStandardMaterial({ color, roughness: 0.6, metalness: 0.1 })
       const matPanel = new THREE.MeshStandardMaterial({
@@ -195,6 +198,7 @@ export const modelRegistry: Record<DeskObjectType, ModelDefinition> = {
         metalness: 0.8,
       })
 
+      // 清空 group
       while (group.children.length) group.remove(group.children[0]!)
 
       // === 底座 ===
@@ -212,13 +216,13 @@ export const modelRegistry: Record<DeskObjectType, ModelDefinition> = {
       stand.rotation.y = standRotationY
       group.add(stand)
 
-      // === pivotGroup（连接件 + 滑动 + 俯仰）===
+      // === pivotGroup（连接件+滑动+俯仰）===
       const pivotGroup = new THREE.Group()
       pivotGroup.position.set(0, baseHeight + standHeight, stand.position.z)
       pivotGroup.rotation.y = standRotationY
       group.add(pivotGroup)
 
-      // 连接件（pivot block）
+      // pivot block
       const pivotBlock = new THREE.Mesh(
         new THREE.BoxGeometry(standWidth * 1.4, pivotBlockHeight, pivotBlockDepth),
         matBody,
@@ -226,58 +230,86 @@ export const modelRegistry: Record<DeskObjectType, ModelDefinition> = {
       pivotBlock.position.set(0, -pivotBlockHeight / 2, standDepth / 2 + pivotBlockDepth / 2)
       pivotGroup.add(pivotBlock)
 
-      // === 屏幕滑动组 ===
+      // === 滑动组 ===
       const slideGroup = new THREE.Group()
-      slideGroup.position.y = screenSlideY // 直接控制屏幕上下滑动
+      slideGroup.position.y = screenSlideY
       pivotGroup.add(slideGroup)
 
-      // === 屏幕组（可俯仰） ===
+      // === 屏幕组（可俯仰）===
       const screenGroup = new THREE.Group()
-      slideGroup.add(screenGroup)
-
-      // 俯仰角
-      screenGroup.rotation.x = screenTiltX
-
-      // 位置：贴在pivotBlock前面
       screenGroup.position.set(
         0,
         -pivotBlockHeight / 2,
         pivotBlock.position.z + pivotBlockDepth / 2 + depth / 2,
       )
+      screenGroup.rotation.x = screenTiltX
+      slideGroup.add(screenGroup)
 
-      // === 屏幕结构 ===
-      const back = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), matBody)
-      back.position.z = -panelDepth
+      // === 生成真实曲面屏（背板+边框+面板）===
+      const widthSeg = panelSubdivisions
+      const heightSeg = 1
+
+      // 背板 + 框
+      const backGeo = new THREE.BoxGeometry(width, height, depth, widthSeg, heightSeg, 1)
+      const pos = backGeo.attributes.position!
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i)
+        if (curvatureR > 0) {
+          const theta = x / curvatureR
+          const cosT = Math.cos(theta)
+          const sinT = Math.sin(theta)
+          const z0 = pos.getZ(i)
+          pos.setX(i, curvatureR * sinT)
+          pos.setZ(i, z0 + curvatureR * (1 - cosT))
+        }
+      }
+      backGeo.computeVertexNormals()
+      const back = new THREE.Mesh(backGeo, matBody)
       screenGroup.add(back)
 
-      const topFrame = new THREE.Mesh(new THREE.BoxGeometry(width, border, depth), matBody)
-      topFrame.position.y = height / 2 - border / 2
-      screenGroup.add(topFrame)
-
-      const bottomFrame = new THREE.Mesh(new THREE.BoxGeometry(width, border, depth), matBody)
-      bottomFrame.position.y = -height / 2 + border / 2
-      screenGroup.add(bottomFrame)
-
-      const leftFrame = new THREE.Mesh(
-        new THREE.BoxGeometry(border, height - 2 * border, depth),
-        matBody,
+      // 面板
+      const panelGeo = new THREE.BoxGeometry(
+        width - 2 * border,
+        height - 2 * border,
+        0.002,
+        widthSeg,
+        heightSeg,
+        1,
       )
-      leftFrame.position.x = -width / 2 + border / 2
-      screenGroup.add(leftFrame)
-
-      const rightFrame = new THREE.Mesh(
-        new THREE.BoxGeometry(border, height - 2 * border, depth),
-        matBody,
-      )
-      rightFrame.position.x = width / 2 - border / 2
-      screenGroup.add(rightFrame)
-
-      const panel = new THREE.Mesh(
-        new THREE.BoxGeometry(width - 2 * border, height - 2 * border, panelDepth),
-        matPanel,
-      )
-      panel.position.z = depth / 2 - panelDepth / 2 - 0.001
+      const panelPos = panelGeo.attributes.position!
+      for (let i = 0; i < panelPos.count; i++) {
+        const x = panelPos.getX(i)
+        if (curvatureR > 0) {
+          const theta = x / curvatureR
+          const cosT = Math.cos(theta)
+          const sinT = Math.sin(theta)
+          const z0 = panelPos.getZ(i)
+          panelPos.setX(i, curvatureR * sinT)
+          panelPos.setZ(i, z0 + curvatureR * (1 - cosT))
+        }
+      }
+      panelGeo.computeVertexNormals()
+      const panel = new THREE.Mesh(panelGeo, matPanel)
+      panel.position.z = depth / 2
       screenGroup.add(panel)
+
+      // 整体边框
+      const frameGeo = new THREE.BoxGeometry(width, height, depth, widthSeg, heightSeg, 1)
+      const framePos = frameGeo.attributes.position!
+      for (let i = 0; i < framePos.count; i++) {
+        const x = framePos.getX(i)
+        if (curvatureR > 0) {
+          const theta = x / curvatureR
+          const cosT = Math.cos(theta)
+          const sinT = Math.sin(theta)
+          const z0 = framePos.getZ(i)
+          framePos.setX(i, curvatureR * sinT)
+          framePos.setZ(i, z0 + curvatureR * (1 - cosT))
+        }
+      }
+      frameGeo.computeVertexNormals()
+      const frame = new THREE.Mesh(frameGeo, matBody)
+      screenGroup.add(frame)
 
       group.position.y = 0
     },
