@@ -363,24 +363,40 @@ const getUnitForParam = (key: string) => {
                     @change="
                       updateObjectParam(selectedObject.id, key, Number($event.target.value) / 1000)
                     "
-                    :min="1"
-                    :max="3000"
+                    :min="0"
+                    :max="5000"
                     :step="1"
                   />
                   <BInputGroupText>{{ getUnitForParam(key) }}</BInputGroupText>
                 </BInputGroup>
               </BCol>
               <BCol cols="6">
-                <BFormInput
-                  type="range"
-                  :model-value="((value as number) * 1000).toFixed(0)"
-                  @input="
-                    updateObjectParam(selectedObject.id, key, Number($event.target.value) / 1000)
-                  "
-                  min="1"
-                  max="3000"
-                  step="1"
-                />
+                <BButtonGroup size="sm" class="d-flex w-100">
+                  <BButton
+                    variant="outline-secondary"
+                    @click="updateObjectParam(selectedObject.id, key, Math.max(value - 0.1, 0))"
+                    class="flex-fill pe-0 ps-0 me-0 ms-0"
+                    >-100</BButton
+                  >
+                  <BButton
+                    variant="outline-secondary"
+                    @click="updateObjectParam(selectedObject.id, key, Math.max(value - 0.01, 0))"
+                    class="flex-fill pe-0 ps-0 me-0 ms-0"
+                    >-10</BButton
+                  >
+                  <BButton
+                    variant="outline-secondary"
+                    @click="updateObjectParam(selectedObject.id, key, Math.min(value + 0.01, 5))"
+                    class="flex-fill pe-0 ps-0 me-0 ms-0"
+                    >+10</BButton
+                  >
+                  <BButton
+                    variant="outline-secondary"
+                    @click="updateObjectParam(selectedObject.id, key, Math.min(value + 0.1, 5))"
+                    class="flex-fill pe-0 ps-0 me-0 ms-0"
+                    >+100</BButton
+                  >
+                </BButtonGroup>
               </BCol>
             </BRow>
 
