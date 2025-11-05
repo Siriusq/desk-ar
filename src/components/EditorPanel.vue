@@ -8,7 +8,7 @@ import {
   handleEditNameToggle,
 } from '@/composables/useUIState'
 import { useWindowSize } from '@vueuse/core'
-import { computed, watch } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { saveLayoutToFile, sceneName } from '@/composables/useLayout'
 import {
   selectedObjectId,
@@ -28,6 +28,7 @@ const { t } = useI18n()
 import { setCameraView, setCameraProjection } from '@/three/sceneManager'
 // 【新增】 导入测量状态和切换函数
 import { isMeasuring, toggleMeasurementMode } from '@/composables/useMeasurement'
+import { MathUtils } from 'three'
 
 // 使用 Composable 共享状态
 const {
@@ -75,15 +76,85 @@ const getEditableParams = (obj: DeskObject | null) => {
   )
 }
 
+// 数值单位
+// 本地输入缓存，单位是输入框的单位（mm或度）
+const inputValues = reactive<Record<string, number>>({})
+
+// 当 selectedObject 变化时，更新输入框显示的值
+watch(
+  selectedObject,
+  (obj) => {
+    if (!obj) return
+    const params = obj.params
+    for (const [key, val] of Object.entries(params)) {
+      if (typeof val === 'number') {
+        inputValues[key] = fromThreeUnitToInput(key, val)
+      }
+    }
+  },
+  { immediate: true, deep: true },
+)
+
+// 按钮调整函数：根据 key 自动判断单位类型
+const adjustValue = (key: string, delta: number) => {
+  const current = inputValues[key] ?? 0
+  let stepAdjusted = current + delta
+
+  // 对角度参数使用不同步进（例如 ±1° 或 ±5°）
+  if (angles.includes(key)) {
+    stepAdjusted = current + delta / 10 // 例如按钮的 ±10 表示 ±1°
+  }
+
+  inputValues[key] = stepAdjusted
+  fromInputToThreeUnit(key, stepAdjusted)
+}
+
+let adjustInterval: ReturnType<typeof setInterval> | null = null
+
+const startAdjust = (key: string, delta: number) => {
+  adjustValue(key, delta)
+  adjustInterval = setInterval(() => adjustValue(key, delta), 300)
+}
+const stopAdjust = () => {
+  if (adjustInterval) clearInterval(adjustInterval)
+  adjustInterval = null
+}
+
+const angles = ['standRotationY', 'screenTiltX', 'screenRotateZ']
 const getUnitForParam = (key: string) => {
-  // 示例逻辑：您可以根据 key 返回不同的单位
-  if (key === 'opacity') {
-    return '%'
-  } else if (key === 'size') {
-    return 'm' // 米
+  // 根据 key 返回不同的单位
+  if (angles.includes(key)) {
+    return '°'
+  } else if (key === 'curvatureR') {
+    return 'R'
   }
   // 默认单位
   return 'mm'
+}
+
+// 数值转换,显示转换和更改数值转换，角度、曲率和长度
+const fromInputToThreeUnit = (key: string, value: number) => {
+  const currObject = selectedObject.value
+  if (!currObject) return
+  if (angles.includes(key)) {
+    value = MathUtils.degToRad(value)
+  } else if (key === 'screenSlideY') {
+    if (value > 0) value = 0
+    value /= 1000
+  } else {
+    if (value < 0) value = 0
+    value /= 1000
+  }
+  // 默认单位
+  updateObjectParam(currObject.id, key, value)
+}
+
+const fromThreeUnitToInput = (key: string, value: number) => {
+  if (angles.includes(key)) {
+    return Number(MathUtils.radToDeg(value).toFixed(0))
+  } else {
+    return Number((value * 1000).toFixed(0))
+  }
 }
 </script>
 
@@ -359,12 +430,8 @@ const getUnitForParam = (key: string) => {
                 <BInputGroup size="sm">
                   <BFormInput
                     type="number"
-                    :model-value="((value as number) * 1000).toFixed(0)"
-                    @change="
-                      updateObjectParam(selectedObject.id, key, Number($event.target.value) / 1000)
-                    "
-                    :min="0"
-                    :max="5000"
+                    :model-value="fromThreeUnitToInput(key, value as number)"
+                    @change="fromInputToThreeUnit(key, Number($event.target.value))"
                     :step="1"
                   />
                   <BInputGroupText>{{ getUnitForParam(key) }}</BInputGroupText>
@@ -374,27 +441,31 @@ const getUnitForParam = (key: string) => {
                 <BButtonGroup size="sm" class="d-flex w-100">
                   <BButton
                     variant="outline-secondary"
-                    @click="updateObjectParam(selectedObject.id, key, value - 0.1)"
+                    @mousedown="startAdjust(key, -100)"
+                    @mouseup="stopAdjust"
                     class="flex-fill pe-0 ps-0 me-0 ms-0"
-                    >-100</BButton
+                    >{{ angles.includes(key) ? '-10' : '-100' }}</BButton
                   >
                   <BButton
                     variant="outline-secondary"
-                    @click="updateObjectParam(selectedObject.id, key, value - 0.01)"
+                    @mousedown="startAdjust(key, -10)"
+                    @mouseup="stopAdjust"
                     class="flex-fill pe-0 ps-0 me-0 ms-0"
-                    >-10</BButton
+                    >{{ angles.includes(key) ? '-1' : '-10' }}</BButton
                   >
                   <BButton
                     variant="outline-secondary"
-                    @click="updateObjectParam(selectedObject.id, key, value + 0.01)"
+                    @mousedown="startAdjust(key, +10)"
+                    @mouseup="stopAdjust"
                     class="flex-fill pe-0 ps-0 me-0 ms-0"
-                    >+10</BButton
+                    >{{ angles.includes(key) ? '+1' : '+10' }}</BButton
                   >
                   <BButton
                     variant="outline-secondary"
-                    @click="updateObjectParam(selectedObject.id, key, value + 0.1)"
+                    @mousedown="startAdjust(key, +100)"
+                    @mouseup="stopAdjust"
                     class="flex-fill pe-0 ps-0 me-0 ms-0"
-                    >+100</BButton
+                    >{{ angles.includes(key) ? '+10' : '+100' }}</BButton
                   >
                 </BButtonGroup>
               </BCol>
