@@ -51,6 +51,8 @@ export interface MonitorParams {
   standRotationY: number
   screenSlideY: number
   screenTiltX: number
+  screenRotateZ: number
+  curvatureR: number
   isMountable: boolean
 }
 export interface MonitorObject extends BaseObject {
