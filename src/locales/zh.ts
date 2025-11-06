@@ -59,6 +59,8 @@ export default {
   screenTiltX: '屏幕俯仰',
   screenRotateZ: '屏幕旋转',
   curvatureR: '屏幕曲率',
+  // 笔记本
+  lidAngle: '屏幕开合角度',
   back: '返回',
   add: '添加',
   selectCategory: '选择分类',

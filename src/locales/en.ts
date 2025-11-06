@@ -58,6 +58,8 @@ export default {
   screenTiltX: 'Screen Tilt',
   screenRotateZ: 'Screen Rotate',
   curvatureR: 'Screen Curvature',
+  // 笔记本
+  lidAngle: 'Lid Angle',
   back: 'Back',
   add: 'Add',
   selectCategory: 'Select Category',

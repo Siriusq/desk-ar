@@ -120,7 +120,7 @@ const stopAdjust = () => {
   adjustInterval = null
 }
 
-const angles = ['standRotationY', 'screenTiltX', 'screenRotateZ']
+const angles = ['standRotationY', 'screenTiltX', 'screenRotateZ', 'lidAngle']
 const getUnitForParam = (key: string) => {
   // 根据 key 返回不同的单位
   if (angles.includes(key)) {
