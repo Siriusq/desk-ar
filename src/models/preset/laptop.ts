@@ -1,5 +1,17 @@
 import * as THREE from 'three'
-import type { MacbookObject } from '../deskObject'
+import type { BaseObject } from '../deskObject'
+
+export interface MacbookParams {
+  width: number
+  height: number
+  depth: number
+  color: string
+  isMountable: boolean
+}
+export interface MacbookObject extends BaseObject {
+  type: 'macbook'
+  params: MacbookParams
+}
 
 export const macbookModal = {
   createData: (id: string, yPos: number) => ({
@@ -17,16 +29,16 @@ export const macbookModal = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: MacbookObject) => {
-    const { width, height, depth, color } = data.params as MacbookObject['params']
-    const mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.7 })
+    const p = data.params
+    const mat = new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.7 })
     const body = new THREE.Group()
-    const base = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
-    const screen = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
+    const base = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), mat)
+    const screen = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), mat)
     screen.rotation.x = Math.PI / 1.5
-    screen.position.z = -depth / 2
-    screen.position.y = height / 2
+    screen.position.z = -p.depth / 2
+    screen.position.y = p.height / 2
     body.add(base, screen)
-    body.position.y = height / 2
+    body.position.y = p.height / 2
     group.add(body)
   },
 }

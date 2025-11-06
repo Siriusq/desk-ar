@@ -1,5 +1,28 @@
 import * as THREE from 'three'
-import type { MonitorObject } from '@/models/deskObject'
+import type { BaseObject } from '@/models/deskObject'
+
+export interface MonitorParams {
+  width: number
+  height: number
+  depth: number
+  color: string
+  baseWidth: number
+  baseDepth: number
+  baseHeight: number
+  standWidth: number
+  standDepth: number
+  standHeight: number
+  standRotationY: number
+  screenSlideY: number
+  screenTiltX: number
+  screenRotateZ: number
+  curvatureR: number
+  isMountable: boolean
+}
+export interface MonitorObject extends BaseObject {
+  type: 'monitor'
+  params: MonitorParams
+}
 
 export const monitorModel = {
   createData: (id: string, yPos: number) => ({
@@ -34,30 +57,18 @@ export const monitorModel = {
   }),
 
   buildGeometry: (group: THREE.Group, data: MonitorObject) => {
-    const {
-      width,
-      height,
-      depth,
-      color,
-      baseWidth,
-      baseDepth,
-      baseHeight,
-      standWidth,
-      standDepth,
-      standHeight,
-      standRotationY,
-      screenSlideY,
-      screenTiltX,
-      screenRotateZ,
-      curvatureR,
-    } = data.params as MonitorObject['params']
+    const p = data.params
 
     const border = 0.015
     const pivotBlockDepth = 0.04
     const pivotBlockHeight = 0.04
     const panelSubdivisions = 90
 
-    const matBody = new THREE.MeshStandardMaterial({ color, roughness: 0.6, metalness: 0.1 })
+    const matBody = new THREE.MeshStandardMaterial({
+      color: p.color,
+      roughness: 0.6,
+      metalness: 0.1,
+    })
     const matPanel = new THREE.MeshStandardMaterial({
       color: 0x111111,
       roughness: 0.2,
@@ -68,19 +79,22 @@ export const monitorModel = {
     while (group.children.length) group.remove(group.children[0]!)
 
     // === 底座（固定，不旋转）===
-    const base = new THREE.Mesh(new THREE.BoxGeometry(baseWidth, baseHeight, baseDepth), matBody)
-    base.position.y = baseHeight / 2
+    const base = new THREE.Mesh(
+      new THREE.BoxGeometry(p.baseWidth, p.baseHeight, p.baseDepth),
+      matBody,
+    )
+    base.position.y = p.baseHeight / 2
     group.add(base)
 
     // === 旋转底盘组（以此组的局部 y 轴作为旋转轴）===
     // 把旋转中心（圆盘中心）放在 base 顶面（y = baseHeight）
     const rotatingBaseGroup = new THREE.Group()
-    rotatingBaseGroup.position.set(0, baseHeight, 0) // 旋转基准点移到 base 顶面
-    rotatingBaseGroup.rotation.y = standRotationY
+    rotatingBaseGroup.position.set(0, p.baseHeight, 0) // 旋转基准点移到 base 顶面
+    rotatingBaseGroup.rotation.y = p.standRotationY
     group.add(rotatingBaseGroup)
 
     // 旋转圆盘（可视化）——不要旋转它自身的旋转.x
-    const discRadius = baseWidth * 0.35
+    const discRadius = p.baseWidth * 0.35
     const discThickness = 0.001
     const rotationDisc = new THREE.Mesh(
       new THREE.CylinderGeometry(discRadius, discRadius, discThickness, 32),
@@ -91,21 +105,21 @@ export const monitorModel = {
     rotatingBaseGroup.add(rotationDisc)
 
     // 计算支架在 rotatingBaseGroup 局部的 z 位移（与之前保持一致的偏移量）
-    const standZ = -baseDepth / 2 + standDepth / 2 + 0.02
+    const standZ = -p.baseDepth / 2 + p.standDepth / 2 + 0.02
 
     // === 支架（作为圆盘的子对象）===
     const stand = new THREE.Mesh(
-      new THREE.BoxGeometry(standWidth, standHeight, standDepth),
+      new THREE.BoxGeometry(p.standWidth, p.standHeight, p.standDepth),
       matBody,
     )
     // 局部 y: 圆盘顶面 + standHeight/2
-    stand.position.set(0, discThickness + standHeight / 2, standZ)
+    stand.position.set(0, discThickness + p.standHeight / 2, standZ)
     rotatingBaseGroup.add(stand)
 
     // === 滑动组：移动应当随旋转一起（所以也挂在 rotatingBaseGroup 下）===
     // slideGroup 的局部 y = 圆盘顶面 + standHeight + screenSlideY
     const slideGroup = new THREE.Group()
-    slideGroup.position.set(0, discThickness + standHeight + screenSlideY, standZ)
+    slideGroup.position.set(0, discThickness + p.standHeight + p.screenSlideY, standZ)
     rotatingBaseGroup.add(slideGroup)
     // === pivotGroup（pivot 与屏幕一起）===
     const pivotGroup = new THREE.Group()
@@ -115,22 +129,22 @@ export const monitorModel = {
 
     // pivot连接块
     const pivotBlock = new THREE.Mesh(
-      new THREE.BoxGeometry(standWidth * 0.7, pivotBlockHeight, pivotBlockDepth),
+      new THREE.BoxGeometry(p.standWidth * 0.7, pivotBlockHeight, pivotBlockDepth),
       matBody,
     )
-    pivotBlock.position.set(0, 0, -depth / 2 - pivotBlockDepth / 2)
+    pivotBlock.position.set(0, 0, -p.depth / 2 - pivotBlockDepth / 2)
     pivotGroup.add(pivotBlock)
 
     // === 屏幕旋转组（横竖屏）===
     const rotateGroup = new THREE.Group()
-    rotateGroup.rotation.z = screenRotateZ
+    rotateGroup.rotation.z = p.screenRotateZ
     pivotGroup.add(rotateGroup)
 
     // === 屏幕组（俯仰）===
     const screenGroup = new THREE.Group()
-    screenGroup.rotation.x = screenTiltX
+    screenGroup.rotation.x = p.screenTiltX
     rotateGroup.add(screenGroup)
-    pivotGroup.position.set(0, 0, pivotBlockDepth + standDepth)
+    pivotGroup.position.set(0, 0, pivotBlockDepth + p.standDepth)
 
     // === 曲面屏生成 ===
     const widthSeg = panelSubdivisions
@@ -140,13 +154,13 @@ export const monitorModel = {
       const pos = geo.attributes.position!
       for (let i = 0; i < pos.count; i++) {
         const x = pos.getX(i)
-        if (curvatureR > 0.1) {
-          const theta = x / curvatureR
+        if (p.curvatureR > 0.1) {
+          const theta = x / p.curvatureR
           const cosT = Math.cos(theta)
           const sinT = Math.sin(theta)
           const z0 = pos.getZ(i)
-          pos.setX(i, curvatureR * sinT)
-          pos.setZ(i, z0 + curvatureR * (1 - cosT))
+          pos.setX(i, p.curvatureR * sinT)
+          pos.setZ(i, z0 + p.curvatureR * (1 - cosT))
         }
       }
       pos.needsUpdate = true
@@ -155,8 +169,8 @@ export const monitorModel = {
 
     // 面板
     const panelGeo = new THREE.BoxGeometry(
-      width - 2 * border,
-      height - 2 * border,
+      p.width - 2 * border,
+      p.height - 2 * border,
       0.002,
       widthSeg,
       heightSeg,
@@ -164,11 +178,11 @@ export const monitorModel = {
     )
     deformGeometry(panelGeo)
     const panel = new THREE.Mesh(panelGeo, matPanel)
-    panel.position.z = depth / 2 - 0.002 / 2 + 0.001
+    panel.position.z = p.depth / 2 - 0.002 / 2 + 0.001
     screenGroup.add(panel)
 
     // 外框
-    const frameGeo = new THREE.BoxGeometry(width, height, depth, widthSeg, heightSeg, 1)
+    const frameGeo = new THREE.BoxGeometry(p.width, p.height, p.depth, widthSeg, heightSeg, 1)
     deformGeometry(frameGeo)
     const frame = new THREE.Mesh(frameGeo, matBody)
     screenGroup.add(frame)

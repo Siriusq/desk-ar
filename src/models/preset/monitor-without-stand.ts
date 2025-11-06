@@ -33,14 +33,14 @@ export const monitorWithoutStandModel = {
   }),
 
   buildGeometry: (group: THREE.Group, data: MonitorWithoutStandObject) => {
-    const { width, height, depth, color, curvatureR } = data.params
+    const p = data.params
 
     const border = 0.015 // 边框厚度
     const panelDepth = 0.002
     const panelSubdivisions = 90
 
     const matBody = new THREE.MeshStandardMaterial({
-      color,
+      color: p.color,
       roughness: 0.6,
       metalness: 0.1,
     })
@@ -58,13 +58,13 @@ export const monitorWithoutStandModel = {
       const pos = geo.attributes.position!
       for (let i = 0; i < pos.count; i++) {
         const x = pos.getX(i)
-        if (curvatureR > 0.1) {
-          const theta = x / curvatureR
+        if (p.curvatureR > 0.1) {
+          const theta = x / p.curvatureR
           const cosT = Math.cos(theta)
           const sinT = Math.sin(theta)
           const z0 = pos.getZ(i)
-          pos.setX(i, curvatureR * sinT)
-          pos.setZ(i, z0 + curvatureR * (1 - cosT))
+          pos.setX(i, p.curvatureR * sinT)
+          pos.setZ(i, z0 + p.curvatureR * (1 - cosT))
         }
       }
       pos.needsUpdate = true
@@ -77,8 +77,8 @@ export const monitorWithoutStandModel = {
     // === 面板（前表面）===
     const screenGroup = new THREE.Group()
     const panelGeo = new THREE.BoxGeometry(
-      width - 2 * border,
-      height - 2 * border,
+      p.width - 2 * border,
+      p.height - 2 * border,
       panelDepth,
       widthSeg,
       heightSeg,
@@ -86,20 +86,19 @@ export const monitorWithoutStandModel = {
     )
     deformGeometry(panelGeo)
     const panel = new THREE.Mesh(panelGeo, matPanel)
-    panel.position.y = height / 2
+    panel.position.y = p.height / 2
     // 位于外框前表面
-    panel.position.z = depth - panelDepth / 2 + 0.001
+    panel.position.z = p.depth - panelDepth / 2 + 0.001
     screenGroup.add(panel)
 
     // 外框
-    const frameGeo = new THREE.BoxGeometry(width, height, depth, widthSeg, heightSeg, 1)
+    const frameGeo = new THREE.BoxGeometry(p.width, p.height, p.depth, widthSeg, heightSeg, 1)
     deformGeometry(frameGeo)
     const frame = new THREE.Mesh(frameGeo, matBody)
-    frame.position.y = height / 2
-    frame.position.z = depth / 2
+    frame.position.y = p.height / 2
+    frame.position.z = p.depth / 2
     screenGroup.add(frame)
 
-    screenGroup.position.y = -height / 2
     group.add(screenGroup)
   },
 }

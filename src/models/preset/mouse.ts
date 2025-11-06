@@ -1,5 +1,16 @@
 import * as THREE from 'three'
-import type { MouseObject } from '../deskObject'
+import type { BaseObject } from '../deskObject'
+
+export interface MouseParams {
+  width: number
+  height: number
+  depth: number
+  color: string
+}
+export interface MouseObject extends BaseObject {
+  type: 'mouse'
+  params: MouseParams
+}
 
 export const mouseModal = {
   createData: (id: string, yPos: number) => ({
@@ -16,10 +27,10 @@ export const mouseModal = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: MouseObject) => {
-    const { width, height, depth, color } = data.params as MouseObject['params']
-    const mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.7 })
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
-    mesh.position.y = height / 2
+    const p = data.params
+    const mat = new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.7 })
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), mat)
+    mesh.position.y = p.height / 2
     group.add(mesh)
   },
 }

@@ -1,5 +1,17 @@
 import * as THREE from 'three'
-import type { IphoneObject } from '../deskObject'
+import type { BaseObject } from '../deskObject'
+
+export interface IphoneParams {
+  width: number
+  height: number
+  depth: number
+  color: string
+  isMountable: boolean
+}
+export interface IphoneObject extends BaseObject {
+  type: 'iphone'
+  params: IphoneParams
+}
 
 export const iphoneModal = {
   createData: (id: string, yPos: number) => ({
@@ -17,10 +29,10 @@ export const iphoneModal = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: IphoneObject) => {
-    const { width, height, depth, color } = data.params as IphoneObject['params']
-    const mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.7 })
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
-    mesh.position.y = height / 2
+    const p = data.params
+    const mat = new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.7 })
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), mat)
+    mesh.position.y = p.height / 2
     group.add(mesh)
   },
 }

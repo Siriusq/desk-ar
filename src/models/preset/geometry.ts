@@ -1,5 +1,17 @@
 import * as THREE from 'three'
-import type { CustomBoxObject } from '@/models/deskObject'
+import type { BaseObject } from '@/models/deskObject'
+
+// 自定义立方体
+export interface CustomBoxParams {
+  width: number
+  height: number
+  depth: number
+  color: string
+}
+export interface CustomBoxObject extends BaseObject {
+  type: 'custom-box'
+  params: CustomBoxParams
+}
 
 export const cubeModal = {
   createData: (id: string, yPos: number) => ({
@@ -16,10 +28,10 @@ export const cubeModal = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: CustomBoxObject) => {
-    const { width, height, depth, color } = data.params as CustomBoxObject['params']
-    const mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.7 })
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), mat)
-    mesh.position.y = height / 2
+    const p = data.params
+    const mat = new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.7 })
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), mat)
+    mesh.position.y = p.height / 2
     group.add(mesh)
   },
 }

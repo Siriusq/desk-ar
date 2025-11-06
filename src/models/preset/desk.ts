@@ -1,5 +1,29 @@
 import * as THREE from 'three'
-import type { DeskLObject, DeskRectObject } from '../deskObject'
+import type { BaseObject } from '../deskObject'
+
+export interface DeskRectParams {
+  width: number
+  depth: number
+  height: number
+  color: string
+}
+export interface DeskRectObject extends BaseObject {
+  type: 'desk-rect'
+  params: DeskRectParams
+}
+
+export interface DeskLParams {
+  widthA: number
+  depthA: number
+  widthB: number
+  depthB: number
+  height: number
+  color: string
+}
+export interface DeskLObject extends BaseObject {
+  type: 'desk-l'
+  params: DeskLParams
+}
 
 export const deskRectModel = {
   createData: (id: string) => ({
@@ -16,26 +40,26 @@ export const deskRectModel = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: DeskRectObject) => {
-    const { width, depth, height, color } = data.params as DeskRectObject['params']
+    const p = data.params
     const mat = new THREE.MeshStandardMaterial({
-      color: color,
+      color: p.color,
       roughness: 0.7,
       metalness: 0.0,
     })
-    const top = new THREE.Mesh(new THREE.BoxGeometry(width, 0.04, depth), mat)
-    top.position.y = height - 0.02
+    const top = new THREE.Mesh(new THREE.BoxGeometry(p.width, 0.04, p.depth), mat)
+    top.position.y = p.height - 0.02
     group.add(top)
     // 腿部逻辑
     if (true) {
-      const legGeom = new THREE.CylinderGeometry(0.03, 0.03, height - 0.04, 16)
+      const legGeom = new THREE.CylinderGeometry(0.03, 0.03, p.height - 0.04, 16)
       ;[
-        [width / 2 - 0.05, depth / 2 - 0.05],
-        [-width / 2 + 0.05, depth / 2 - 0.05],
-        [width / 2 - 0.05, -depth / 2 + 0.05],
-        [-width / 2 + 0.05, -depth / 2 + 0.05],
-      ].forEach((p) => {
+        [p.width / 2 - 0.05, p.depth / 2 - 0.05],
+        [-p.width / 2 + 0.05, p.depth / 2 - 0.05],
+        [p.width / 2 - 0.05, -p.depth / 2 + 0.05],
+        [-p.width / 2 + 0.05, -p.depth / 2 + 0.05],
+      ].forEach((x) => {
         const leg = new THREE.Mesh(legGeom, mat)
-        leg.position.set(p[0] as number, (height - 0.04) / 2, p[1] as number)
+        leg.position.set(x[0] as number, (p.height - 0.04) / 2, x[1] as number)
         group.add(leg)
       })
     }
@@ -59,35 +83,35 @@ export const deskLModel = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: DeskLObject) => {
-    const { widthA, depthA, widthB, depthB, height, color } = data.params as DeskLObject['params']
-    const mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.7 })
-    const y = height - 0.02 // 桌板中心Y高度
+    const p = data.params
+    const mat = new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.7 })
+    const y = p.height - 0.02 // 桌板中心Y高度
 
     // === 主桌面 ===
-    const topA = new THREE.Mesh(new THREE.BoxGeometry(widthA, 0.04, depthA), mat)
+    const topA = new THREE.Mesh(new THREE.BoxGeometry(p.widthA, 0.04, p.depthA), mat)
     // 以直角点为基准，主桌向 X 轴正方向延伸
-    topA.position.set(widthA / 2, y, depthA / 2)
+    topA.position.set(p.widthA / 2, y, p.depthA / 2)
     group.add(topA)
 
     // === 副桌面 ===
-    const topB = new THREE.Mesh(new THREE.BoxGeometry(depthB, 0.04, widthB), mat)
+    const topB = new THREE.Mesh(new THREE.BoxGeometry(p.depthB, 0.04, p.widthB), mat)
     // 以直角点为基准，副桌向 Z 轴正方向延伸
-    topB.position.set(depthB / 2, y, widthB / 2)
+    topB.position.set(p.depthB / 2, y, p.widthB / 2)
     group.add(topB)
 
     // === 桌腿 ===
     const legThickness = 0.04 // 立板厚度
-    const legHeight = height - 0.04
-    const yLegMid = (height - 0.04) / 2
+    const legHeight = p.height - 0.04
+    const yLegMid = (p.height - 0.04) / 2
 
     // 主桌右端整块腿（与主桌宽度一致）
-    const legA = new THREE.Mesh(new THREE.BoxGeometry(legThickness, legHeight, depthA), mat)
-    legA.position.set(widthA - legThickness / 2, yLegMid, depthA / 2)
+    const legA = new THREE.Mesh(new THREE.BoxGeometry(legThickness, legHeight, p.depthA), mat)
+    legA.position.set(p.widthA - legThickness / 2, yLegMid, p.depthA / 2)
     group.add(legA)
 
     // 副桌远端整块腿（与副桌宽度一致）
-    const legB = new THREE.Mesh(new THREE.BoxGeometry(depthB, legHeight, legThickness), mat)
-    legB.position.set(depthB / 2, yLegMid, widthB - legThickness / 2)
+    const legB = new THREE.Mesh(new THREE.BoxGeometry(p.depthB, legHeight, legThickness), mat)
+    legB.position.set(p.depthB / 2, yLegMid, p.widthB - legThickness / 2)
     group.add(legB)
 
     // 转角支撑板（可选）
