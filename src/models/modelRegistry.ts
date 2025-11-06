@@ -7,6 +7,7 @@ import { iphoneModal } from './preset/phone'
 import { macbookModal } from './preset/laptop'
 import { universalStandModal } from './preset/stand'
 import { cubeModal } from './preset/geometry'
+import { monitorWithoutStandModel } from './preset/monitor-without-stand'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -18,6 +19,8 @@ export const modelRegistry = {
 
   // --- MONITOR ---
   monitor: monitorModel,
+
+  'monitor-without-stand': monitorWithoutStandModel,
 
   // --- KEYBOARD ---
   'keyboard-108': keyboard108Modal,

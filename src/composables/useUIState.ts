@@ -3,7 +3,7 @@ const { t } = i18n.global
 import { ref } from 'vue'
 
 import { exitToWelcome, sceneName } from './useLayout'
-import type { CatalogCategoryKey } from '@/models/modelLists'
+import type { CatalogCategoryKey } from '@/models/modelCatalog'
 
 // 共享状态
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)

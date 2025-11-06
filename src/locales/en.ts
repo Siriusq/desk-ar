@@ -97,6 +97,7 @@ export default {
     'desk-rect': 'Rectangle Desk',
     'desk-l': 'L-Shape Desk',
     monitor: 'Monitor',
+    'monitor-without-stand': 'Monitor without stand',
     macbook: 'Laptop',
     iphone: 'Phone',
     keyboard: 'Keyboard',

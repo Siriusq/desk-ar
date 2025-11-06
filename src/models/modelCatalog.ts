@@ -37,6 +37,7 @@ export const availableModels: AvailableModelsMap = {
     icon: '💻', // 新增：目录图标
     models: [
       { type: 'monitor', name: 'monitor', icon: '🖥️' },
+      { type: 'monitor-without-stand', name: 'monitor-without-stand', icon: '🖥️' },
       { type: 'macbook', name: 'macbook', icon: '💻' },
       { type: 'iphone', name: 'iphone', icon: '📱' },
     ],

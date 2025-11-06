@@ -176,6 +176,3 @@ export const monitorModel = {
     group.position.y = 0
   },
 }
-
-// todo:无支架显示器
-export const monitorScreenModal = {}

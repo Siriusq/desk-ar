@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useUIState } from '@/composables/useUIState'
 import { isDeskInScene } from '@/composables/useObjects'
-import { availableModels } from '@/models/modelLists'
+import { availableModels } from '@/models/modelCatalog'
 import { useI18n } from 'vue-i18n'
 import { addObject } from '@/three/objectFactory'
 const { t } = useI18n()

@@ -97,6 +97,7 @@ export default {
     'desk-rect': '矩形桌',
     'desk-l': 'L形转角桌',
     monitor: '显示器',
+    'monitor-without-stand': '显示器-不含底座',
     macbook: '笔记本电脑',
     iphone: '手机',
     keyboard: '键盘',

@@ -1,5 +1,8 @@
 // src/types/deskObject.ts
 // 1. 基础布局对象接口 (所有对象共享的属性)
+
+import type { MonitorWithoutStandObject } from './preset/monitor-without-stand'
+
 // 注意：position 和 rotation 应该是纯对象，以便 JSON 序列化
 export interface BaseObject {
   id: string
@@ -148,6 +151,7 @@ export type DeskObject =
   | DeskRectObject
   | DeskLObject
   | MonitorObject
+  | MonitorWithoutStandObject
   | MacbookObject
   | IphoneObject
   | KeyboardObject
@@ -163,6 +167,7 @@ export type DeskObjectType =
   | 'desk-rect'
   | 'desk-l'
   | 'monitor'
+  | 'monitor-without-stand'
   | 'macbook'
   | 'iphone'
   | 'keyboard-108'
