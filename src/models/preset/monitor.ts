@@ -64,31 +64,53 @@ export const monitorModel = {
       metalness: 0.8,
     })
 
+    // 清空 group
     while (group.children.length) group.remove(group.children[0]!)
 
-    // === 底座 ===
+    // === 底座（固定，不旋转）===
     const base = new THREE.Mesh(new THREE.BoxGeometry(baseWidth, baseHeight, baseDepth), matBody)
     base.position.y = baseHeight / 2
     group.add(base)
 
-    // === 支架 ===
+    // === 旋转底盘组（以此组的局部 y 轴作为旋转轴）===
+    // 把旋转中心（圆盘中心）放在 base 顶面（y = baseHeight）
+    const rotatingBaseGroup = new THREE.Group()
+    rotatingBaseGroup.position.set(0, baseHeight, 0) // 旋转基准点移到 base 顶面
+    rotatingBaseGroup.rotation.y = standRotationY
+    group.add(rotatingBaseGroup)
+
+    // 旋转圆盘（可视化）——不要旋转它自身的旋转.x
+    const discRadius = baseWidth * 0.35
+    const discThickness = 0.001
+    const rotationDisc = new THREE.Mesh(
+      new THREE.CylinderGeometry(discRadius, discRadius, discThickness, 32),
+      matBody,
+    )
+    // 圆盘平放：CylinderGeometry 默认轴为 Y 轴，面朝上下，位置需上移 discThickness/2
+    rotationDisc.position.y = discThickness / 2 - 0.001 // 使圆盘轻微嵌入底座表面
+    rotatingBaseGroup.add(rotationDisc)
+
+    // 计算支架在 rotatingBaseGroup 局部的 z 位移（与之前保持一致的偏移量）
+    const standZ = -baseDepth / 2 + standDepth / 2 + 0.02
+
+    // === 支架（作为圆盘的子对象）===
     const stand = new THREE.Mesh(
       new THREE.BoxGeometry(standWidth, standHeight, standDepth),
       matBody,
     )
-    stand.position.y = baseHeight + standHeight / 2
-    stand.position.z = -baseDepth / 2 + standDepth / 2 + 0.02
-    stand.rotation.y = standRotationY
-    group.add(stand)
+    // 局部 y: 圆盘顶面 + standHeight/2
+    stand.position.set(0, discThickness + standHeight / 2, standZ)
+    rotatingBaseGroup.add(stand)
 
-    // === 滑动组（带动pivot和屏幕整体移动）===
+    // === 滑动组：移动应当随旋转一起（所以也挂在 rotatingBaseGroup 下）===
+    // slideGroup 的局部 y = 圆盘顶面 + standHeight + screenSlideY
     const slideGroup = new THREE.Group()
-    slideGroup.position.set(0, baseHeight + standHeight + screenSlideY, stand.position.z)
-    slideGroup.rotation.y = standRotationY
-    group.add(slideGroup)
-
-    // === pivot组 ===
+    slideGroup.position.set(0, discThickness + standHeight + screenSlideY, standZ)
+    rotatingBaseGroup.add(slideGroup)
+    // === pivotGroup（pivot 与屏幕一起）===
     const pivotGroup = new THREE.Group()
+    // pivotGroup 放在 slideGroup 的局部原点（即紧贴 stand 对齐的那个位置）
+    pivotGroup.position.set(0, 0, 0)
     slideGroup.add(pivotGroup)
 
     // pivot连接块
@@ -106,11 +128,6 @@ export const monitorModel = {
 
     // === 屏幕组（俯仰）===
     const screenGroup = new THREE.Group()
-    // screenGroup.position.set(
-    //   0,
-    //   -pivotBlockHeight / 2,
-    //   pivotBlock.position.z + pivotBlockDepth / 2 + depth / 2,
-    // )
     screenGroup.rotation.x = screenTiltX
     rotateGroup.add(screenGroup)
     pivotGroup.position.set(0, 0, pivotBlockDepth + standDepth)
@@ -150,7 +167,7 @@ export const monitorModel = {
     panel.position.z = depth / 2 - 0.002 / 2 + 0.001
     screenGroup.add(panel)
 
-    // 外框（可稍微前移一点）
+    // 外框
     const frameGeo = new THREE.BoxGeometry(width, height, depth, widthSeg, heightSeg, 1)
     deformGeometry(frameGeo)
     const frame = new THREE.Mesh(frameGeo, matBody)
@@ -159,3 +176,6 @@ export const monitorModel = {
     group.position.y = 0
   },
 }
+
+// todo:无支架显示器
+export const monitorScreenModal = {}
