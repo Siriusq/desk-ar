@@ -29,6 +29,8 @@ import { setCameraView, setCameraProjection } from '@/three/sceneManager'
 // 【新增】 导入测量状态和切换函数
 import { isMeasuring, toggleMeasurementMode } from '@/composables/useMeasurement'
 import { MathUtils } from 'three'
+import { macbookPresets } from '@/models/preset/laptop'
+import { monitorPresets } from '@/models/preset/monitor'
 
 // 使用 Composable 共享状态
 const {
@@ -154,6 +156,31 @@ const fromThreeUnitToInput = (key: string, value: number) => {
     return Number(MathUtils.radToDeg(value).toFixed(0))
   } else {
     return Number((value * 1000).toFixed(0))
+  }
+}
+
+// 下拉菜单支持
+function getPresetOptions(type: string) {
+  switch (type) {
+    case 'macbook':
+      return [
+        { value: '', text: t('custom') },
+        ...Object.keys(macbookPresets).map((k) => ({
+          value: k,
+          text: t(k),
+        })),
+      ]
+    case 'monitor':
+    case 'monitor-without-stand':
+      return [
+        { value: '', text: t('custom') },
+        ...Object.keys(monitorPresets).map((k) => ({
+          value: k,
+          text: t(k),
+        })),
+      ]
+    default:
+      return [{ value: '', text: t('custom') }]
   }
 }
 </script>
@@ -502,6 +529,18 @@ const fromThreeUnitToInput = (key: string, value: number) => {
               :modelValue="value"
               @update:modelValue="updateObjectParam(selectedObject.id, key, $event)"
               switch
+            />
+
+            <!--下拉-->
+            <!-- 开关 -->
+            <BFormSelect
+              v-else-if="key === 'preset'"
+              v-model="(selectedObject.params as any)[key]"
+              :options="getPresetOptions(selectedObject.type)"
+              @change="
+                updateObjectParam(selectedObject.id, key, (selectedObject.params as any)[key])
+              "
+              size="sm"
             />
 
             <!--文本-->

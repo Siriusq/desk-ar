@@ -1,8 +1,71 @@
 import * as THREE from 'three'
 import type { BaseObject } from '@/models/deskObject'
 
+// 预设尺寸
+export const monitorPresets = {
+  '24-inch': {
+    width: 0.538,
+    depth: 0.03,
+    height: 0.311,
+    standHeight: 0.35,
+    baseWidth: 0.243,
+    baseDepth: 0.181,
+  },
+  '27-inch': {
+    width: 0.612,
+    depth: 0.035,
+    height: 0.353,
+    standHeight: 0.39,
+    baseWidth: 0.272,
+    baseDepth: 0.189,
+  },
+  '32-inch': {
+    width: 0.713,
+    depth: 0.037,
+    height: 0.41,
+    standHeight: 0.45,
+    baseWidth: 0.287,
+    baseDepth: 0.215,
+  },
+  '34-inch': {
+    width: 0.813,
+    depth: 0.035,
+    height: 0.359,
+    standHeight: 0.4,
+    baseWidth: 0.323,
+    baseDepth: 0.24,
+  },
+  '40-inch': {
+    width: 0.946,
+    depth: 0.035,
+    height: 0.419,
+    standHeight: 0.46,
+    baseWidth: 0.391,
+    baseDepth: 0.252,
+  },
+  '43-inch': {
+    width: 0.967,
+    depth: 0.035,
+    height: 0.56,
+    standHeight: 0.7,
+    baseWidth: 0.38,
+    baseDepth: 0.256,
+  },
+  '49-inch': {
+    width: 1.214,
+    depth: 0.035,
+    height: 0.366,
+    standHeight: 0.41,
+    baseWidth: 0.42,
+    baseDepth: 0.269,
+  },
+} as const
+
+export type MonitorPresetKey = keyof typeof monitorPresets
+
 // 带有支架的显示器
 export interface MonitorParams {
+  preset: MonitorPresetKey | ''
   width: number
   height: number
   depth: number
@@ -33,6 +96,8 @@ export const monitorModel = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      preset: '',
+
       width: 0.54, // 屏幕整体宽度
       height: 0.32, // 屏幕整体高度
       depth: 0.03, // 屏幕厚度
@@ -59,6 +124,17 @@ export const monitorModel = {
 
   buildGeometry: (group: THREE.Group, data: MonitorObject) => {
     const p = data.params
+
+    // ✅ 应用预设尺寸（如果有）
+    if (p.preset && monitorPresets[p.preset]) {
+      const preset = monitorPresets[p.preset]
+      p.width = preset.width
+      p.depth = preset.depth
+      p.height = preset.height
+      p.standHeight = preset.standHeight
+      p.baseWidth = preset.baseWidth
+      p.baseDepth = preset.baseDepth
+    }
 
     const border = 0.015
     const pivotBlockDepth = 0.04
@@ -194,6 +270,7 @@ export const monitorModel = {
 
 // 不带支架的显示器，用于壁挂等场景
 export interface MonitorWithoutStandParams {
+  preset: MonitorPresetKey | ''
   width: number
   height: number
   depth: number
@@ -215,6 +292,7 @@ export const monitorWithoutStandModel = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      preset: '',
       width: 0.54,
       height: 0.32,
       depth: 0.03,
@@ -226,6 +304,14 @@ export const monitorWithoutStandModel = {
 
   buildGeometry: (group: THREE.Group, data: MonitorWithoutStandObject) => {
     const p = data.params
+
+    // ✅ 应用预设尺寸（如果有）
+    if (p.preset && monitorPresets[p.preset]) {
+      const preset = monitorPresets[p.preset]
+      p.width = preset.width
+      p.depth = preset.depth
+      p.height = preset.height
+    }
 
     const border = 0.015 // 边框厚度
     const panelDepth = 0.002

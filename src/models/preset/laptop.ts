@@ -3,6 +3,7 @@ import type { BaseObject } from '../deskObject'
 const textureLoader = new THREE.TextureLoader()
 
 export interface MacbookParams {
+  preset: MacbookPresetKey | '' // 允许空字符串或预设名
   width: number
   height: number
   depth: number
@@ -15,6 +16,16 @@ export interface MacbookObject extends BaseObject {
   params: MacbookParams
 }
 
+// 预设尺寸
+export const macbookPresets = {
+  '13-inch': { width: 0.304, depth: 0.215, height: 0.014 },
+  '14-inch': { width: 0.312, depth: 0.221, height: 0.015 },
+  '15-inch': { width: 0.34, depth: 0.237, height: 0.016 },
+  '16-inch': { width: 0.355, depth: 0.248, height: 0.017 },
+} as const
+
+export type MacbookPresetKey = keyof typeof macbookPresets
+
 export const macbookModal = {
   createData: (id: string, yPos: number) => ({
     id: id,
@@ -23,6 +34,7 @@ export const macbookModal = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      preset: '', // 默认无预设
       width: 0.3,
       height: 0.015,
       depth: 0.21,
@@ -33,6 +45,14 @@ export const macbookModal = {
   }),
   buildGeometry: (group: THREE.Group, data: MacbookObject) => {
     const p = data.params
+
+    // ✅ 应用预设尺寸（如果有）
+    if (p.preset && macbookPresets[p.preset]) {
+      const preset = macbookPresets[p.preset]
+      p.width = preset.width
+      p.depth = preset.depth
+    }
+
     const border = 0.007
     const screenHeight = 0.001
     const topPanelHeight = 0.004
