@@ -3,7 +3,7 @@ import { monitorModel, monitorWithoutStandModel } from './preset/monitor'
 import { deskLModel, deskRectModel } from './preset/desk'
 import { keyboard108Modal, keyboard68Modal, keyboard87Modal } from './preset/keyboard'
 import { mouseModal } from './preset/mouse'
-import { iphoneModal } from './preset/phone'
+import { phoneModel } from './preset/phone'
 import { macbookModal } from './preset/laptop'
 import { universalStandModal } from './preset/stand'
 import { cubeModal } from './preset/geometry'
@@ -34,7 +34,7 @@ export const modelRegistry = {
   mouse: mouseModal,
 
   // --- IPHONE ---
-  iphone: iphoneModal,
+  phone: phoneModel,
 
   // --- MACBOOK ---
   macbook: macbookModal,

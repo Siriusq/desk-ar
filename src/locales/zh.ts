@@ -115,7 +115,7 @@ export default {
     monitor: '显示器',
     'monitor-without-stand': '显示器-不含底座',
     macbook: '笔记本电脑',
-    iphone: '手机',
+    phone: '手机',
     keyboard: '键盘',
     'keyboard-108': '108键键盘',
     'keyboard-87': '87键键盘',

@@ -39,7 +39,7 @@ export const availableModels: AvailableModelsMap = {
       { type: 'monitor', name: 'monitor', icon: '🖥️' },
       { type: 'monitor-without-stand', name: 'monitor-without-stand', icon: '🖥️' },
       { type: 'macbook', name: 'macbook', icon: '💻' },
-      { type: 'iphone', name: 'iphone', icon: '📱' },
+      { type: 'phone', name: 'phone', icon: '📱' },
     ],
   },
   accessories: {

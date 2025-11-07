@@ -115,7 +115,7 @@ export default {
     monitor: 'Monitor',
     'monitor-without-stand': 'Monitor without stand',
     macbook: 'Laptop',
-    iphone: 'Phone',
+    phone: 'Phone',
     keyboard: 'Keyboard',
     'keyboard-108': 'Keyboard 108 Keys',
     'keyboard-87': 'Keyboard 87 Keys',
