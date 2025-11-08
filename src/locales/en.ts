@@ -61,6 +61,9 @@ export default {
   // 笔记本
   lidAngle: 'Lid Angle',
   // 屏幕尺寸
+  '10-inch': '10 inch',
+  '11-inch': '11 inch',
+  '12-inch': '12 inch',
   '13-inch': '13 inch',
   '14-inch': '14 inch',
   '15-inch': '15 inch',
@@ -116,6 +119,7 @@ export default {
     'monitor-without-stand': 'Monitor without stand',
     macbook: 'Laptop',
     phone: 'Phone',
+    tablet: 'Tablet',
     keyboard: 'Keyboard',
     'keyboard-108': 'Keyboard 108 Keys',
     'keyboard-87': 'Keyboard 87 Keys',

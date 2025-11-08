@@ -31,6 +31,7 @@ import { isMeasuring, toggleMeasurementMode } from '@/composables/useMeasurement
 import { MathUtils } from 'three'
 import { macbookPresets } from '@/models/preset/laptop'
 import { monitorPresets } from '@/models/preset/monitor'
+import { tabletPresets } from '@/models/preset/tablet'
 
 // 使用 Composable 共享状态
 const {
@@ -175,6 +176,14 @@ function getPresetOptions(type: string) {
       return [
         { value: '', text: t('custom') },
         ...Object.keys(monitorPresets).map((k) => ({
+          value: k,
+          text: t(k),
+        })),
+      ]
+    case 'tablet':
+      return [
+        { value: '', text: t('custom') },
+        ...Object.keys(tabletPresets).map((k) => ({
           value: k,
           text: t(k),
         })),

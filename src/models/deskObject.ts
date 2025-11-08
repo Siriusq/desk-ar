@@ -9,6 +9,7 @@ import type { MonitorObject, MonitorWithoutStandObject } from './preset/monitor'
 import type { MouseObject } from './preset/mouse'
 import type { PhoneObject } from './preset/phone'
 import type { UniversalStandObject } from './preset/stand'
+import type { TabletObject } from './preset/tablet'
 
 // 注意：position 和 rotation 应该是纯对象，以便 JSON 序列化
 export interface BaseObject {
@@ -38,6 +39,7 @@ export type DeskObject =
   | MonitorWithoutStandObject
   | MacbookObject
   | PhoneObject
+  | TabletObject
   | KeyboardObject
   | MouseObject
   | UniversalStandObject
@@ -54,6 +56,7 @@ export type DeskObjectType =
   | 'monitor-without-stand'
   | 'macbook'
   | 'phone'
+  | 'tablet'
   | 'keyboard-108'
   | 'keyboard-87'
   | 'keyboard-68'

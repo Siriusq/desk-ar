@@ -12,6 +12,7 @@ import { phoneModel } from './preset/phone'
 import { macbookModal } from './preset/laptop'
 import { universalStandModal } from './preset/stand'
 import { cubeModal } from './preset/geometry'
+import { tabletModel } from './preset/tablet'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -40,6 +41,9 @@ export const modelRegistry = {
 
   // --- IPHONE ---
   phone: phoneModel,
+
+  // --- TABLET ---
+  tablet: tabletModel,
 
   // --- MACBOOK ---
   macbook: macbookModal,

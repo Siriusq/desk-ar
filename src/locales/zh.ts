@@ -62,6 +62,9 @@ export default {
   // 笔记本
   lidAngle: '屏幕开合角度',
   // 屏幕尺寸
+  '10-inch': '10 寸',
+  '11-inch': '11 寸',
+  '12-inch': '12 寸',
   '13-inch': '13 寸',
   '14-inch': '14 寸',
   '15-inch': '15 寸',
@@ -116,6 +119,7 @@ export default {
     'monitor-without-stand': '显示器-不含底座',
     macbook: '笔记本电脑',
     phone: '手机',
+    tablet: '平板电脑',
     keyboard: '键盘',
     'keyboard-108': '108键键盘',
     'keyboard-87': '87键键盘',
