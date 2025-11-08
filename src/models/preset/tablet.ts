@@ -123,7 +123,7 @@ export const tabletModel = {
       new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0, metalness: 0 }),
     )
     //camera.rotation.x = Math.PI / 2
-    camera.position.set(-p.width / 2 + 0.01, -0.001, -p.depth / 2 + 0.01)
+    camera.position.set(p.width / 2 - 0.015, -0.001, -p.depth / 2 + 0.015)
     cameraGroup.add(camera)
 
     // === 按钮 ===

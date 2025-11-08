@@ -10,7 +10,7 @@ import {
 import { mouseModal } from './preset/mouse'
 import { phoneModel } from './preset/phone'
 import { macbookModal } from './preset/laptop'
-import { rectangleBaseStandModal, roundBaseStandModal, universalStandModal } from './preset/stand'
+import { rectangleBaseStandModal, roundBaseStandModal } from './preset/stand'
 import { customBoxModal, customCylinderModal, customSphereModal } from './preset/geometry'
 import { tabletModel } from './preset/tablet'
 
@@ -49,7 +49,6 @@ export const modelRegistry = {
   macbook: macbookModal,
 
   // --- UNIVERSAL-STAND ---
-  'universal-stand': universalStandModal,
   'round-base-stand': roundBaseStandModal,
   'rectangle-base-stand': rectangleBaseStandModal,
 

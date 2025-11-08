@@ -324,13 +324,6 @@ export const rebuildSceneFromData = () => {
       if (stand3D) {
         // 【修改】 standData 现在是强类型
         const standData = objects.value.find((o) => o.id === data.mountedToId)
-        // 确保 standData 和 params 存在
-        if (standData && standData.type === 'universal-stand') {
-          const { poleHeight, armLength } = standData.params
-          obj3D.position.set(armLength, poleHeight + 0.02, 0)
-          //obj3D.rotation.set(0, 0, 0)
-          stand3D.add(obj3D)
-        }
         // 支架类型：圆形底座支架
         if (standData && standData.type === 'round-base-stand') {
           const { poleHeight, poleRadius, baseHeight, tilterAngleX, tilterAngleY, tilterAngleZ } =

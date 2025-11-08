@@ -96,9 +96,7 @@ export const mountObject = (standId: string, itemId: string) => {
   if (
     stand &&
     item &&
-    (stand.type === 'universal-stand' ||
-      stand.type === 'round-base-stand' ||
-      stand.type === 'rectangle-base-stand') &&
+    (stand.type === 'round-base-stand' || stand.type === 'rectangle-base-stand') &&
     !stand.params.mountedObjectId
   ) {
     stand.params.mountedObjectId = itemId
@@ -113,9 +111,7 @@ export const unmountObject = (standId: string) => {
   const stand = objects.value.find((o) => o.id === standId)
   if (
     stand &&
-    (stand.type === 'universal-stand' ||
-      stand.type === 'round-base-stand' ||
-      stand.type === 'rectangle-base-stand') &&
+    (stand.type === 'round-base-stand' || stand.type === 'rectangle-base-stand') &&
     stand.params.mountedObjectId
   ) {
     const item = objects.value.find((o) => o.id === stand.params.mountedObjectId)
@@ -146,7 +142,11 @@ export const deleteObject = (id: string) => {
   saveState() // 在修改前保存状态
 
   // 先处理挂载关系
-  if (obj.type === 'universal-stand' && obj.params.mountedObjectId) unmountObject(id)
+  if (
+    (obj.type === 'round-base-stand' || obj.type === 'rectangle-base-stand') &&
+    obj.params.mountedObjectId
+  )
+    unmountObject(id)
   if (obj.mountedToId) unmountObject(obj.mountedToId)
 
   // 【新增】 从 3D 场景中移除

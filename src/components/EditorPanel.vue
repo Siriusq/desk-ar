@@ -583,7 +583,6 @@ function getPresetOptions(type: string) {
 
         <div
           v-if="
-            selectedObject.type === 'universal-stand' ||
             selectedObject.type === 'round-base-stand' ||
             selectedObject.type === 'rectangle-base-stand'
           "
