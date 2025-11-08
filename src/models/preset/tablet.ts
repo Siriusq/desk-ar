@@ -47,7 +47,7 @@ export const tabletModel = {
   buildGeometry: (group: THREE.Group, data: TabletObject) => {
     if (!cachedScreenShotTexture) {
       const loader = new THREE.TextureLoader()
-      cachedScreenShotTexture = loader.load('/textures/phone/phone-screenshot.jpg')
+      cachedScreenShotTexture = loader.load('/textures/tablet/tablet-screenshot.jpg')
       cachedScreenShotTexture.colorSpace = THREE.SRGBColorSpace
     }
     // 清空旧内容
