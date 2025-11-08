@@ -2,7 +2,7 @@
 // 1. 基础布局对象接口 (所有对象共享的属性)
 
 import type { DeskLObject, DeskRectObject } from './preset/desk'
-import type { CustomBoxObject } from './preset/geometry'
+import type { CustomBoxObject, CustomCylinderObject, CustomSphereObject } from './preset/geometry'
 import type { KeyboardObject } from './preset/keyboard'
 import type { MacbookObject } from './preset/laptop'
 import type { MonitorObject, MonitorWithoutStandObject } from './preset/monitor'
@@ -44,6 +44,8 @@ export type DeskObject =
   | MouseObject
   | UniversalStandObject
   | CustomBoxObject
+  | CustomCylinderObject
+  | CustomSphereObject
   | ImportedModelObject
 
 // 4. 导出 Type 字符串的联合类型，用于 addObject
@@ -64,3 +66,5 @@ export type DeskObjectType =
   | 'mouse'
   | 'universal-stand'
   | 'custom-box'
+  | 'custom-cylinder'
+  | 'custom-sphere'

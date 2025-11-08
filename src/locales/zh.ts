@@ -81,6 +81,11 @@ export default {
   '49-inch': '49 寸 32:9',
   custom: '自定义',
   preset: '预设（部分参数将不可调节）',
+  // 自定义图形
+  name: '名称',
+  radiusTop: '顶部半径',
+  radiusBottom: '底部半径',
+  radius: '半径',
   back: '返回',
   add: '添加',
   selectCategory: '选择分类',
@@ -131,5 +136,7 @@ export default {
     mouse: '鼠标',
     'universal-stand': '通用支架',
     'custom-box': '自定义立方体',
+    'custom-cylinder': '自定义圆柱体',
+    'custom-sphere': '自定义球体',
   },
 }

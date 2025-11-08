@@ -68,6 +68,11 @@ const getDisplayName = (obj: DeskObject | undefined) => {
   const type = obj.type
   if (!type) return 'Item'
   if (type == 'imported-model') return obj.params.fileName
+  if (
+    (type == 'custom-box' || type == 'custom-cylinder' || type == 'custom-sphere') &&
+    obj.params.name
+  )
+    return obj.params.name
   return t('models.' + type)
 }
 

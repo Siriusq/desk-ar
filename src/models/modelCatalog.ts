@@ -57,6 +57,10 @@ export const availableModels: AvailableModelsMap = {
   },
   others: {
     icon: '🧩', // 新增：目录图标
-    models: [{ type: 'custom-box', name: 'custom-box', icon: '📦' }],
+    models: [
+      { type: 'custom-box', name: 'custom-box', icon: '📦' },
+      { type: 'custom-cylinder', name: 'custom-cylinder', icon: '🛢️' },
+      { type: 'custom-sphere', name: 'custom-sphere', icon: '⚽' },
+    ],
   },
 }

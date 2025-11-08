@@ -80,6 +80,11 @@ export default {
   '49-inch': '49 inch 32:9',
   custom: 'Custom',
   preset: 'Preset (Some parameters will be unadjustable)',
+  // 自定义图形
+  name: 'Name',
+  radiusTop: 'Top Radius',
+  radiusBottom: 'Bottom Radius',
+  radius: 'Radius',
   back: 'Back',
   add: 'Add',
   selectCategory: 'Select Category',
@@ -131,5 +136,7 @@ export default {
     mouse: 'Mouse',
     'universal-stand': 'Universal Stand',
     'custom-box': 'Custom Box',
+    'custom-cylinder': 'Custom Cylinder',
+    'custom-sphere': 'Custom Sphere',
   },
 }

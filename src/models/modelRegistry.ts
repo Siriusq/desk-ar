@@ -11,7 +11,7 @@ import { mouseModal } from './preset/mouse'
 import { phoneModel } from './preset/phone'
 import { macbookModal } from './preset/laptop'
 import { universalStandModal } from './preset/stand'
-import { cubeModal } from './preset/geometry'
+import { customBoxModal, customCylinderModal, customSphereModal } from './preset/geometry'
 import { tabletModel } from './preset/tablet'
 
 // 创建模型“注册表”
@@ -51,6 +51,8 @@ export const modelRegistry = {
   // --- UNIVERSAL-STAND ---
   'universal-stand': universalStandModal,
 
-  // --- CUSTOM-BOX ---
-  'custom-box': cubeModal,
+  // --- CUSTOM-Geometry ---
+  'custom-box': customBoxModal,
+  'custom-cylinder': customCylinderModal,
+  'custom-sphere': customSphereModal,
 }
