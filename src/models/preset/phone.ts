@@ -14,9 +14,7 @@ export interface PhoneObject extends BaseObject {
 }
 
 // === 纹理缓存 ===
-const textureLoader = new THREE.TextureLoader()
-const screenShotTexture = textureLoader.load('/textures/phone/phone-screenshot.jpg')
-screenShotTexture.colorSpace = THREE.SRGBColorSpace
+let cachedScreenShotTexture: THREE.Texture | null = null
 
 export const phoneModel = {
   createData: (id: string, yPos: number) => ({
@@ -34,15 +32,19 @@ export const phoneModel = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: PhoneObject) => {
+    if (!cachedScreenShotTexture) {
+      const loader = new THREE.TextureLoader()
+      cachedScreenShotTexture = loader.load('/textures/phone/phone-screenshot.jpg')
+      cachedScreenShotTexture.colorSpace = THREE.SRGBColorSpace
+    }
     // 清空旧内容
     while (group.children.length) group.remove(group.children[0]!)
 
     const p = data.params
-    const { width, height, depth, color } = p
 
     // === 材质 ===
     const metalMat = new THREE.MeshPhysicalMaterial({
-      color,
+      color: p.color,
       metalness: 1.0,
       roughness: 0.25,
       clearcoat: 1.0,
@@ -54,7 +56,7 @@ export const phoneModel = {
     })
 
     const screenMat = new THREE.MeshPhysicalMaterial({
-      map: screenShotTexture,
+      map: cachedScreenShotTexture,
       metalness: 0.0,
       roughness: 0.05,
       clearcoat: 1.0,
@@ -82,16 +84,16 @@ export const phoneModel = {
     const baseMatArray = Array(6).fill(metalMat)
     baseMatArray[2] = blackMat // 顶面（屏幕下方的黑边）
 
-    const base = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), baseMatArray)
-    base.position.y = height / 2
+    const base = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), baseMatArray)
+    base.position.y = p.height / 2
     bodyGroup.add(base)
 
     // === 屏幕 ===
     const screen = new THREE.Mesh(
-      new THREE.BoxGeometry(width * 0.95, 0.0001, depth * 0.98),
+      new THREE.BoxGeometry(p.width * 0.95, 0.0001, p.depth * 0.98),
       screenMat,
     )
-    screen.position.y = height + 0.00005
+    screen.position.y = p.height + 0.00005
     bodyGroup.add(screen)
 
     // === 摄像头 ===
@@ -100,20 +102,20 @@ export const phoneModel = {
       new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0, metalness: 0 }),
     )
     //camera.rotation.x = Math.PI / 2
-    camera.position.set(-width / 2 + 0.01, -0.001, -depth / 2 + 0.01)
+    camera.position.set(-p.width / 2 + 0.01, -0.001, -p.depth / 2 + 0.01)
     cameraGroup.add(camera)
 
     // === 按钮 ===
     const buttonGeo = new THREE.BoxGeometry(0.001, 0.002, 0.01)
     const createButton = (x: number, z: number) => {
       const btn = new THREE.Mesh(buttonGeo, metalMat)
-      btn.position.set(x, height / 2, z)
+      btn.position.set(x, p.height / 2, z)
       return btn
     }
 
-    const powerButton = createButton(width / 2 + 0.0005, -depth * 0.3)
-    const volumeUp = createButton(-width / 2 - 0.0005, -depth * 0.3 + 0.02)
-    const volumeDown = createButton(-width / 2 - 0.0005, -depth * 0.3)
+    const powerButton = createButton(p.width / 2 + 0.0005, -p.depth * 0.3)
+    const volumeUp = createButton(-p.width / 2 - 0.0005, -p.depth * 0.3 + 0.02)
+    const volumeDown = createButton(-p.width / 2 - 0.0005, -p.depth * 0.3)
     buttonGroup.add(powerButton, volumeUp, volumeDown)
 
     // === 层级关系 ===

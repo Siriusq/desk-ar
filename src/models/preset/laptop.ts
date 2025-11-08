@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import type { BaseObject } from '../deskObject'
-const textureLoader = new THREE.TextureLoader()
 
 export interface MacbookParams {
   preset: MacbookPresetKey | '' // 允许空字符串或预设名
@@ -26,6 +25,9 @@ export const macbookPresets = {
 
 export type MacbookPresetKey = keyof typeof macbookPresets
 
+// === 纹理缓存 ===
+let cachedkeyboardTexture: THREE.Texture | null = null
+
 export const macbookModal = {
   createData: (id: string, yPos: number) => ({
     id: id,
@@ -44,6 +46,12 @@ export const macbookModal = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: MacbookObject) => {
+    if (!cachedkeyboardTexture) {
+      const loader = new THREE.TextureLoader()
+      cachedkeyboardTexture = loader.load('/textures/laptop/macbook-keyboard.jpg')
+      cachedkeyboardTexture.colorSpace = THREE.SRGBColorSpace
+    }
+
     const p = data.params
 
     // ✅ 应用预设尺寸（如果有）
@@ -72,12 +80,8 @@ export const macbookModal = {
     })
 
     // 2. 【修改】 顶部贴图材质
-    const keyboardTextureMap = '/textures/laptop/macbook-keyboard.jpg'
-    // 使用从 params 传来的 textureMap 路径
-    const keyboardTexture = textureLoader.load(keyboardTextureMap)
-    keyboardTexture.colorSpace = THREE.SRGBColorSpace
     const keyboardTextureMaterial = new THREE.MeshStandardMaterial({
-      map: keyboardTexture,
+      map: cachedkeyboardTexture,
       metalness: 0.2,
       roughness: 0.7,
     })

@@ -14,6 +14,16 @@ export interface KeyboardObject extends BaseObject {
   params: KeyboardParams
 }
 
+// === 纹理缓存 ===
+let cachedKeyboard108WhiteTexture: THREE.Texture | null = null
+let cachedKeyboard108BlackTexture: THREE.Texture | null = null
+let cachedKeyboard87WhiteTexture: THREE.Texture | null = null
+let cachedKeyboard87BlackTexture: THREE.Texture | null = null
+let cachedKeyboard68WhiteTexture: THREE.Texture | null = null
+let cachedKeyboard68BlackTexture: THREE.Texture | null = null
+let cachedKeyboard60WhiteTexture: THREE.Texture | null = null
+let cachedKeyboard60BlackTexture: THREE.Texture | null = null
+
 export const keyboard108Modal = {
   createData: (id: string, yPos: number) => ({
     id: id,
@@ -29,6 +39,15 @@ export const keyboard108Modal = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
+    if (!cachedKeyboard108WhiteTexture) {
+      cachedKeyboard108WhiteTexture = textureLoader.load('/textures/keyboard/108w.jpg')
+      cachedKeyboard108WhiteTexture.colorSpace = THREE.SRGBColorSpace
+    }
+    if (!cachedKeyboard108BlackTexture) {
+      cachedKeyboard108BlackTexture = textureLoader.load('/textures/keyboard/108b.jpg')
+      cachedKeyboard108BlackTexture.colorSpace = THREE.SRGBColorSpace
+    }
+
     const p = data.params
     // 1. 侧面材质 (保持不变)
     const metalMaterial = new THREE.MeshStandardMaterial({
@@ -38,10 +57,7 @@ export const keyboard108Modal = {
     })
 
     // 2. 【修改】 顶部贴图材质
-    const textureMap = p.isBlack ? '/textures/keyboard/108b.jpg' : '/textures/keyboard/108w.jpg'
-    // 使用从 params 传来的 textureMap 路径
-    const topTexture = textureLoader.load(textureMap)
-    topTexture.colorSpace = THREE.SRGBColorSpace
+    const topTexture = p.isBlack ? cachedKeyboard108BlackTexture! : cachedKeyboard108WhiteTexture!
     const textureMaterial = new THREE.MeshStandardMaterial({
       map: topTexture,
       metalness: 0.2,
@@ -80,6 +96,15 @@ export const keyboard87Modal = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
+    if (!cachedKeyboard87WhiteTexture) {
+      cachedKeyboard87WhiteTexture = textureLoader.load('/textures/keyboard/87w.jpg')
+      cachedKeyboard87WhiteTexture.colorSpace = THREE.SRGBColorSpace
+    }
+    if (!cachedKeyboard87BlackTexture) {
+      cachedKeyboard87BlackTexture = textureLoader.load('/textures/keyboard/87b.jpg')
+      cachedKeyboard87BlackTexture.colorSpace = THREE.SRGBColorSpace
+    }
+
     const p = data.params
     // 1. 侧面材质 (保持不变)
     const metalMaterial = new THREE.MeshStandardMaterial({
@@ -89,10 +114,7 @@ export const keyboard87Modal = {
     })
 
     // 2. 【修改】 顶部贴图材质
-    const textureMap = p.isBlack ? '/textures/keyboard/87b.jpg' : '/textures/keyboard/87w.jpg'
-    // 使用从 params 传来的 textureMap 路径
-    const topTexture = textureLoader.load(textureMap)
-    topTexture.colorSpace = THREE.SRGBColorSpace
+    const topTexture = p.isBlack ? cachedKeyboard87BlackTexture! : cachedKeyboard87WhiteTexture!
     const textureMaterial = new THREE.MeshStandardMaterial({
       map: topTexture,
       metalness: 0.2,
@@ -131,6 +153,15 @@ export const keyboard68Modal = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
+    if (!cachedKeyboard68WhiteTexture) {
+      cachedKeyboard68WhiteTexture = textureLoader.load('/textures/keyboard/68w.jpg')
+      cachedKeyboard68WhiteTexture.colorSpace = THREE.SRGBColorSpace
+    }
+    if (!cachedKeyboard68BlackTexture) {
+      cachedKeyboard68BlackTexture = textureLoader.load('/textures/keyboard/68b.jpg')
+      cachedKeyboard68BlackTexture.colorSpace = THREE.SRGBColorSpace
+    }
+
     const p = data.params
     // 1. 侧面材质 (保持不变)
     const metalMaterial = new THREE.MeshStandardMaterial({
@@ -140,10 +171,7 @@ export const keyboard68Modal = {
     })
 
     // 2. 【修改】 顶部贴图材质
-    const textureMap = p.isBlack ? '/textures/keyboard/68b.jpg' : '/textures/keyboard/68w.jpg'
-    // 使用从 params 传来的 textureMap 路径
-    const topTexture = textureLoader.load(textureMap)
-    topTexture.colorSpace = THREE.SRGBColorSpace
+    const topTexture = p.isBlack ? cachedKeyboard68BlackTexture! : cachedKeyboard68WhiteTexture!
     const textureMaterial = new THREE.MeshStandardMaterial({
       map: topTexture,
       metalness: 0.2,
@@ -182,6 +210,15 @@ export const keyboard60Modal = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
+    if (!cachedKeyboard60WhiteTexture) {
+      cachedKeyboard60WhiteTexture = textureLoader.load('/textures/keyboard/60w.jpg')
+      cachedKeyboard60WhiteTexture.colorSpace = THREE.SRGBColorSpace
+    }
+    if (!cachedKeyboard60BlackTexture) {
+      cachedKeyboard60BlackTexture = textureLoader.load('/textures/keyboard/60b.jpg')
+      cachedKeyboard60BlackTexture.colorSpace = THREE.SRGBColorSpace
+    }
+
     const p = data.params
     // 1. 侧面材质 (保持不变)
     const metalMaterial = new THREE.MeshStandardMaterial({
@@ -191,10 +228,7 @@ export const keyboard60Modal = {
     })
 
     // 2. 【修改】 顶部贴图材质
-    const textureMap = p.isBlack ? '/textures/keyboard/60b.jpg' : '/textures/keyboard/60w.jpg'
-    // 使用从 params 传来的 textureMap 路径
-    const topTexture = textureLoader.load(textureMap)
-    topTexture.colorSpace = THREE.SRGBColorSpace
+    const topTexture = p.isBlack ? cachedKeyboard60BlackTexture! : cachedKeyboard60WhiteTexture!
     const textureMaterial = new THREE.MeshStandardMaterial({
       map: topTexture,
       metalness: 0.2,

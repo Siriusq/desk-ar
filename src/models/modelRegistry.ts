@@ -1,7 +1,12 @@
 // src/three/modelRegistry.ts
 import { monitorModel, monitorWithoutStandModel } from './preset/monitor'
 import { deskLModel, deskRectModel } from './preset/desk'
-import { keyboard108Modal, keyboard68Modal, keyboard87Modal } from './preset/keyboard'
+import {
+  keyboard108Modal,
+  keyboard60Modal,
+  keyboard68Modal,
+  keyboard87Modal,
+} from './preset/keyboard'
 import { mouseModal } from './preset/mouse'
 import { phoneModel } from './preset/phone'
 import { macbookModal } from './preset/laptop'
@@ -28,7 +33,7 @@ export const modelRegistry = {
 
   'keyboard-68': keyboard68Modal,
 
-  'keyboard-60': keyboard68Modal,
+  'keyboard-60': keyboard60Modal,
 
   // --- MOUSE ---
   mouse: mouseModal,
