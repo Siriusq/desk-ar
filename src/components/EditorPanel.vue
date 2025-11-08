@@ -32,6 +32,7 @@ import { MathUtils } from 'three'
 import { macbookPresets } from '@/models/preset/laptop'
 import { monitorPresets } from '@/models/preset/monitor'
 import { tabletPresets } from '@/models/preset/tablet'
+import { phonePresets } from '@/models/preset/phone'
 
 // 使用 Composable 共享状态
 const {
@@ -184,6 +185,14 @@ function getPresetOptions(type: string) {
       return [
         { value: '', text: t('custom') },
         ...Object.keys(tabletPresets).map((k) => ({
+          value: k,
+          text: t(k),
+        })),
+      ]
+    case 'phone':
+      return [
+        { value: '', text: t('custom') },
+        ...Object.keys(phonePresets).map((k) => ({
           value: k,
           text: t(k),
         })),

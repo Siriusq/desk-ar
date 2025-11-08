@@ -61,6 +61,9 @@ export default {
   // 笔记本
   lidAngle: 'Lid Angle',
   // 屏幕尺寸
+  '6-inch': '6 inch',
+  '6.5-inch': '6.5 inch',
+  '7-inch': '7 inch',
   '10-inch': '10 inch',
   '11-inch': '11 inch',
   '12-inch': '12 inch',

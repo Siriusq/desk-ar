@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import type { BaseObject } from '../deskObject'
 
 export interface PhoneParams {
+  preset: PhonePresetKey | '' // 允许空字符串或预设名
   width: number
   height: number
   depth: number
@@ -12,6 +13,15 @@ export interface PhoneObject extends BaseObject {
   type: 'phone'
   params: PhoneParams
 }
+
+// 预设尺寸
+export const phonePresets = {
+  '6-inch': { width: 0.071, depth: 0.146, height: 0.006 },
+  '6.5-inch': { width: 0.074, depth: 0.152, height: 0.006 },
+  '7-inch': { width: 0.078, depth: 0.158, height: 0.006 },
+} as const
+
+export type PhonePresetKey = keyof typeof phonePresets
 
 // === 纹理缓存 ===
 let cachedScreenShotTexture: THREE.Texture | null = null
@@ -24,6 +34,7 @@ export const phoneModel = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      preset: '', // 默认无预设
       width: 0.071,
       height: 0.006,
       depth: 0.146,
@@ -41,6 +52,14 @@ export const phoneModel = {
     while (group.children.length) group.remove(group.children[0]!)
 
     const p = data.params
+
+    // ✅ 应用预设尺寸（如果有）
+    if (p.preset && phonePresets[p.preset]) {
+      const preset = phonePresets[p.preset]
+      p.width = preset.width
+      p.depth = preset.depth
+      p.height = preset.height
+    }
 
     // === 材质 ===
     const metalMat = new THREE.MeshPhysicalMaterial({
