@@ -53,6 +53,8 @@ export const availableModels: AvailableModelsMap = {
       { type: 'keyboard-60', name: 'keyboard-60', icon: '⌨️' },
       { type: 'mouse', name: 'mouse', icon: '🖱️' },
       { type: 'universal-stand', name: 'universal-stand', icon: '🔩' },
+      { type: 'round-base-stand', name: 'round-base-stand', icon: '⚙️' },
+      { type: 'rectangle-base-stand', name: 'rectangle-base-stand', icon: '⚙️' },
     ],
   },
   others: {

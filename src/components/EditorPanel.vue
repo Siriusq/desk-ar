@@ -67,8 +67,8 @@ const getDisplayName = (obj: DeskObject | undefined) => {
   if (!obj) return 'Unknown'
   const type = obj.type
   if (!type) return 'Item'
-  if (type == 'imported-model') return obj.params.fileName
   if (obj.params.name) return obj.params.name
+  if (type == 'imported-model') return obj.params.fileName
   return t('models.' + type)
 }
 
@@ -125,7 +125,15 @@ const stopAdjust = () => {
   adjustInterval = null
 }
 
-const angles = ['standRotationY', 'screenTiltX', 'screenRotateZ', 'lidAngle']
+const angles = [
+  'standRotationY',
+  'screenTiltX',
+  'screenRotateZ',
+  'lidAngle',
+  'tilterAngleX',
+  'tilterAngleY',
+  'tilterAngleZ',
+]
 const getUnitForParam = (key: string) => {
   // 根据 key 返回不同的单位
   if (angles.includes(key)) {
@@ -573,7 +581,13 @@ function getPresetOptions(type: string) {
           </BFormGroup>
         </div>
 
-        <div v-if="selectedObject.type === 'universal-stand'">
+        <div
+          v-if="
+            selectedObject.type === 'universal-stand' ||
+            selectedObject.type === 'round-base-stand' ||
+            selectedObject.type === 'rectangle-base-stand'
+          "
+        >
           <hr />
           <div
             v-if="

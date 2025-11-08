@@ -328,8 +328,40 @@ export const rebuildSceneFromData = () => {
         if (standData && standData.type === 'universal-stand') {
           const { poleHeight, armLength } = standData.params
           obj3D.position.set(armLength, poleHeight + 0.02, 0)
-          obj3D.rotation.set(0, 0, 0)
+          //obj3D.rotation.set(0, 0, 0)
           stand3D.add(obj3D)
+        }
+        // 支架类型：圆形底座支架
+        if (standData && standData.type === 'round-base-stand') {
+          const { poleHeight, poleRadius, baseHeight, tilterAngleX, tilterAngleY, tilterAngleZ } =
+            standData.params
+          // 偏移被挂载物品Y轴至倾斜面顶部
+          const objGroup = new THREE.Group()
+          obj3D.position.y += poleRadius * 1.5
+          objGroup.add(obj3D)
+          objGroup.position.set(0, poleHeight + baseHeight, 0)
+          objGroup.rotation.set(tilterAngleX, tilterAngleY, tilterAngleZ)
+          stand3D.add(objGroup)
+        }
+        // 支架类型：方形底座支架
+        if (standData && standData.type === 'rectangle-base-stand') {
+          const {
+            poleHeight,
+            poleWidth,
+            poleDepth,
+            baseHeight,
+            tilterAngleX,
+            tilterAngleY,
+            tilterAngleZ,
+          } = standData.params
+          // 偏移被挂载物品Y轴至倾斜面顶部
+          const objGroup = new THREE.Group()
+          const tilterPivotSize = Math.max(poleWidth, poleDepth) * 0.6
+          obj3D.position.y += tilterPivotSize * 1.5
+          objGroup.add(obj3D)
+          objGroup.position.set(0, poleHeight + baseHeight, 0)
+          objGroup.rotation.set(tilterAngleX, tilterAngleY, tilterAngleZ)
+          stand3D.add(objGroup)
         }
       }
     } else if (!data.type.startsWith('desk-')) {

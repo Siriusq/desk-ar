@@ -93,7 +93,14 @@ export const mountObject = (standId: string, itemId: string) => {
   const item = objects.value.find((o) => o.id === itemId)
 
   // 确保 stand 是 'universal-stand'
-  if (stand && item && stand.type === 'universal-stand' && !stand.params.mountedObjectId) {
+  if (
+    stand &&
+    item &&
+    (stand.type === 'universal-stand' ||
+      stand.type === 'round-base-stand' ||
+      stand.type === 'rectangle-base-stand') &&
+    !stand.params.mountedObjectId
+  ) {
     stand.params.mountedObjectId = itemId
     item.mountedToId = standId
     saveState()
@@ -104,7 +111,13 @@ export const mountObject = (standId: string, itemId: string) => {
 
 export const unmountObject = (standId: string) => {
   const stand = objects.value.find((o) => o.id === standId)
-  if (stand && stand.type === 'universal-stand' && stand.params.mountedObjectId) {
+  if (
+    stand &&
+    (stand.type === 'universal-stand' ||
+      stand.type === 'round-base-stand' ||
+      stand.type === 'rectangle-base-stand') &&
+    stand.params.mountedObjectId
+  ) {
     const item = objects.value.find((o) => o.id === stand.params.mountedObjectId)
     if (item) {
       item.mountedToId = null
