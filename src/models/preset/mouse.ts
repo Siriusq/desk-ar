@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import type { BaseObject } from '../deskObject'
 
 export interface MouseParams {
+  name: string | ''
   width: number
   height: number
   depth: number
@@ -20,6 +21,7 @@ export const mouseModal = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       width: 0.06,
       height: 0.03,
       depth: 0.1,

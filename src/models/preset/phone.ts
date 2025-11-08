@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import type { BaseObject } from '../deskObject'
 
 export interface PhoneParams {
+  name: string | ''
   preset: PhonePresetKey | '' // 允许空字符串或预设名
   width: number
   height: number
@@ -34,6 +35,7 @@ export const phoneModel = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       preset: '', // 默认无预设
       width: 0.071,
       height: 0.006,

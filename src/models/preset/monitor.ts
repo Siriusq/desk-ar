@@ -65,6 +65,7 @@ export type MonitorPresetKey = keyof typeof monitorPresets
 
 // 带有支架的显示器
 export interface MonitorParams {
+  name: string | ''
   preset: MonitorPresetKey | ''
   width: number
   height: number
@@ -96,6 +97,7 @@ export const monitorModel = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       preset: '',
 
       width: 0.54, // 屏幕整体宽度
@@ -270,6 +272,7 @@ export const monitorModel = {
 
 // 不带支架的显示器，用于壁挂等场景
 export interface MonitorWithoutStandParams {
+  name: string | ''
   preset: MonitorPresetKey | ''
   width: number
   height: number
@@ -292,6 +295,7 @@ export const monitorWithoutStandModel = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       preset: '',
       width: 0.54,
       height: 0.32,

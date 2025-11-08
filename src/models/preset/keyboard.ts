@@ -3,6 +3,7 @@ import type { BaseObject } from '../deskObject'
 const textureLoader = new THREE.TextureLoader()
 
 export interface KeyboardParams {
+  name: string | ''
   width: number
   height: number
   depth: number
@@ -32,6 +33,7 @@ export const keyboard108Modal = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       width: 0.44,
       height: 0.02,
       depth: 0.14,
@@ -89,6 +91,7 @@ export const keyboard87Modal = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       width: 0.36,
       height: 0.02,
       depth: 0.14,
@@ -146,6 +149,7 @@ export const keyboard68Modal = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       width: 0.32,
       height: 0.02,
       depth: 0.11,
@@ -203,6 +207,7 @@ export const keyboard60Modal = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       width: 0.3,
       height: 0.02,
       depth: 0.11,

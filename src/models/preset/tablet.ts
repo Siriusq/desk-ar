@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import type { BaseObject } from '../deskObject'
 
 export interface TabletParams {
+  name: string | ''
   preset: TabletPresetKey | '' // 允许空字符串或预设名
   width: number
   height: number
@@ -34,6 +35,7 @@ export const tabletModel = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       preset: '', // 默认无预设
       width: 0.179,
       height: 0.006,

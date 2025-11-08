@@ -15,6 +15,7 @@ import type { TabletObject } from './preset/tablet'
 export interface BaseObject {
   id: string
   type: string
+  name?: string // 可选名称属性
   position: { x: number; y: number; z: number }
   rotation: { x: number; y: number; z: number }
   mountedToId: string | null
@@ -22,6 +23,7 @@ export interface BaseObject {
 
 // 导入的模型类型
 export interface ImportedModelParams {
+  name?: string
   fileName: string
   dataUrl: string // 存储模型的 Base64 Data URL
   color: string // 占位符，以满足 createObject3D 和 sceneManager 的要求

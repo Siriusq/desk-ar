@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import type { BaseObject } from '../deskObject'
 
 export interface MacbookParams {
+  name: string | ''
   preset: MacbookPresetKey | '' // 允许空字符串或预设名
   width: number
   height: number
@@ -36,6 +37,7 @@ export const macbookModal = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       preset: '', // 默认无预设
       width: 0.3,
       height: 0.015,

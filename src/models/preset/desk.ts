@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import type { BaseObject } from '../deskObject'
 
 export interface DeskRectParams {
+  name: string | ''
   width: number
   depth: number
   height: number
@@ -13,6 +14,7 @@ export interface DeskRectObject extends BaseObject {
 }
 
 export interface DeskLParams {
+  name: string | ''
   widthA: number
   depthA: number
   widthB: number
@@ -33,6 +35,7 @@ export const deskRectModel = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       width: 1.2,
       depth: 0.6,
       height: 0.75,
@@ -74,6 +77,7 @@ export const deskLModel = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       widthA: 1.2,
       depthA: 0.6,
       widthB: 0.8,

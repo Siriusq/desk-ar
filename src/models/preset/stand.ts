@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import type { BaseObject } from '../deskObject'
 
 export interface UniversalStandParams {
+  name: string | ''
   baseSize: number
   poleHeight: number
   armLength: number
@@ -21,6 +22,7 @@ export const universalStandModal = {
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
+      name: '',
       baseSize: 0.25,
       poleHeight: 0.4,
       armLength: 0.3,
