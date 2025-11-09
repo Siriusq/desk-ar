@@ -169,6 +169,7 @@ export default {
     mouse: 'Mouse',
     speaker: 'Speaker',
     'sound-bar': 'Sound Bar',
+    headphone: 'Headphones',
     'universal-stand': 'Universal Stand',
     'round-base-stand': 'Round Base Stand',
     'rectangle-base-stand': 'Rectangle Base Stand',

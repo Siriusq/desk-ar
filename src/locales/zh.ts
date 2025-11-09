@@ -169,6 +169,7 @@ export default {
     mouse: '鼠标',
     speaker: '音响',
     'sound-bar': '条形音箱',
+    headphone: '头戴式耳机',
     'universal-stand': '通用支架',
     'round-base-stand': '圆形底座支架',
     'rectangle-base-stand': '方形底座支架',

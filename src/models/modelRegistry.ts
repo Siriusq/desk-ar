@@ -17,6 +17,7 @@ import { pcCaseModel } from './preset/pc_case'
 import { monitorRiserModel } from './preset/monitor_riser'
 import { mousePadModel } from './preset/mouse_pad'
 import { soundBarModel, speakerModel } from './preset/speaker'
+import { headphoneModel } from './preset/headphone'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -61,6 +62,7 @@ export const modelRegistry = {
   // --- SPEAKER ---
   speaker: speakerModel,
   'sound-bar': soundBarModel,
+  headphone: headphoneModel,
 
   // --- UNIVERSAL-STAND ---
   'round-base-stand': roundBaseStandModel,
