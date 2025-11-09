@@ -18,6 +18,7 @@ import { monitorRiserModel } from './preset/monitor_riser'
 import { mousePadModel } from './preset/mouse_pad'
 import { soundBarModel, speakerModel } from './preset/speaker'
 import { headphoneModel } from './preset/headphone'
+import { microphoneModel } from './preset/microphone'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -63,6 +64,9 @@ export const modelRegistry = {
   speaker: speakerModel,
   'sound-bar': soundBarModel,
   headphone: headphoneModel,
+
+  // --- MICROPHONE ---
+  microphone: microphoneModel,
 
   // --- UNIVERSAL-STAND ---
   'round-base-stand': roundBaseStandModel,

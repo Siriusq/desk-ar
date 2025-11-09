@@ -45,6 +45,10 @@ export default {
   unmount: '卸载',
   mountObject: '挂载物品',
   noMountableItems: '场景中无可用挂载物品',
+  // 话筒
+  capsuleRadius: '胶囊体半径',
+  capsuleHeight: '胶囊体高度',
+  standRadius: '支架半径',
   // 键盘颜色
   isBlack: '白色/黑色',
   // 显示器
@@ -161,6 +165,7 @@ export default {
     tablet: '平板电脑',
     'pc-case': '电脑主机',
     'mouse-pad': '鼠标垫',
+    microphone: '话筒',
     keyboard: '键盘',
     'keyboard-108': '108键键盘',
     'keyboard-87': '87键键盘',

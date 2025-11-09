@@ -44,6 +44,10 @@ export default {
   unmount: 'Unmount',
   mountObject: 'Mount Item',
   noMountableItems: 'No mountable items in scene',
+  // 话筒
+  capsuleRadius: 'Capsule Radius',
+  capsuleHeight: 'Capsule Height',
+  standRadius: 'Stand Radius',
   // 键盘
   isBlack: 'White/Black',
   // 显示器
@@ -161,6 +165,7 @@ export default {
     tablet: 'Tablet',
     'pc-case': 'PC Case',
     'mouse-pad': 'Mouse Pad',
+    microphone: 'Microphone',
     keyboard: 'Keyboard',
     'keyboard-108': 'Keyboard 108 Keys',
     'keyboard-87': 'Keyboard 87 Keys',
