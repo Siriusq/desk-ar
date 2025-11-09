@@ -13,6 +13,7 @@ import type { PhoneObject } from './preset/phone'
 import type { RectangleBaseStandObject, RoundBaseStandObject } from './preset/stand'
 import type { TabletObject } from './preset/tablet'
 import type { MousePadObject } from './preset/mouse_pad'
+import type { SoundBarObject, SpeakerObject } from './preset/speaker'
 
 // 注意：position 和 rotation 应该是纯对象，以便 JSON 序列化
 export interface BaseObject {
@@ -49,6 +50,8 @@ export type DeskObject =
   | MousePadObject
   | KeyboardObject
   | MouseObject
+  | SpeakerObject
+  | SoundBarObject
   | RoundBaseStandObject
   | RectangleBaseStandObject
   | MonitorRiserObject
@@ -75,6 +78,8 @@ export type DeskObjectType =
   | 'keyboard-68'
   | 'keyboard-60'
   | 'mouse'
+  | 'speaker'
+  | 'sound-bar'
   | 'round-base-stand'
   | 'rectangle-base-stand'
   | 'monitor-riser'

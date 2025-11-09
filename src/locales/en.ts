@@ -167,6 +167,8 @@ export default {
     'keyboard-68': 'Keyboard 68 Keys',
     'keyboard-60': 'Keyboard 60 Keys',
     mouse: 'Mouse',
+    speaker: 'Speaker',
+    'sound-bar': 'Sound Bar',
     'universal-stand': 'Universal Stand',
     'round-base-stand': 'Round Base Stand',
     'rectangle-base-stand': 'Rectangle Base Stand',

@@ -53,6 +53,8 @@ export const availableModels: AvailableModelsMap = {
       { type: 'keyboard-68', name: 'keyboard-68', icon: '⌨️' },
       { type: 'keyboard-60', name: 'keyboard-60', icon: '⌨️' },
       { type: 'mouse', name: 'mouse', icon: '🖱️' },
+      { type: 'speaker', name: 'speaker', icon: '🔊' },
+      { type: 'sound-bar', name: 'sound-bar', icon: '📢' },
       { type: 'round-base-stand', name: 'round-base-stand', icon: '🔩' },
       { type: 'rectangle-base-stand', name: 'rectangle-base-stand', icon: '🔩' },
       { type: 'monitor-riser', name: 'monitor-riser', icon: '📏' },
