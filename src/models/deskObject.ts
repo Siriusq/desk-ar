@@ -12,6 +12,7 @@ import type { PcCaseObject } from './preset/pc_case'
 import type { PhoneObject } from './preset/phone'
 import type { RectangleBaseStandObject, RoundBaseStandObject } from './preset/stand'
 import type { TabletObject } from './preset/tablet'
+import type { MousePadObject } from './preset/mouse_pad'
 
 // 注意：position 和 rotation 应该是纯对象，以便 JSON 序列化
 export interface BaseObject {
@@ -45,6 +46,7 @@ export type DeskObject =
   | PhoneObject
   | TabletObject
   | PcCaseObject
+  | MousePadObject
   | KeyboardObject
   | MouseObject
   | RoundBaseStandObject
@@ -67,6 +69,7 @@ export type DeskObjectType =
   | 'phone'
   | 'tablet'
   | 'pc-case'
+  | 'mouse-pad'
   | 'keyboard-108'
   | 'keyboard-87'
   | 'keyboard-68'

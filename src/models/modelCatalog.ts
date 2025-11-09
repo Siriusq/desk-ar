@@ -47,7 +47,7 @@ export const availableModels: AvailableModelsMap = {
   accessories: {
     icon: '⌨️', // 新增：目录图标
     models: [
-      // 【修改】 替换 'keyboard' 为具体的尺寸选项
+      { type: 'mouse-pad', name: 'mouse-pad', icon: '🖱️' },
       { type: 'keyboard-108', name: 'keyboard-108', icon: '⌨️' },
       { type: 'keyboard-87', name: 'keyboard-87', icon: '⌨️' },
       { type: 'keyboard-68', name: 'keyboard-68', icon: '⌨️' },

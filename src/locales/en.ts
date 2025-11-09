@@ -32,6 +32,7 @@ export default {
   depthB: 'Depth (B)',
   showLegs: 'Show Legs',
   height: 'Height',
+  thickness: 'Thickness',
   color: 'Color',
   dimensions: 'Dimensions',
   depth: 'Depth',
@@ -85,6 +86,15 @@ export default {
   // 机箱预设
   c24: 'C24',
   'rider-r2': 'Rider R2',
+  // 鼠标垫尺寸
+  small: 'Small',
+  medium: 'Medium',
+  large: 'Large',
+  xl: 'XL',
+  xxl: 'XXL',
+  xxxl: 'XXXL',
+  xxxxl: 'XXXXL',
+  // 自定义
   custom: 'Custom',
   preset: 'Preset (Some parameters will be unadjustable)',
   // 自定义图形
@@ -150,6 +160,7 @@ export default {
     phone: 'Phone',
     tablet: 'Tablet',
     'pc-case': 'PC Case',
+    'mouse-pad': 'Mouse Pad',
     keyboard: 'Keyboard',
     'keyboard-108': 'Keyboard 108 Keys',
     'keyboard-87': 'Keyboard 87 Keys',

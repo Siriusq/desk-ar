@@ -33,6 +33,7 @@ export default {
   depthB: '进深 (B)',
   showLegs: '显示桌腿',
   height: '高度',
+  thickness: '厚度',
   color: '颜色',
   dimensions: '尺寸',
   depth: '深度',
@@ -86,6 +87,15 @@ export default {
   // 机箱预设
   c24: 'C24',
   'rider-r2': 'Rider R2',
+  // 鼠标垫尺寸
+  small: '小号',
+  medium: '中号',
+  large: '大号',
+  xl: '加大号',
+  xxl: '超大号',
+  xxxl: '特大号',
+  xxxxl: '巨大号',
+  // 自定义
   custom: '自定义',
   preset: '预设（部分参数将不可调节）',
   // 自定义图形
@@ -150,6 +160,7 @@ export default {
     phone: '手机',
     tablet: '平板电脑',
     'pc-case': '电脑主机',
+    'mouse-pad': '鼠标垫',
     keyboard: '键盘',
     'keyboard-108': '108键键盘',
     'keyboard-87': '87键键盘',

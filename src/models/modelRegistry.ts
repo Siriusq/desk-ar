@@ -15,6 +15,7 @@ import { customBoxModel, customCylinderModel, customSphereModel } from './preset
 import { tabletModel } from './preset/tablet'
 import { pcCaseModel } from './preset/pc_case'
 import { monitorRiserModel } from './preset/monitor_riser'
+import { mousePadModel } from './preset/mouse_pad'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -52,6 +53,9 @@ export const modelRegistry = {
 
   // --- PC CASE ---
   'pc-case': pcCaseModel,
+
+  // --- Mouse Pad ---
+  'mouse-pad': mousePadModel,
 
   // --- UNIVERSAL-STAND ---
   'round-base-stand': roundBaseStandModel,

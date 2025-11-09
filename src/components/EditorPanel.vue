@@ -34,6 +34,7 @@ import { monitorPresets } from '@/models/preset/monitor'
 import { tabletPresets } from '@/models/preset/tablet'
 import { phonePresets } from '@/models/preset/phone'
 import { pcCasePresets } from '@/models/preset/pc_case'
+import { mousePadPresets } from '@/models/preset/mouse_pad'
 
 // 使用 Composable 共享状态
 const {
@@ -211,6 +212,14 @@ function getPresetOptions(type: string) {
       return [
         { value: '', text: t('custom') },
         ...Object.keys(pcCasePresets).map((k) => ({
+          value: k,
+          text: t(k),
+        })),
+      ]
+    case 'mouse-pad':
+      return [
+        { value: '', text: t('custom') },
+        ...Object.keys(mousePadPresets).map((k) => ({
           value: k,
           text: t(k),
         })),
