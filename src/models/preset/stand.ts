@@ -20,7 +20,7 @@ export interface RoundBaseStandObject extends BaseObject {
   params: RoundBaseStandParams
 }
 
-export const roundBaseStandModal = {
+export const roundBaseStandModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'round-base-stand',
@@ -97,7 +97,7 @@ export interface RectangleBaseStandObject extends BaseObject {
   params: RectangleBaseStandParams
 }
 
-export const rectangleBaseStandModal = {
+export const rectangleBaseStandModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'rectangle-base-stand',

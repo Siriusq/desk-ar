@@ -103,6 +103,8 @@ export default {
   // 方形底座支架
   poleWidth: 'Pole Width',
   poleDepth: 'Pole Depth',
+  // 桌面增高架
+  panelThickness: 'Panel Thickness',
   // 通用
   back: 'Back',
   add: 'Add',
@@ -147,7 +149,7 @@ export default {
     macbook: 'Laptop',
     phone: 'Phone',
     tablet: 'Tablet',
-    pc_case: 'PC Case',
+    'pc-case': 'PC Case',
     keyboard: 'Keyboard',
     'keyboard-108': 'Keyboard 108 Keys',
     'keyboard-87': 'Keyboard 87 Keys',
@@ -157,6 +159,7 @@ export default {
     'universal-stand': 'Universal Stand',
     'round-base-stand': 'Round Base Stand',
     'rectangle-base-stand': 'Rectangle Base Stand',
+    'monitor-riser': 'Desk Riser',
     'custom-box': 'Custom Box',
     'custom-cylinder': 'Custom Cylinder',
     'custom-sphere': 'Custom Sphere',

@@ -41,7 +41,7 @@ export const availableModels: AvailableModelsMap = {
       { type: 'macbook', name: 'macbook', icon: '💻' },
       { type: 'phone', name: 'phone', icon: '📱' },
       { type: 'tablet', name: 'tablet', icon: '📱' },
-      { type: 'pc_case', name: 'pc_case', icon: '🖥️' },
+      { type: 'pc-case', name: 'pc-case', icon: '🖥️' },
     ],
   },
   accessories: {
@@ -55,6 +55,7 @@ export const availableModels: AvailableModelsMap = {
       { type: 'mouse', name: 'mouse', icon: '🖱️' },
       { type: 'round-base-stand', name: 'round-base-stand', icon: '🔩' },
       { type: 'rectangle-base-stand', name: 'rectangle-base-stand', icon: '🔩' },
+      { type: 'monitor-riser', name: 'monitor-riser', icon: '📏' },
     ],
   },
   others: {

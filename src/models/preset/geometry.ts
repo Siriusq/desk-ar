@@ -14,7 +14,7 @@ export interface CustomBoxObject extends BaseObject {
   params: CustomBoxParams
 }
 
-export const customBoxModal = {
+export const customBoxModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'custom-box',
@@ -51,7 +51,7 @@ export interface CustomCylinderObject extends BaseObject {
   params: CustomCylinderParams
 }
 
-export const customCylinderModal = {
+export const customCylinderModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'custom-cylinder',
@@ -89,7 +89,7 @@ export interface CustomSphereObject extends BaseObject {
   params: CustomSphereParams
 }
 
-export const customSphereModal = {
+export const customSphereModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'custom-sphere',

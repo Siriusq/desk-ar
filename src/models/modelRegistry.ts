@@ -2,18 +2,19 @@
 import { monitorModel, monitorWithoutStandModel } from './preset/monitor'
 import { deskLModel, deskRectModel } from './preset/desk'
 import {
-  keyboard108Modal,
-  keyboard60Modal,
-  keyboard68Modal,
-  keyboard87Modal,
+  keyboard108Model,
+  keyboard60Model,
+  keyboard68Model,
+  keyboard87Model,
 } from './preset/keyboard'
-import { mouseModal } from './preset/mouse'
+import { mouseModel } from './preset/mouse'
 import { phoneModel } from './preset/phone'
-import { macbookModal } from './preset/laptop'
-import { rectangleBaseStandModal, roundBaseStandModal } from './preset/stand'
-import { customBoxModal, customCylinderModal, customSphereModal } from './preset/geometry'
+import { macbookModel } from './preset/laptop'
+import { rectangleBaseStandModel, roundBaseStandModel } from './preset/stand'
+import { customBoxModel, customCylinderModel, customSphereModel } from './preset/geometry'
 import { tabletModel } from './preset/tablet'
 import { pcCaseModel } from './preset/pc_case'
+import { monitorRiserModel } from './preset/monitor_riser'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -29,16 +30,16 @@ export const modelRegistry = {
   'monitor-without-stand': monitorWithoutStandModel,
 
   // --- KEYBOARD ---
-  'keyboard-108': keyboard108Modal,
+  'keyboard-108': keyboard108Model,
 
-  'keyboard-87': keyboard87Modal,
+  'keyboard-87': keyboard87Model,
 
-  'keyboard-68': keyboard68Modal,
+  'keyboard-68': keyboard68Model,
 
-  'keyboard-60': keyboard60Modal,
+  'keyboard-60': keyboard60Model,
 
   // --- MOUSE ---
-  mouse: mouseModal,
+  mouse: mouseModel,
 
   // --- IPHONE ---
   phone: phoneModel,
@@ -47,17 +48,18 @@ export const modelRegistry = {
   tablet: tabletModel,
 
   // --- MACBOOK ---
-  macbook: macbookModal,
+  macbook: macbookModel,
 
   // --- PC CASE ---
-  pc_case: pcCaseModel,
+  'pc-case': pcCaseModel,
 
   // --- UNIVERSAL-STAND ---
-  'round-base-stand': roundBaseStandModal,
-  'rectangle-base-stand': rectangleBaseStandModal,
+  'round-base-stand': roundBaseStandModel,
+  'rectangle-base-stand': rectangleBaseStandModel,
+  'monitor-riser': monitorRiserModel,
 
   // --- CUSTOM-Geometry ---
-  'custom-box': customBoxModal,
-  'custom-cylinder': customCylinderModal,
-  'custom-sphere': customSphereModal,
+  'custom-box': customBoxModel,
+  'custom-cylinder': customCylinderModel,
+  'custom-sphere': customSphereModel,
 }

@@ -13,7 +13,7 @@ export interface MouseObject extends BaseObject {
   params: MouseParams
 }
 
-export const mouseModal = {
+export const mouseModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'mouse',

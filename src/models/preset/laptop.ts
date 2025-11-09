@@ -29,7 +29,7 @@ export type MacbookPresetKey = keyof typeof macbookPresets
 // === 纹理缓存 ===
 let cachedkeyboardTexture: THREE.Texture | null = null
 
-export const macbookModal = {
+export const macbookModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'macbook',

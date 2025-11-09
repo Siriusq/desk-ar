@@ -25,7 +25,7 @@ let cachedKeyboard68BlackTexture: THREE.Texture | null = null
 let cachedKeyboard60WhiteTexture: THREE.Texture | null = null
 let cachedKeyboard60BlackTexture: THREE.Texture | null = null
 
-export const keyboard108Modal = {
+export const keyboard108Model = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'keyboard-108',
@@ -83,7 +83,7 @@ export const keyboard108Modal = {
   },
 }
 
-export const keyboard87Modal = {
+export const keyboard87Model = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'keyboard-87',
@@ -141,7 +141,7 @@ export const keyboard87Modal = {
   },
 }
 
-export const keyboard68Modal = {
+export const keyboard68Model = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'keyboard-68',
@@ -199,7 +199,7 @@ export const keyboard68Modal = {
   },
 }
 
-export const keyboard60Modal = {
+export const keyboard60Model = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'keyboard-60',

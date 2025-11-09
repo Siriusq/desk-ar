@@ -12,7 +12,7 @@ export interface PcCaseParams {
   isMountable: boolean
 }
 export interface PcCaseObject extends BaseObject {
-  type: 'pc_case'
+  type: 'pc-case'
   params: PcCaseParams
 }
 // 预设尺寸
@@ -29,7 +29,7 @@ export type PcCasePresetKey = keyof typeof pcCasePresets
 export const pcCaseModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
-    type: 'pc_case',
+    type: 'pc-case',
     position: { x: 0, y: yPos, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,

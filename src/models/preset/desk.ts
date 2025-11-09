@@ -53,19 +53,17 @@ export const deskRectModel = {
     top.position.y = p.height - 0.02
     group.add(top)
     // 腿部逻辑
-    if (true) {
-      const legGeom = new THREE.CylinderGeometry(0.03, 0.03, p.height - 0.04, 16)
-      ;[
-        [p.width / 2 - 0.05, p.depth / 2 - 0.05],
-        [-p.width / 2 + 0.05, p.depth / 2 - 0.05],
-        [p.width / 2 - 0.05, -p.depth / 2 + 0.05],
-        [-p.width / 2 + 0.05, -p.depth / 2 + 0.05],
-      ].forEach((x) => {
-        const leg = new THREE.Mesh(legGeom, mat)
-        leg.position.set(x[0] as number, (p.height - 0.04) / 2, x[1] as number)
-        group.add(leg)
-      })
-    }
+    const legGeom = new THREE.CylinderGeometry(0.03, 0.03, p.height - 0.04, 16)
+    ;[
+      [p.width / 2 - 0.05, p.depth / 2 - 0.05],
+      [-p.width / 2 + 0.05, p.depth / 2 - 0.05],
+      [p.width / 2 - 0.05, -p.depth / 2 + 0.05],
+      [-p.width / 2 + 0.05, -p.depth / 2 + 0.05],
+    ].forEach((x) => {
+      const leg = new THREE.Mesh(legGeom, mat)
+      leg.position.set(x[0] as number, (p.height - 0.04) / 2, x[1] as number)
+      group.add(leg)
+    })
   },
 }
 

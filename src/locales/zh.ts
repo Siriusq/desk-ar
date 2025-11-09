@@ -104,6 +104,8 @@ export default {
   // 方形底座支架
   poleWidth: '支撑杆宽度',
   poleDepth: '支撑杆深度',
+  // 桌面增高架
+  panelThickness: '顶板厚度',
   // 通用
   back: '返回',
   add: '添加',
@@ -147,7 +149,7 @@ export default {
     macbook: '笔记本电脑',
     phone: '手机',
     tablet: '平板电脑',
-    pc_case: '电脑主机',
+    'pc-case': '电脑主机',
     keyboard: '键盘',
     'keyboard-108': '108键键盘',
     'keyboard-87': '87键键盘',
@@ -157,6 +159,7 @@ export default {
     'universal-stand': '通用支架',
     'round-base-stand': '圆形底座支架',
     'rectangle-base-stand': '方形底座支架',
+    'monitor-riser': '桌面增高架',
     'custom-box': '自定义立方体',
     'custom-cylinder': '自定义圆柱体',
     'custom-sphere': '自定义球体',

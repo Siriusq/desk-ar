@@ -2,6 +2,7 @@
 // 1. 基础布局对象接口 (所有对象共享的属性)
 
 import type { DeskLObject, DeskRectObject } from './preset/desk'
+import type { MonitorRiserObject } from './preset/monitor_riser'
 import type { CustomBoxObject, CustomCylinderObject, CustomSphereObject } from './preset/geometry'
 import type { KeyboardObject } from './preset/keyboard'
 import type { MacbookObject } from './preset/laptop'
@@ -48,6 +49,7 @@ export type DeskObject =
   | MouseObject
   | RoundBaseStandObject
   | RectangleBaseStandObject
+  | MonitorRiserObject
   | CustomBoxObject
   | CustomCylinderObject
   | CustomSphereObject
@@ -64,7 +66,7 @@ export type DeskObjectType =
   | 'macbook'
   | 'phone'
   | 'tablet'
-  | 'pc_case'
+  | 'pc-case'
   | 'keyboard-108'
   | 'keyboard-87'
   | 'keyboard-68'
@@ -72,6 +74,7 @@ export type DeskObjectType =
   | 'mouse'
   | 'round-base-stand'
   | 'rectangle-base-stand'
+  | 'monitor-riser'
   | 'custom-box'
   | 'custom-cylinder'
   | 'custom-sphere'
