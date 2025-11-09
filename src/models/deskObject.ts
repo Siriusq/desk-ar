@@ -7,6 +7,7 @@ import type { KeyboardObject } from './preset/keyboard'
 import type { MacbookObject } from './preset/laptop'
 import type { MonitorObject, MonitorWithoutStandObject } from './preset/monitor'
 import type { MouseObject } from './preset/mouse'
+import type { PcCaseObject } from './preset/pc_case'
 import type { PhoneObject } from './preset/phone'
 import type { RectangleBaseStandObject, RoundBaseStandObject } from './preset/stand'
 import type { TabletObject } from './preset/tablet'
@@ -42,6 +43,7 @@ export type DeskObject =
   | MacbookObject
   | PhoneObject
   | TabletObject
+  | PcCaseObject
   | KeyboardObject
   | MouseObject
   | RoundBaseStandObject
@@ -62,6 +64,7 @@ export type DeskObjectType =
   | 'macbook'
   | 'phone'
   | 'tablet'
+  | 'pc_case'
   | 'keyboard-108'
   | 'keyboard-87'
   | 'keyboard-68'

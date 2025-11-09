@@ -41,6 +41,7 @@ export const availableModels: AvailableModelsMap = {
       { type: 'macbook', name: 'macbook', icon: '💻' },
       { type: 'phone', name: 'phone', icon: '📱' },
       { type: 'tablet', name: 'tablet', icon: '📱' },
+      { type: 'pc_case', name: 'pc_case', icon: '🖥️' },
     ],
   },
   accessories: {

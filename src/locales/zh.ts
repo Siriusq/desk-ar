@@ -78,6 +78,14 @@ export default {
   '40-inch': '40 寸 21:9',
   '43-inch': '43 寸',
   '49-inch': '49 寸 32:9',
+  // 机箱尺寸
+  itx: 'ITX',
+  matx: 'mATX',
+  atx: 'ATX',
+  eatx: 'EATX',
+  // 机箱预设
+  c24: 'C24',
+  'rider-r2': 'Rider R2',
   custom: '自定义',
   preset: '预设（部分参数将不可调节）',
   // 自定义图形
@@ -139,6 +147,7 @@ export default {
     macbook: '笔记本电脑',
     phone: '手机',
     tablet: '平板电脑',
+    pc_case: '电脑主机',
     keyboard: '键盘',
     'keyboard-108': '108键键盘',
     'keyboard-87': '87键键盘',

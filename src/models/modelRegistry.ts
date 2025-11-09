@@ -13,6 +13,7 @@ import { macbookModal } from './preset/laptop'
 import { rectangleBaseStandModal, roundBaseStandModal } from './preset/stand'
 import { customBoxModal, customCylinderModal, customSphereModal } from './preset/geometry'
 import { tabletModel } from './preset/tablet'
+import { pcCaseModel } from './preset/pc_case'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -47,6 +48,9 @@ export const modelRegistry = {
 
   // --- MACBOOK ---
   macbook: macbookModal,
+
+  // --- PC CASE ---
+  pc_case: pcCaseModel,
 
   // --- UNIVERSAL-STAND ---
   'round-base-stand': roundBaseStandModal,
