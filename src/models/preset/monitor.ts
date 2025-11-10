@@ -120,7 +120,7 @@ export const monitorModel = {
 
       curvatureR: 0,
 
-      isMountable: true,
+      isMountable: false,
     },
   }),
 

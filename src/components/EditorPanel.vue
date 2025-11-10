@@ -135,6 +135,7 @@ const angles = [
   'tilterAngleX',
   'tilterAngleY',
   'tilterAngleZ',
+  'openAngle',
 ]
 const getUnitForParam = (key: string) => {
   // 根据 key 返回不同的单位

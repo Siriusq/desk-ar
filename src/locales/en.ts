@@ -119,6 +119,11 @@ export default {
   poleDepth: 'Pole Depth',
   // 桌面增高架
   panelThickness: 'Panel Thickness',
+  // 台灯
+  shellWidth: 'Shell Width',
+  shellLength: 'Shell Length',
+  shellThickness: 'Shell Thickness',
+  openAngle: 'Open Angle',
   // 通用
   back: 'Back',
   add: 'Add',
@@ -181,6 +186,8 @@ export default {
     'rectangle-base-stand': 'Rectangle Base Stand',
     'monitor-riser': 'Desk Riser',
     'monitor-light': 'Monitor Light',
+    'round-base-table-light': 'Round Base Table Light',
+    'rectangle-base-table-light': 'Rectangle Base Table Light',
     'custom-box': 'Custom Box',
     'custom-cylinder': 'Custom Cylinder',
     'custom-sphere': 'Custom Sphere',

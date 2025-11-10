@@ -120,6 +120,11 @@ export default {
   poleDepth: '支撑杆深度',
   // 桌面增高架
   panelThickness: '顶板厚度',
+  // 台灯
+  shellWidth: '外壳宽度',
+  shellLength: '外壳长度',
+  shellThickness: '外壳厚度',
+  openAngle: '开合角度',
   // 通用
   back: '返回',
   add: '添加',
@@ -181,6 +186,8 @@ export default {
     'rectangle-base-stand': '方形底座支架',
     'monitor-riser': '桌面增高架',
     'monitor-light': '屏幕挂灯',
+    'round-base-table-light': '圆形底座台灯',
+    'rectangle-base-table-light': '方形底座台灯',
     'custom-box': '自定义立方体',
     'custom-cylinder': '自定义圆柱体',
     'custom-sphere': '自定义球体',

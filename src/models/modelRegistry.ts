@@ -21,6 +21,7 @@ import { headphoneModel } from './preset/headphone'
 import { microphoneModel } from './preset/microphone'
 import { stylusModel } from './preset/stylus'
 import { monitorLightModel } from './preset/monitor_light'
+import { rectangleBaseTableLightModel, roundBaseTableLightModel } from './preset/table_light'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -75,6 +76,8 @@ export const modelRegistry = {
 
   // --- LIGHT
   'monitor-light': monitorLightModel,
+  'round-base-table-light': roundBaseTableLightModel,
+  'rectangle-base-table-light': rectangleBaseTableLightModel,
 
   // --- UNIVERSAL-STAND ---
   'round-base-stand': roundBaseStandModel,
