@@ -20,6 +20,7 @@ import { soundBarModel, speakerModel } from './preset/speaker'
 import { headphoneModel } from './preset/headphone'
 import { microphoneModel } from './preset/microphone'
 import { stylusModel } from './preset/stylus'
+import { monitorLightModel } from './preset/monitor_light'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -71,6 +72,9 @@ export const modelRegistry = {
 
   // --- MICROPHONE ---
   microphone: microphoneModel,
+
+  // --- LIGHT
+  'monitor-light': monitorLightModel,
 
   // --- UNIVERSAL-STAND ---
   'round-base-stand': roundBaseStandModel,

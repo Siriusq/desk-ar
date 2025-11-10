@@ -61,6 +61,7 @@ export const availableModels: AvailableModelsMap = {
       { type: 'round-base-stand', name: 'round-base-stand', icon: '🔩' },
       { type: 'rectangle-base-stand', name: 'rectangle-base-stand', icon: '🔩' },
       { type: 'monitor-riser', name: 'monitor-riser', icon: '📏' },
+      { type: 'monitor-light', name: 'monitor-light', icon: '💡' },
     ],
   },
   others: {

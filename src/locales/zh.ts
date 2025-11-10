@@ -180,6 +180,7 @@ export default {
     'round-base-stand': '圆形底座支架',
     'rectangle-base-stand': '方形底座支架',
     'monitor-riser': '桌面增高架',
+    'monitor-light': '屏幕挂灯',
     'custom-box': '自定义立方体',
     'custom-cylinder': '自定义圆柱体',
     'custom-sphere': '自定义球体',

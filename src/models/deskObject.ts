@@ -17,6 +17,7 @@ import type { SoundBarObject, SpeakerObject } from './preset/speaker'
 import type { HeadphoneObject } from './preset/headphone'
 import type { MicrophoneObject } from './preset/microphone'
 import type { StylusObject } from './preset/stylus'
+import type { MonitorLightObject } from './preset/monitor_light'
 
 // 注意：position 和 rotation 应该是纯对象，以便 JSON 序列化
 export interface BaseObject {
@@ -61,6 +62,7 @@ export type DeskObject =
   | RoundBaseStandObject
   | RectangleBaseStandObject
   | MonitorRiserObject
+  | MonitorLightObject
   | CustomBoxObject
   | CustomCylinderObject
   | CustomSphereObject
@@ -92,6 +94,7 @@ export type DeskObjectType =
   | 'round-base-stand'
   | 'rectangle-base-stand'
   | 'monitor-riser'
+  | 'monitor-light'
   | 'custom-box'
   | 'custom-cylinder'
   | 'custom-sphere'

@@ -180,6 +180,7 @@ export default {
     'round-base-stand': 'Round Base Stand',
     'rectangle-base-stand': 'Rectangle Base Stand',
     'monitor-riser': 'Desk Riser',
+    'monitor-light': 'Monitor Light',
     'custom-box': 'Custom Box',
     'custom-cylinder': 'Custom Cylinder',
     'custom-sphere': 'Custom Sphere',
