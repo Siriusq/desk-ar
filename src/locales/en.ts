@@ -172,6 +172,7 @@ export default {
     'keyboard-68': 'Keyboard 68 Keys',
     'keyboard-60': 'Keyboard 60 Keys',
     mouse: 'Mouse',
+    stylus: 'Stylus',
     speaker: 'Speaker',
     'sound-bar': 'Sound Bar',
     headphone: 'Headphones',

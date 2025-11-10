@@ -172,6 +172,7 @@ export default {
     'keyboard-68': '68键键盘',
     'keyboard-60': '60键键盘',
     mouse: '鼠标',
+    stylus: '手写笔',
     speaker: '音响',
     'sound-bar': '条形音箱',
     headphone: '头戴式耳机',

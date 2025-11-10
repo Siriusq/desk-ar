@@ -19,6 +19,7 @@ import { mousePadModel } from './preset/mouse_pad'
 import { soundBarModel, speakerModel } from './preset/speaker'
 import { headphoneModel } from './preset/headphone'
 import { microphoneModel } from './preset/microphone'
+import { stylusModel } from './preset/stylus'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -44,6 +45,9 @@ export const modelRegistry = {
 
   // --- MOUSE ---
   mouse: mouseModel,
+
+  // --- STYLUS ---
+  stylus: stylusModel,
 
   // --- IPHONE ---
   phone: phoneModel,
