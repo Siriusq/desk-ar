@@ -22,7 +22,8 @@ import { microphoneModel } from './preset/microphone'
 import { stylusModel } from './preset/stylus'
 import { monitorLightModel } from './preset/monitor_light'
 import { rectangleBaseTableLightModel, roundBaseTableLightModel } from './preset/table_light'
-import { WebcamModel } from './preset/webcam'
+import { webcamModel } from './preset/webcam'
+import { waterGlassModel } from './preset/water_glass'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -76,12 +77,15 @@ export const modelRegistry = {
   microphone: microphoneModel,
 
   // --- WEBCAM ---
-  webcam: WebcamModel,
+  webcam: webcamModel,
 
-  // --- LIGHT
+  // --- LIGHT ---
   'monitor-light': monitorLightModel,
   'round-base-table-light': roundBaseTableLightModel,
   'rectangle-base-table-light': rectangleBaseTableLightModel,
+
+  // --- WATER GLASS ---
+  'water-glass': waterGlassModel,
 
   // --- UNIVERSAL-STAND ---
   'round-base-stand': roundBaseStandModel,

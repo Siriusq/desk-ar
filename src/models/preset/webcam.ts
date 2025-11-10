@@ -16,7 +16,7 @@ export interface WebcamObject extends BaseObject {
   params: WebcamParams
 }
 
-export const WebcamModel = {
+export const webcamModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'webcam',

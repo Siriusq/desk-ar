@@ -189,6 +189,7 @@ export default {
     'monitor-light': '屏幕挂灯',
     'round-base-table-light': '圆形底座台灯',
     'rectangle-base-table-light': '方形底座台灯',
+    'water-glass': '玻璃杯',
     'custom-box': '自定义立方体',
     'custom-cylinder': '自定义圆柱体',
     'custom-sphere': '自定义球体',

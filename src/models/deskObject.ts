@@ -20,6 +20,7 @@ import type { StylusObject } from './preset/stylus'
 import type { MonitorLightObject } from './preset/monitor_light'
 import type { RectangleBaseTableLightObject, RoundBaseTableLightObject } from './preset/table_light'
 import type { WebcamObject } from './preset/webcam'
+import type { WaterGlassObject } from './preset/water_glass'
 
 // 注意：position 和 rotation 应该是纯对象，以便 JSON 序列化
 export interface BaseObject {
@@ -68,6 +69,7 @@ export type DeskObject =
   | MonitorLightObject
   | RoundBaseTableLightObject
   | RectangleBaseTableLightObject
+  | WaterGlassObject
   | CustomBoxObject
   | CustomCylinderObject
   | CustomSphereObject
@@ -103,6 +105,7 @@ export type DeskObjectType =
   | 'monitor-light'
   | 'round-base-table-light'
   | 'rectangle-base-table-light'
+  | 'water-glass'
   | 'custom-box'
   | 'custom-cylinder'
   | 'custom-sphere'

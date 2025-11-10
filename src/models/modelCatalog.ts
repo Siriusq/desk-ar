@@ -73,6 +73,7 @@ export const availableModels: AvailableModelsMap = {
       { type: 'custom-box', name: 'custom-box', icon: '📦' },
       { type: 'custom-cylinder', name: 'custom-cylinder', icon: '🛢️' },
       { type: 'custom-sphere', name: 'custom-sphere', icon: '⚽' },
+      { type: 'water-glass', name: 'water-glass', icon: '🥛' },
     ],
   },
 }

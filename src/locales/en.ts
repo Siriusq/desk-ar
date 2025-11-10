@@ -189,6 +189,7 @@ export default {
     'monitor-light': 'Monitor Light',
     'round-base-table-light': 'Round Base Table Light',
     'rectangle-base-table-light': 'Rectangle Base Table Light',
+    'water-glass': 'Water Glass',
     'custom-box': 'Custom Box',
     'custom-cylinder': 'Custom Cylinder',
     'custom-sphere': 'Custom Sphere',
