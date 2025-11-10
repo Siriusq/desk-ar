@@ -22,6 +22,7 @@ import { microphoneModel } from './preset/microphone'
 import { stylusModel } from './preset/stylus'
 import { monitorLightModel } from './preset/monitor_light'
 import { rectangleBaseTableLightModel, roundBaseTableLightModel } from './preset/table_light'
+import { WebcamModel } from './preset/webcam'
 
 // 创建模型“注册表”
 export const modelRegistry = {
@@ -73,6 +74,9 @@ export const modelRegistry = {
 
   // --- MICROPHONE ---
   microphone: microphoneModel,
+
+  // --- WEBCAM ---
+  webcam: WebcamModel,
 
   // --- LIGHT
   'monitor-light': monitorLightModel,

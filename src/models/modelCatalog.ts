@@ -58,6 +58,7 @@ export const availableModels: AvailableModelsMap = {
       { type: 'sound-bar', name: 'sound-bar', icon: '📢' },
       { type: 'headphone', name: 'headphone', icon: '🎧' },
       { type: 'microphone', name: 'microphone', icon: '🎤' },
+      { type: 'webcam', name: 'webcam', icon: '📷' },
       { type: 'round-base-stand', name: 'round-base-stand', icon: '🔩' },
       { type: 'rectangle-base-stand', name: 'rectangle-base-stand', icon: '🔩' },
       { type: 'monitor-riser', name: 'monitor-riser', icon: '📏' },

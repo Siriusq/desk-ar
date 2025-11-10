@@ -181,6 +181,7 @@ export default {
     speaker: 'Speaker',
     'sound-bar': 'Sound Bar',
     headphone: 'Headphones',
+    webcam: 'Webcam',
     'universal-stand': 'Universal Stand',
     'round-base-stand': 'Round Base Stand',
     'rectangle-base-stand': 'Rectangle Base Stand',
