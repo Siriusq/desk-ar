@@ -132,6 +132,14 @@ export const unmountObject = (standId: string) => {
   }
 }
 
+// 删除选中物品并清除选中状态
+export const deleteSelectObject = () => {
+  if (selectedObjectId.value) {
+    deleteObject(selectedObjectId.value)
+    selectedObjectId.value = null
+  }
+}
+
 // 删除物品，销毁 3D 对象
 export const deleteObject = (id: string) => {
   const obj = objects.value.find((o) => o.id === id)

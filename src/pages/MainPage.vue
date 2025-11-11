@@ -5,7 +5,7 @@ import { delay, isLoading, isPreviewOptionModalOpen, useUIState } from '@/compos
 import HelpModal from '@/components/HelpModal.vue'
 import AddModelModal from '@/components/AddModelModal.vue'
 import { undo, redo, canUndo, canRedo } from '@/composables/useHistory'
-import { deleteObject, selectedObjectId } from '@/composables/useObjects'
+import { deleteSelectObject } from '@/composables/useObjects'
 import PreviewOptionModal from '@/components/PreviewOptionModal.vue'
 import { measurementHint } from '@/composables/useMeasurement'
 import { onMounted } from 'vue'
@@ -14,7 +14,6 @@ defineOptions({
   name: 'MainPage',
 })
 
-// 使用 Composable 共享状态
 const {
   isControlPanelOpen,
   isHelpModalOpen,
@@ -23,21 +22,14 @@ const {
   toggleAddModelModal,
 } = useUIState()
 
-const deleteSelectObject = () => {
-  if (selectedObjectId.value) {
-    deleteObject(selectedObjectId.value)
-    selectedObjectId.value = null
-  }
-}
-
 onMounted(async () => {
-  // 1. 设置加载状态
+  // 设置加载状态
   isLoading.value = true
 
-  // 2. 在此等待 300 毫秒
+  // 在此等待 300 毫秒
   await delay(300)
 
-  console.log('MainPage onMounted: Initializing Three.js...')
+  //console.log('MainPage onMounted: Initializing Three.js...')
 })
 </script>
 
@@ -65,7 +57,7 @@ onMounted(async () => {
         <i class="bi bi-plus-lg" />
       </BButton>
       <!--删除按钮-->
-      <BButton variant="danger" @click="deleteSelectObject()">
+      <BButton variant="danger" @click="deleteSelectObject">
         <i class="bi bi-trash" />
       </BButton>
       <!--撤销按钮-->
@@ -132,7 +124,7 @@ onMounted(async () => {
   color: white;
   padding: 8px 16px;
   border-radius: 8px;
-  z-index: 10;
+  z-index: 20;
   pointer-events: none; /* 不妨碍点击 */
   font-size: 14px;
   white-space: nowrap;

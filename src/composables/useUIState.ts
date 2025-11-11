@@ -5,33 +5,33 @@ import { ref } from 'vue'
 import { exitToWelcome, sceneName } from './useLayout'
 import type { CatalogCategoryKey } from '@/models/modelCatalog'
 
+// --- UI状态管理 ---
+
 // 共享状态
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
 const isAndroid = /Android/.test(navigator.userAgent)
 export const isMobile = isIOS || isAndroid
+// UI 开关状态
 export const isControlPanelOpen = ref(false)
 export const isHelpModalOpen = ref(false)
 export const isAddModelModalOpen = ref(false)
 export const isPreviewOptionModalOpen = ref(false)
 export const isLoading = ref(false)
+
 export const addModalCategory = ref<CatalogCategoryKey>()
-
 export const expandedObjectId = ref()
-
-// const isArModalOpen = ref(false)
-// const isMobile = ref(window.innerWidth < 768)
 const showMountDropdownFor = ref()
 
-// 【新增】 标题编辑状态
+// 标题编辑状态
 export const isEditingName = ref(false)
 export const tempSceneName = ref(sceneName.value)
 
-// 【新增】 处理标题编辑的切换和保存
+// 处理标题编辑的切换和保存
 export const handleEditNameToggle = () => {
   if (isEditingName.value) {
     // 正在编辑 -> 点击保存
     sceneName.value = tempSceneName.value
-    // 注意：useHistory.ts 中的 saveState() 会在下次操作时
+    // useHistory.ts 中的 saveState() 会在下次操作时
     // 自动捕获这个新的 sceneName.value，无需手动调用
   } else {
     // 正在显示 -> 点击编辑
@@ -85,7 +85,7 @@ export function useUIState() {
 
   // --- 返回状态和方法 ---
   return {
-    // 只读状态
+    // 状态
     isControlPanelOpen,
     isHelpModalOpen,
     isAddModelModalOpen,

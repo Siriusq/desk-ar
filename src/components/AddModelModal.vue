@@ -7,8 +7,6 @@ import { addObject } from '@/three/objectFactory'
 const { t } = useI18n()
 import { useModelImporter } from '@/composables/useModelImporter'
 const { fileInput, openImportDialog, handleFileChange } = useModelImporter()
-
-// 使用 Composable 共享状态
 const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIState()
 </script>
 
@@ -131,7 +129,6 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
 }
 
 .model-item-wrapper {
-  /* 在 Grid 布局中，项目不再需要设置 margin/min/max-width */
   margin: 0;
   min-width: unset;
   max-width: unset;

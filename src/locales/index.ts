@@ -1,11 +1,9 @@
-// src/i18n/index.ts
 import { createI18n } from 'vue-i18n'
 import en from './en'
 import zh from './zh'
 
 /**
  * 从浏览器获取语言并匹配
- * (这替换了您的 useLangManager.ts 中的 getInitialLocale)
  */
 function getInitialLocale(): 'zh' | 'en' {
   const browserLang = navigator.language.split('-')[0]?.toLowerCase()

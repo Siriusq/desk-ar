@@ -4,6 +4,7 @@ const { t } = useI18n()
 import { createNewLayout, loadLayoutFromFile, resetApplicationState } from '@/composables/useLayout'
 import { onMounted, ref } from 'vue'
 
+// 打开文件
 const fileInput = ref<HTMLInputElement | null>(null)
 const openFile = () => {
   if (fileInput.value) {
@@ -12,7 +13,7 @@ const openFile = () => {
 }
 
 onMounted(() => {
-  console.log('WelcomePage onMounted: Resetting application state and clearing autosave.')
+  //console.log('WelcomePage onMounted: Resetting application state and clearing autosave.')
   // 任何时候只要到达欢迎页面，就清除所有状态和 localStorage
   // 确保从 /main 或 /preview 回来时，会话被彻底清除
   resetApplicationState()
@@ -51,7 +52,7 @@ onMounted(() => {
 
 <style scoped>
 /* ---------------------------------- */
-/* 内容容器样式（保持不变） */
+/* 内容容器样式 */
 /* ---------------------------------- */
 .z-index-content {
   position: relative;
@@ -71,10 +72,10 @@ onMounted(() => {
   width: 100%;
   overflow: hidden;
 
-  /* 基础背景色：保持您的原代码中的 bg-white 效果 */
+  /* 基础背景色 */
   background-color: #f8fafc;
 
-  /* 移除：background-image, filter, background-repeat */
+  /* 渐变色背景 */
   background-image:
     linear-gradient(
       135deg,
@@ -90,7 +91,7 @@ onMounted(() => {
 }
 
 /* ---------------------------------- */
-/* 2. 内部背景层：电路板/网格图案 (保持不变) */
+/* 背景网格图案 */
 /* ---------------------------------- */
 .absolute-fill {
   position: absolute;
@@ -104,7 +105,7 @@ onMounted(() => {
 /* 网格图案，源自 https://patterncraft.fun/ */
 .dashed-grid-overlay {
   background-image:
-    /* 1. 水平实线 (0deg) */
+    /* 水平实线 (0deg) */
     repeating-linear-gradient(
       0deg,
       transparent,
@@ -116,7 +117,7 @@ onMounted(() => {
       rgba(75, 85, 99, 0.08) 39px,
       rgba(75, 85, 99, 0.08) 40px
     ),
-    /* 2. 垂直实线 (90deg) */
+    /* 垂直实线 (90deg) */
       repeating-linear-gradient(
         90deg,
         transparent,
@@ -128,9 +129,9 @@ onMounted(() => {
         rgba(75, 85, 99, 0.08) 39px,
         rgba(75, 85, 99, 0.08) 40px
       ),
-    /* 3. 网格交叉点上的圆点 (小圆点) */
+    /* 网格交叉点上的圆点 (小圆点) */
       radial-gradient(circle at 20px 20px, rgba(55, 65, 81, 0.12) 2px, transparent 2px),
-    /* 4. 网格中心点上的圆点 (大圆点) */
+    /* 网格中心点上的圆点 (大圆点) */
       radial-gradient(circle at 40px 40px, rgba(55, 65, 81, 0.12) 2px, transparent 2px);
 
   background-size:
@@ -139,7 +140,6 @@ onMounted(() => {
     40px 40px,
     40px 40px;
 
-  /* 移除所有 mask 相关的属性，因为新的图案不需要 */
   mask-image: none;
   mask-composite: unset;
   -webkit-mask-composite: unset;

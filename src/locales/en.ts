@@ -3,6 +3,16 @@ export default {
   welcomeTitle: 'Welcome to Desk AR',
   welcomeCreate: 'Create New Layout',
   welcomeOpen: 'Open Layout File',
+  // 预览页面UI
+  modelFileNotFound:
+    'The model file was not found. Please return to the editing page and try accessing the preview page again.',
+  noModelViewerInstance: 'The AR button is unresponsive; no model-viewer instance was found.',
+  arMode: 'AR Mode',
+  warning: 'Warning!',
+  // 预览前模型导出选项
+  previewOptionTitle: 'Should the desk be included?',
+  includeDesk: 'Includes desk',
+  noDeskIncluded: 'No desk included',
   // 场景UI
   sceneNamePlaceholder: 'Desk Setup Layout',
   addModel: 'Add Model',

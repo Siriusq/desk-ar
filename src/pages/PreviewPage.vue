@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import i18n from '@/locales'
+const { t } = i18n.global
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { previewModelUrl } from '@/composables/usePreview'
 import { isLoading } from '@/composables/useUIState'
@@ -10,7 +12,7 @@ const modelSrc = ref<string | null>(null)
 const viewerRef = ref<HTMLModelViewerElement | null>(null)
 const isARSupported = ref(false)
 
-// 1. 页面加载时：从共享状态获取 URL
+// 页面加载时：从共享状态获取 URL
 onMounted(() => {
   if (previewModelUrl.value) {
     modelSrc.value = previewModelUrl.value
@@ -21,33 +23,32 @@ onMounted(() => {
 
 // 计算属性：仅在 modelSrc 不存在时显示中央提示
 const centralInfoText = computed(() => {
-  return modelSrc.value ? null : '未找到模型文件。请返回编辑页面并尝试重新进入预览页面。'
+  return modelSrc.value ? null : t('modelFileNotFound')
 })
 
-// 2. 页面卸载时：释放 Blob URL 资源
+// 页面卸载时：释放 Blob URL 资源
 onUnmounted(() => {
   if (previewModelUrl.value) {
-    console.log('✅ 已释放 Blob URL 资源')
+    //console.log('已释放 Blob URL 资源')
     URL.revokeObjectURL(previewModelUrl.value)
     previewModelUrl.value = null // 清空共享状态
   }
 })
 
-// 3. 自定义 AR 按钮的点击事件
+// 自定义 AR 按钮的点击事件
 const startAR = () => {
   if (viewerRef.value) {
     viewerRef.value.activateAR()
   } else {
-    console.warn('AR 按钮点击无效，未找到 model-viewer 实例。')
+    console.warn(t('noModelViewerInstance'))
   }
 }
 
-// 4. model-viewer 的 @load 事件处理函数
+// model-viewer 的 @load 事件处理函数
 const onModelLoad = () => {
   if (viewerRef.value) {
-    // 此时 canActivateAR 属性已经是准确的
     isARSupported.value = viewerRef.value.canActivateAR
-    console.log('Model loaded. AR Supported:', isARSupported.value)
+    //console.log('Model loaded. AR Supported:', isARSupported.value)
   }
 }
 </script>
@@ -55,12 +56,12 @@ const onModelLoad = () => {
 <template>
   <div class="preview-page-wrapper">
     <div class="position-fixed top-0 start-0 p-3 z-1">
-      <BButton variant="warning" @click="$router.back"> ← 返回 </BButton>
+      <BButton variant="warning" @click="$router.back"> ← {{ t('back') }} </BButton>
     </div>
 
     <div class="position-fixed top-0 end-0 p-3 z-1">
       <BButton v-if="isARSupported && modelSrc" variant="success" @click="startAR">
-        AR 模式
+        {{ t('arMode') }}
       </BButton>
     </div>
 
@@ -69,7 +70,7 @@ const onModelLoad = () => {
       class="info-center d-flex align-items-center justify-content-center"
     >
       <BAlert :show="true" variant="warning" class="shadow-lg mb-0">
-        <h4 class="alert-heading">Warning!</h4>
+        <h4 class="alert-heading">{{ t('warning') }}</h4>
         <p class="mb-0">
           {{ centralInfoText }}
         </p>

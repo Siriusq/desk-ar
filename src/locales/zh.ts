@@ -3,6 +3,15 @@ export default {
   welcomeTitle: '欢迎使用 DeskAR',
   welcomeCreate: '创建新布局',
   welcomeOpen: '从文件打开',
+  // 预览页面UI
+  modelFileNotFound: '未找到模型文件。请返回编辑页面并尝试重新进入预览页面。',
+  noModelViewerInstance: 'AR 按钮点击无效，未找到 model-viewer 实例。',
+  arMode: 'AR 模式',
+  warning: '错误！',
+  // 预览前模型导出选项
+  previewOptionTitle: '是否需要包含桌子？',
+  includeDesk: '包含桌子',
+  noDeskIncluded: '不含桌子',
   // 场景UI
   sceneNamePlaceholder: '桌面布局',
   addModel: '添加模型',
