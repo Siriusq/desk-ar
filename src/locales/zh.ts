@@ -1,46 +1,55 @@
-// src/locales/zh.ts
 export default {
-  // UI 文本
+  // 欢迎页面UI
   welcomeTitle: '欢迎使用 DeskAR',
-  welcomeDesc: '创建一个新的桌面布局，或从文件中加载您已有的方案。',
   welcomeCreate: '创建新布局',
   welcomeOpen: '从文件打开',
-  sceneNamePlaceholder: '我的桌面布局',
+  // 场景UI
+  sceneNamePlaceholder: '桌面布局',
   addModel: '添加模型',
   saveLayout: '保存方案',
-  preview: '3D预览',
   arPreview: 'AR 预览',
   exitPreview: '返回编辑',
   exit: '退出',
   exitConfirm: '您确定要退出吗？所有未保存的更改将丢失。',
   emptyScene: '场景为空，请点击 "添加模型"',
   transformTip: '提示：再次点击场景中的模型可切换移动/旋转模式。',
+  name: '名称',
+  unknown: '未知',
+  item: '物品',
+  // 测量UI
+  selectStartPoint: '请选择测量的起点',
+  selectEndPoint: '请选择测量的终点',
+  reselectStartPoint: '再次单击以重新选择测量的起点',
+  // 导入模型
+  unableToReadFile: '无法读取文件',
+  failedToAddImportedModel: '添加导入的模型失败：',
+  fileReadError: '文件读取错误：',
+  importModelFailed: '导入模型失败：{error}',
+  invalidFileType: '文件类型无效。请选择 .glb 文件。',
+  // 编辑面板操作UI
   translate: '移动',
   rotate: '旋转',
   position: '位置',
   rotation: '旋转',
   dropToSurface: '垂直下落',
+  // 编辑面板参数UI
   unit: 'mm',
   mountedTip: '此物品已挂载，位置和旋转由支架决定。',
-  deskProps: '桌面属性',
+  // 通用参数
   length: '长度',
   width: '宽度',
+  thickness: '厚度',
+  depth: '深度',
+  height: '高度',
+  color: '颜色',
+  // 转角桌
   lengthA: '长度 (A)',
   widthA: '宽度 (A)',
   depthA: '进深 (A)',
   lengthB: '长度 (B)',
   widthB: '宽度 (B)',
   depthB: '进深 (B)',
-  showLegs: '显示桌腿',
-  height: '高度',
-  thickness: '厚度',
-  color: '颜色',
-  dimensions: '尺寸',
-  depth: '深度',
-  standProps: '支架属性',
-  baseSize: '底座尺寸',
-  armLength: '悬臂长度',
-  mountPoint: '挂载点',
+  // 支架
   mounted: '已挂载',
   unmount: '卸载',
   mountObject: '挂载物品',
@@ -103,7 +112,6 @@ export default {
   custom: '自定义',
   preset: '预设（部分参数将不可调节）',
   // 自定义图形
-  name: '名称',
   radiusTop: '顶部半径',
   radiusBottom: '底部半径',
   radius: '半径',
@@ -153,7 +161,7 @@ export default {
   more: '更多',
   history: '操作历史',
 
-  // 嵌套的分类键
+  // 模型分类目录
   categories: {
     desks: '桌子',
     computingDevices: '核心设备',
@@ -164,7 +172,7 @@ export default {
     customGeometry: '自定义几何体',
   },
 
-  // 动态模型的名称
+  // 模型名称
   models: {
     'desk-rect': '矩形桌',
     'desk-l': 'L形转角桌',

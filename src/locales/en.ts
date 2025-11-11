@@ -1,45 +1,55 @@
 export default {
-  // UI 文本
+  // 欢迎页面UI
   welcomeTitle: 'Welcome to Desk AR',
-  welcomeDesc: 'Create a new desk layout, or load an existing one from a file.',
-  welcomeCreate: 'Create New Desk',
+  welcomeCreate: 'Create New Layout',
   welcomeOpen: 'Open Layout File',
-  sceneNamePlaceholder: 'My Desk Setup',
+  // 场景UI
+  sceneNamePlaceholder: 'Desk Setup Layout',
   addModel: 'Add Model',
   saveLayout: 'Save Layout',
-  preview: '3D Preview',
   arPreview: 'AR Preview',
   exitPreview: 'Back to Editor',
   exit: 'Exit',
   exitConfirm: 'Are you sure you want to exit? All unsaved changes will be lost.',
   emptyScene: 'Scene is empty. Click "Add Model" to start.',
   transformTip: 'Tip: Click the selected model again in the scene to toggle Translate/Rotate mode.',
+  name: 'Name',
+  unknown: 'Unknown',
+  item: 'Item',
+  // 测量UI
+  selectStartPoint: 'Please select the starting point for measurement',
+  selectEndPoint: 'Please select the endpoint for measurement',
+  reselectStartPoint: 'Click again to reselect the starting point of the measurement',
+  // 导入模型
+  unableToReadFile: 'Unable to read the file',
+  failedToAddImportedModel: 'Failed to add imported model: ',
+  fileReadError: 'File read error: ',
+  importModelFailed: 'Failed to import model: {error}',
+  invalidFileType: 'The file type is invalid. Please select a .glb file.',
+  // 编辑面板操作UI
   translate: 'Translate',
   rotate: 'Rotate',
   position: 'Position',
   rotation: 'Rotation',
   dropToSurface: 'Drop to Surface',
+  // 编辑面板参数UI
   unit: 'mm',
   mountedTip: 'This item is mounted. Its position and rotation are controlled by the stand.',
-  deskProps: 'Desk Properties',
+  // 通用参数
   length: 'Length',
   width: 'Width',
+  thickness: 'Thickness',
+  depth: 'Depth',
+  height: 'Height',
+  color: 'Color',
+  // 转角桌
   lengthA: 'Length (A)',
   widthA: 'Width (A)',
   depthA: 'Depth (A)',
   lengthB: 'Length (B)',
   widthB: 'Width (B)',
   depthB: 'Depth (B)',
-  showLegs: 'Show Legs',
-  height: 'Height',
-  thickness: 'Thickness',
-  color: 'Color',
-  dimensions: 'Dimensions',
-  depth: 'Depth',
-  standProps: 'Stand Properties',
-  baseSize: 'Base Size',
-  armLength: 'Arm Length',
-  mountPoint: 'Mount Point',
+  // 支架
   mounted: 'Mounted',
   unmount: 'Unmount',
   mountObject: 'Mount Item',
@@ -102,7 +112,6 @@ export default {
   custom: 'Custom',
   preset: 'Preset (Some parameters will be unadjustable)',
   // 自定义图形
-  name: 'Name',
   radiusTop: 'Top Radius',
   radiusBottom: 'Bottom Radius',
   radius: 'Radius',
@@ -153,7 +162,7 @@ export default {
   more: 'More',
   history: 'History',
 
-  // 嵌套的分类键
+  // 模型分类目录
   categories: {
     desks: 'Desks',
     computingDevices: 'Computing Devices',
@@ -164,7 +173,7 @@ export default {
     customGeometry: 'Custom Geometry',
   },
 
-  // 动态模型的名称
+  // 模型名称
   models: {
     'desk-rect': 'Rectangle Desk',
     'desk-l': 'L-Shape Desk',

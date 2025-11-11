@@ -1,7 +1,6 @@
 import { ref, watch } from 'vue'
 import { transformControls } from '@/three/sceneManager'
 
-export const isPreviewing = ref(false)
 export const isTransformDragging = ref(false)
 export const transformMode = ref('translate')
 

@@ -1,24 +1,26 @@
-// src/composables/useMeasurement.ts
+import i18n from '@/locales'
+const { t } = i18n.global
 import { ref, watch, computed } from 'vue'
 import * as THREE from 'three'
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js'
 import { scene, camera, renderer, transformControls } from '@/three/sceneManager'
 import { selectedObjectId } from './useObjects'
 
-// --- 状态 ---
+// --- 距离测量 ---
+
 /** 切换测量模式 */
 export const isMeasuring = ref(false)
-/** 测量的第一个点 (世界坐标) */
+/** 测量的起点 (世界坐标) */
 export const point1 = ref<THREE.Vector3 | null>(null)
-/** 测量的第二个点 (世界坐标) */
+/** 测量的终点 (世界坐标) */
 export const point2 = ref<THREE.Vector3 | null>(null)
 
-// 【新增】 UI 提示状态 (请求 3)
+// UI 提示状态
 export const measurementHint = computed(() => {
   if (!isMeasuring.value) return ''
-  if (!point1.value) return '请选择第一个端点'
-  if (!point2.value) return '请选择第二个端点'
-  return '再次单击以重新选择端点'
+  if (!point1.value) return t('selectStartPoint')
+  if (!point2.value) return t('selectEndPoint')
+  return t('reselectStartPoint')
 })
 
 // --- 3D/2D UI 对象 ---
@@ -29,7 +31,7 @@ let measurementLine: THREE.Line | null = null
 /** 场景中的距离标签 */
 let measurementLabel: CSS2DObject | null = null
 
-// 【新增】 高亮标记 (请求 1 & 2)
+// 高亮标记
 let hoverMarker: THREE.Mesh | null = null
 let point1Marker: THREE.Mesh | null = null
 let point2Marker: THREE.Mesh | null = null
@@ -52,9 +54,9 @@ export const initMeasurement = (container: HTMLElement) => {
   cssRenderer.domElement.style.pointerEvents = 'none' // 允许点击穿透
   container.appendChild(cssRenderer.domElement)
 
-  // 【修改】 初始化高亮标记为圆环
+  // 初始化高亮标记为圆环
   markerGeometry = new THREE.RingGeometry(0.015, 0.02, 32) // 1.5cm - 2cm 环
-  // 【修改】 旋转几何体，使其“平躺”在 XZ 平面上，默认法线为 (0, 1, 0)
+  // 旋转几何体，使其“平躺”在 XZ 平面上，默认法线为 (0, 1, 0)
   markerGeometry.rotateX(-Math.PI / 2)
 
   hoverMaterial = new THREE.MeshBasicMaterial({
@@ -136,7 +138,7 @@ export const clearMeasurementUI = () => {
     measurementLabel = null
   }
 
-  // 【新增】 隐藏选中的标记
+  // 隐藏选中的标记
   if (point1Marker) point1Marker.visible = false
   if (point2Marker) point2Marker.visible = false
 }
@@ -147,10 +149,10 @@ export const clearMeasurementUI = () => {
 const drawMeasurement = () => {
   if (!point1.value || !point2.value) return
 
-  // 1. 清理旧的 UI
+  // 清理旧的 UI
   clearMeasurementUI()
 
-  // 2. 绘制 3D 线
+  // 绘制 3D 线
   const material = new THREE.LineBasicMaterial({
     color: 0xf77c7c,
     linewidth: 2,
@@ -161,11 +163,11 @@ const drawMeasurement = () => {
   measurementLine.renderOrder = 999 // 确保在最前
   scene.add(measurementLine)
 
-  // 3. 计算距离和中点
+  // 计算距离和中点
   const distance = point1.value.distanceTo(point2.value)
   const midPoint = new THREE.Vector3().lerpVectors(point1.value, point2.value, 0.5)
 
-  // 4. 创建 HTML 标签
+  // 创建 HTML 标签
   const labelDiv = document.createElement('div')
   labelDiv.className = 'measurement-label'
   labelDiv.textContent = `${(distance * 1000).toFixed(0)} mm` // 转换为 mm
@@ -175,7 +177,7 @@ const drawMeasurement = () => {
   labelDiv.style.borderRadius = '3px'
   labelDiv.style.fontSize = '12px'
 
-  // 5. 创建 2D 对象并添加到场景
+  // 创建 2D 对象并添加到场景
   measurementLabel = new CSS2DObject(labelDiv)
   measurementLabel.position.copy(midPoint)
   scene.add(measurementLabel)
@@ -184,7 +186,7 @@ const drawMeasurement = () => {
 // --- 核心功能 ---
 
 /**
- * 【修改】 接收 point 和 normal
+ * 接收 point 和 normal
  * @param point 射线命中的世界坐标点
  * @param normal 命中点的世界法线
  */
@@ -199,7 +201,7 @@ export const handleMeasurementClick = (point: THREE.Vector3, normal: THREE.Vecto
     point1.value = point
     if (point1Marker) {
       point1Marker.position.copy(point)
-      // 【新增】 设置旋转
+      // 设置旋转
       point1Marker.quaternion.setFromUnitVectors(defaultNormal, normal)
       point1Marker.visible = true
     }
@@ -208,7 +210,7 @@ export const handleMeasurementClick = (point: THREE.Vector3, normal: THREE.Vecto
     point2.value = point
     if (point2Marker) {
       point2Marker.position.copy(point)
-      // 【新增】 设置旋转
+      // 设置旋转
       point2Marker.quaternion.setFromUnitVectors(defaultNormal, normal)
       point2Marker.visible = true
     }
@@ -220,7 +222,7 @@ export const handleMeasurementClick = (point: THREE.Vector3, normal: THREE.Vecto
     point2.value = null
     if (point1Marker) {
       point1Marker.position.copy(point)
-      // 【新增】 设置旋转
+      // 设置旋转
       point1Marker.quaternion.setFromUnitVectors(defaultNormal, normal)
       point1Marker.visible = true
     }
@@ -236,21 +238,21 @@ export const toggleMeasurementMode = () => {
 }
 
 /**
- * 【修改】 接收 point 和 normal
+ * 接收 point 和 normal
  * @param point 射线命中的世界坐标点
  * @param normal 命中点的世界法线
  */
 export const updateHoverMarker = (point: THREE.Vector3, normal: THREE.Vector3) => {
   if (hoverMarker && isMeasuring.value) {
     hoverMarker.position.copy(point)
-    // 【新增】 设置旋转
+    // 设置旋转
     const defaultNormal = new THREE.Vector3(0, 1, 0)
     hoverMarker.quaternion.setFromUnitVectors(defaultNormal, normal)
     hoverMarker.visible = true
   }
 }
 
-// 【新增】 隐藏悬停标记 (请求 1)
+// 隐藏悬停标记
 export const hideHoverMarker = () => {
   if (hoverMarker) {
     hoverMarker.visible = false
@@ -272,7 +274,7 @@ watch(isMeasuring, (isActive) => {
     clearMeasurementUI() // [垃圾回收]
     point1.value = null
     point2.value = null
-    // 【新增】 确保悬停标记被隐藏
+    // 确保悬停标记被隐藏
     hideHoverMarker()
   }
 })

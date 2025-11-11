@@ -1,8 +1,10 @@
-// src/composables/useModelImporter.ts
+import i18n from '@/locales'
+const { t } = i18n.global
 import { ref } from 'vue'
 import { isLoading } from './useUIState'
-// 【重要】 导入 objectFactory 中的新函数
 import { addImportedObject } from '@/three/objectFactory'
+
+// --- 导入本地GLB模型 ---
 
 /**
  * 将用户选择的 GLB/GLTF 文件读取为 Data URL
@@ -17,24 +19,24 @@ const loadModelData = (file: File) => {
       try {
         const dataUrl = event.target?.result as string
         if (!dataUrl) {
-          throw new Error('无法读取文件。')
+          throw new Error(t('unableToReadFile'))
         }
 
-        // 1. 调用 objectFactory 创建数据对象
-        // 这会将 dataUrl 存储在 useObjects 的 objects 数组中
+        // 调用 objectFactory 创建数据对象
+        // 将 dataUrl 存储在 useObjects 的 objects 数组中
         addImportedObject(file.name, dataUrl)
 
         isLoading.value = false
         resolve()
       } catch (error) {
-        console.error('添加导入的模型失败:', error)
+        console.error(t('failedToAddImportedModel'), error)
         isLoading.value = false
         reject(error)
       }
     }
 
     reader.onerror = (error) => {
-      console.error('文件读取错误:', error)
+      console.error(t('fileReadError'), error)
       isLoading.value = false
       reject(error)
     }
@@ -45,7 +47,7 @@ const loadModelData = (file: File) => {
 }
 
 /**
- * Composable，用于管理模型导入的 UI 逻辑
+ * 管理模型导入的 UI 逻辑
  */
 export function useModelImporter() {
   const fileInput = ref<HTMLInputElement | null>(null)
@@ -70,10 +72,10 @@ export function useModelImporter() {
         try {
           await loadModelData(file)
         } catch (error) {
-          alert(`导入模型失败: ${error}`)
+          alert(t('importModelFailed', { error }))
         }
       } else {
-        alert('文件类型无效。请选择 .gltf 或 .glb 文件。')
+        alert(t('invalidFileType'))
       }
     }
     // 清空输入框，以便下次可以选择同名文件

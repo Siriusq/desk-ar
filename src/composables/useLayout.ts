@@ -1,11 +1,9 @@
 import i18n from '@/locales'
 const { t } = i18n.global
-
 import { disposeScene } from '@/three/sceneManager'
 import { nextTick, ref } from 'vue'
 import { history, historyIndex, saveState } from './useHistory'
 import { objects, selectedObjectId } from './useObjects'
-import { isPreviewing } from './useScene'
 import {
   isAddModelModalOpen,
   isHelpModalOpen,
@@ -14,10 +12,13 @@ import {
 } from './useUIState'
 import router from '@/router'
 
+// --- 场景IO ---
+
 export const layoutLoaded = ref(false)
-export const sceneName = ref('')
+export const sceneName = ref('') // 场景名称
 export const isNewlyCreated = ref(false)
 
+// 创建新布局
 export const createNewLayout = () => {
   resetApplicationState()
   layoutLoaded.value = true
@@ -29,6 +30,7 @@ export const createNewLayout = () => {
   })
 }
 
+// 从文件加载布局
 export const loadLayoutFromFile = (event: Event) => {
   const target = event.target as HTMLInputElement
   if (!target || !target.files || target.files.length === 0) {
@@ -37,7 +39,7 @@ export const loadLayoutFromFile = (event: Event) => {
   const file = target.files[0]
   if (!file) return
 
-  console.log('loaded from file')
+  //console.log('loaded from file')
 
   const reader = new FileReader()
   reader.onload = (e) => {
@@ -53,7 +55,7 @@ export const loadLayoutFromFile = (event: Event) => {
         isNewlyCreated.value = false
 
         saveState(true) // 强制保存当前状态
-        console.log('Layout data loaded successfully from file.')
+        //console.log('Layout data loaded successfully from file.')
         nextTick(() => {
           router.push('/main')
         })
@@ -78,7 +80,7 @@ export const loadAutoSaveData = () => {
     objects.value.splice(0, objects.value.length, ...data.objects)
     layoutLoaded.value = true // 标记为已加载
     isNewlyCreated.value = false
-    console.log('Auto-save data loaded successfully.')
+    //console.log('Auto-save data loaded successfully.')
     return true
   } catch (error) {
     console.error('Error parsing auto-save JSON:', error)
@@ -87,6 +89,7 @@ export const loadAutoSaveData = () => {
   }
 }
 
+// 将场景布局保存为json文件并下载
 export const saveLayoutToFile = () => {
   const layoutData = {
     sceneName: sceneName.value,
@@ -111,16 +114,16 @@ export const autoSave = () => {
     sceneName: sceneName.value,
     objects: JSON.parse(JSON.stringify(objects.value)),
   }
-  console.log('auto saved!')
+  //console.log('auto saved!')
   localStorage.setItem('ar-desk-planner-autosave', JSON.stringify(layoutData))
 }
 
 export const exitToWelcome = () => {
-  // 1. 清理 3D 资源
+  // 清理 3D 资源
   disposeScene()
-  // 2. 清理状态和 localStorage
+  // 清理状态和 localStorage
   resetApplicationState()
-  // 3. 导航
+  // 导航
   router.push('/')
 }
 
@@ -137,7 +140,6 @@ export const resetApplicationState = () => {
   isAddModelModalOpen.value = false
   isHelpModalOpen.value = false
   addModalCategory.value = undefined
-  isPreviewing.value = false
   isNewlyCreated.value = false
-  console.log('Application state reset and autosave cleared.')
+  //console.log('Application state reset and autosave cleared.')
 }
