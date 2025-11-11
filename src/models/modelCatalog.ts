@@ -45,7 +45,7 @@ export const availableModels: AvailableModelsMap = {
       { type: 'phone', name: 'phone', icon: '📱' },
       { type: 'tablet', name: 'tablet', icon: '📲' },
       { type: 'pc-case', name: 'pc-case', icon: '🕹️' },
-      //{ type: 'wireless-router', name: 'wireless-router', icon: '🛜' },
+      { type: 'wireless-router', name: 'wireless-router', icon: '🛜' },
     ],
   },
   inputDevices: {

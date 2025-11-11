@@ -1,4 +1,4 @@
-// src/three/modelRegistry.ts
+// 模型注册表
 import { monitorModel, monitorWithoutStandModel } from './preset/monitor'
 import { deskLModel, deskRectModel } from './preset/desk'
 import {
@@ -24,8 +24,9 @@ import { monitorLightModel } from './preset/monitor_light'
 import { rectangleBaseTableLightModel, roundBaseTableLightModel } from './preset/table_light'
 import { webcamModel } from './preset/webcam'
 import { waterGlassModel } from './preset/water_glass'
+import { wirelessRouterModel } from './preset/wireless_router'
 
-// 创建模型“注册表”
+// 创建模型注册表
 export const modelRegistry = {
   // --- DESK-RECT ---
   'desk-rect': deskRectModel,
@@ -84,8 +85,11 @@ export const modelRegistry = {
   'round-base-table-light': roundBaseTableLightModel,
   'rectangle-base-table-light': rectangleBaseTableLightModel,
 
-  // --- WATER GLASS ---
+  // --- WATER-GLASS ---
   'water-glass': waterGlassModel,
+
+  // --- WIRELESS-ROUTER ---
+  'wireless-router': wirelessRouterModel,
 
   // --- UNIVERSAL-STAND ---
   'round-base-stand': roundBaseStandModel,

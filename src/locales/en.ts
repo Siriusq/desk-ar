@@ -124,6 +124,8 @@ export default {
   shellLength: 'Shell Length',
   shellThickness: 'Shell Thickness',
   openAngle: 'Open Angle',
+  // 路由器
+  antennaHeight: 'Antenna Height',
   // 通用
   back: 'Back',
   add: 'Add',

@@ -125,6 +125,8 @@ export default {
   shellLength: '外壳长度',
   shellThickness: '外壳厚度',
   openAngle: '开合角度',
+  // 路由器
+  antennaHeight: '天线高度',
   // 通用
   back: '返回',
   add: '添加',

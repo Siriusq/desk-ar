@@ -1,6 +1,4 @@
-// src/types/deskObject.ts
-// 1. 基础布局对象接口 (所有对象共享的属性)
-
+// 模型类型
 import type { DeskLObject, DeskRectObject } from './preset/desk'
 import type { MonitorRiserObject } from './preset/monitor_riser'
 import type { CustomBoxObject, CustomCylinderObject, CustomSphereObject } from './preset/geometry'
@@ -21,8 +19,9 @@ import type { MonitorLightObject } from './preset/monitor_light'
 import type { RectangleBaseTableLightObject, RoundBaseTableLightObject } from './preset/table_light'
 import type { WebcamObject } from './preset/webcam'
 import type { WaterGlassObject } from './preset/water_glass'
+import type { WirelessRouterObject } from './preset/wireless_router'
 
-// 注意：position 和 rotation 应该是纯对象，以便 JSON 序列化
+// 基础布局对象接口 (所有对象共享的属性)
 export interface BaseObject {
   id: string
   type: string
@@ -37,14 +36,14 @@ export interface ImportedModelParams {
   name?: string
   fileName: string
   dataUrl: string // 存储模型的 Base64 Data URL
-  color: string // 占位符，以满足 createObject3D 和 sceneManager 的要求
+  color: string // 占位符
 }
 export interface ImportedModelObject extends BaseObject {
   type: 'imported-model'
   params: ImportedModelParams
 }
 
-// 3. 导出最终的联合类型
+// 导出最终的联合类型
 export type DeskObject =
   | DeskRectObject
   | DeskLObject
@@ -70,14 +69,14 @@ export type DeskObject =
   | RoundBaseTableLightObject
   | RectangleBaseTableLightObject
   | WaterGlassObject
+  | WirelessRouterObject
   | CustomBoxObject
   | CustomCylinderObject
   | CustomSphereObject
   | ImportedModelObject
 
-// 4. 导出 Type 字符串的联合类型，用于 addObject
-// 【注意】 我们 *不* 在这里添加 'imported-model'
-// 这可以防止它出现在 AddModelModal 的预设列表中
+// 导出 Type 字符串的联合类型，用于 addObject
+// 不在这里添加 'imported-model'，防止它出现在 AddModelModal 的预设列表中
 export type DeskObjectType =
   | 'desk-rect'
   | 'desk-l'
@@ -106,6 +105,7 @@ export type DeskObjectType =
   | 'round-base-table-light'
   | 'rectangle-base-table-light'
   | 'water-glass'
+  | 'wireless-router'
   | 'custom-box'
   | 'custom-cylinder'
   | 'custom-sphere'
