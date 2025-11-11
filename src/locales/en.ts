@@ -154,9 +154,12 @@ export default {
   // 嵌套的分类键
   categories: {
     desks: 'Desks',
-    devices: 'Devices',
-    accessories: 'Accessories',
-    others: 'Others',
+    computingDevices: 'Computing Devices',
+    inputDevices: 'Input Devices',
+    audioDevices: 'Audio Devices',
+    lighting: 'Lighting',
+    stands: 'Stands',
+    customGeometry: 'Custom Geometry',
   },
 
   // 动态模型的名称
@@ -190,6 +193,7 @@ export default {
     'round-base-table-light': 'Round Base Table Light',
     'rectangle-base-table-light': 'Rectangle Base Table Light',
     'water-glass': 'Water Glass',
+    'wireless-router': 'Wireless Router',
     'custom-box': 'Custom Box',
     'custom-cylinder': 'Custom Cylinder',
     'custom-sphere': 'Custom Sphere',

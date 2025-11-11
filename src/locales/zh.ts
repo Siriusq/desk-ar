@@ -154,9 +154,12 @@ export default {
   // 嵌套的分类键
   categories: {
     desks: '桌子',
-    devices: '设备',
-    accessories: '配件',
-    others: '其他',
+    computingDevices: '核心设备',
+    inputDevices: '输入设备',
+    audioDevices: '音频设备',
+    lighting: '照明灯具',
+    stands: '支架',
+    customGeometry: '自定义几何体',
   },
 
   // 动态模型的名称
@@ -190,6 +193,7 @@ export default {
     'round-base-table-light': '圆形底座台灯',
     'rectangle-base-table-light': '方形底座台灯',
     'water-glass': '玻璃杯',
+    'wireless-router': '无线路由器',
     'custom-box': '自定义立方体',
     'custom-cylinder': '自定义圆柱体',
     'custom-sphere': '自定义球体',
