@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import type { BaseObject } from '@/models/deskObject'
 
+// 显示器
+
 // 预设尺寸
 export const monitorPresets = {
   '24-inch': {
@@ -127,7 +129,7 @@ export const monitorModel = {
   buildGeometry: (group: THREE.Group, data: MonitorObject) => {
     const p = data.params
 
-    // ✅ 应用预设尺寸（如果有）
+    // 应用预设尺寸（如果有）
     if (p.preset && monitorPresets[p.preset]) {
       const preset = monitorPresets[p.preset]
       p.width = preset.width
@@ -309,7 +311,7 @@ export const monitorWithoutStandModel = {
   buildGeometry: (group: THREE.Group, data: MonitorWithoutStandObject) => {
     const p = data.params
 
-    // ✅ 应用预设尺寸（如果有）
+    // 应用预设尺寸（如果有）
     if (p.preset && monitorPresets[p.preset]) {
       const preset = monitorPresets[p.preset]
       p.width = preset.width

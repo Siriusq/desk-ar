@@ -44,10 +44,9 @@ export const pcCaseModel = {
     },
   }),
   buildGeometry: (group: THREE.Group, data: PcCaseObject) => {
-    // 清空旧内容
     const p = data.params
 
-    // ✅ 应用预设尺寸（如果有）
+    // 应用预设尺寸（如果有）
     if (p.preset && pcCasePresets[p.preset]) {
       const preset = pcCasePresets[p.preset]
       p.width = preset.width

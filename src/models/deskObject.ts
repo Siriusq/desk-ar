@@ -1,4 +1,4 @@
-// 模型类型
+// 模型类型与通用接口
 import type { DeskLObject, DeskRectObject } from './preset/desk'
 import type { MonitorRiserObject } from './preset/monitor_riser'
 import type { CustomBoxObject, CustomCylinderObject, CustomSphereObject } from './preset/geometry'

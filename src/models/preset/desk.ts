@@ -1,6 +1,7 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
+// 方形桌与L形转角桌
 export interface DeskRectParams {
   name: string | ''
   width: number
@@ -116,7 +117,7 @@ export const deskLModel = {
     legB.position.set(p.depthB / 2, yLegMid, p.widthB - legThickness / 2)
     group.add(legB)
 
-    // 转角支撑板（可选）
+    // 转角支撑板
     const legCorner = new THREE.Mesh(
       new THREE.BoxGeometry(legThickness, legHeight, legThickness),
       mat,

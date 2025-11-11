@@ -8,6 +8,7 @@ export interface SpeakerParams {
   height: number
   depth: number
   color: string
+  isMountable: boolean
 }
 
 export interface SpeakerObject extends BaseObject {
@@ -28,6 +29,7 @@ export const speakerModel = {
       height: 0.226,
       depth: 0.197,
       color: '#2e2e2e',
+      isMountable: true,
     },
   }),
   buildGeometry: (group: THREE.Group, data: SpeakerObject) => {
@@ -126,6 +128,7 @@ export const soundBarModel = {
       height: 0.05,
       depth: 0.05,
       color: '#2e2e2e',
+      isMountable: true,
     },
   }),
   buildGeometry: (group: THREE.Group, data: SoundBarObject) => {

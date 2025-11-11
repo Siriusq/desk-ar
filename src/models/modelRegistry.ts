@@ -28,75 +28,71 @@ import { wirelessRouterModel } from './preset/wireless_router'
 
 // 创建模型注册表
 export const modelRegistry = {
-  // --- DESK-RECT ---
+  // ---  矩形桌子 ---
   'desk-rect': deskRectModel,
 
-  // --- DESK-L ---
+  // --- L形桌子 ---
   'desk-l': deskLModel,
 
-  // --- MONITOR ---
+  // --- 显示器 ---
   monitor: monitorModel,
-
   'monitor-without-stand': monitorWithoutStandModel,
 
-  // --- KEYBOARD ---
+  // --- 键盘 ---
   'keyboard-108': keyboard108Model,
-
   'keyboard-87': keyboard87Model,
-
   'keyboard-68': keyboard68Model,
-
   'keyboard-60': keyboard60Model,
 
-  // --- MOUSE ---
+  // --- 鼠标 ---
   mouse: mouseModel,
 
-  // --- STYLUS ---
+  // --- 手写笔 ---
   stylus: stylusModel,
 
-  // --- IPHONE ---
+  // --- 手机 ---
   phone: phoneModel,
 
-  // --- TABLET ---
+  // --- 平板电脑 ---
   tablet: tabletModel,
 
-  // --- MACBOOK ---
+  // --- 笔记本电脑 ---
   macbook: macbookModel,
 
-  // --- PC CASE ---
+  // --- 机箱 ---
   'pc-case': pcCaseModel,
 
-  // --- Mouse Pad ---
+  // --- 鼠标垫 ---
   'mouse-pad': mousePadModel,
 
-  // --- SPEAKER ---
+  // --- 扬声器与耳机 ---
   speaker: speakerModel,
   'sound-bar': soundBarModel,
   headphone: headphoneModel,
 
-  // --- MICROPHONE ---
+  // --- 麦克风 ---
   microphone: microphoneModel,
 
-  // --- WEBCAM ---
+  // --- 摄像头 ---
   webcam: webcamModel,
 
-  // --- LIGHT ---
+  // --- 灯光 ---
   'monitor-light': monitorLightModel,
   'round-base-table-light': roundBaseTableLightModel,
   'rectangle-base-table-light': rectangleBaseTableLightModel,
 
-  // --- WATER-GLASS ---
+  // --- 水杯 ---
   'water-glass': waterGlassModel,
 
-  // --- WIRELESS-ROUTER ---
+  // --- 路由器 ---
   'wireless-router': wirelessRouterModel,
 
-  // --- UNIVERSAL-STAND ---
+  // --- 支架 ---
   'round-base-stand': roundBaseStandModel,
   'rectangle-base-stand': rectangleBaseStandModel,
   'monitor-riser': monitorRiserModel,
 
-  // --- CUSTOM-Geometry ---
+  // --- 自定义几何体 ---
   'custom-box': customBoxModel,
   'custom-cylinder': customCylinderModel,
   'custom-sphere': customSphereModel,

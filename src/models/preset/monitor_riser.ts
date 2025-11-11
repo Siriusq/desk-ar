@@ -1,7 +1,8 @@
 // 桌面增高架
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
+// 显示器增高架
 export interface MonitorRiserParams {
   name: string | ''
   width: number
@@ -9,7 +10,6 @@ export interface MonitorRiserParams {
   height: number
   panelThickness: number
   color: string
-  isMountable: boolean
 }
 export interface MonitorRiserObject extends BaseObject {
   type: 'monitor-riser'
@@ -30,7 +30,6 @@ export const monitorRiserModel = {
       height: 0.07,
       panelThickness: 0.02,
       color: '#eeeeee',
-      isMountable: false,
     },
   }),
   buildGeometry: (group: THREE.Group, data: MonitorRiserObject) => {

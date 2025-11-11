@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
 // 头戴式耳机
 export interface HeadphoneParams {

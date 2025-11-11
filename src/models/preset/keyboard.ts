@@ -1,15 +1,17 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 const textureLoader = new THREE.TextureLoader()
 
+// 四种键盘
 export interface KeyboardParams {
   name: string | ''
   width: number
   height: number
   depth: number
   isBlack: boolean
+  isMountable: boolean
 }
-// 【修改】 将 KeyboardObject 的 type 扩展为联合类型
+// 将 KeyboardObject 的 type 扩展为联合类型
 export interface KeyboardObject extends BaseObject {
   type: 'keyboard-108' | 'keyboard-87' | 'keyboard-68' | 'keyboard-60'
   params: KeyboardParams
@@ -38,6 +40,7 @@ export const keyboard108Model = {
       height: 0.02,
       depth: 0.14,
       isBlack: true,
+      isMountable: true,
     },
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
@@ -51,14 +54,14 @@ export const keyboard108Model = {
     }
 
     const p = data.params
-    // 1. 侧面材质 (保持不变)
+    // 侧面材质
     const metalMaterial = new THREE.MeshStandardMaterial({
       color: p.isBlack ? 0x000000 : 0xffffff,
       metalness: 0.8,
       roughness: 0.4,
     })
 
-    // 2. 【修改】 顶部贴图材质
+    // 顶部贴图材质
     const topTexture = p.isBlack ? cachedKeyboard108BlackTexture! : cachedKeyboard108WhiteTexture!
     const textureMaterial = new THREE.MeshStandardMaterial({
       map: topTexture,
@@ -66,7 +69,7 @@ export const keyboard108Model = {
       roughness: 0.7,
     })
 
-    // 3. 材质数组 (保持不变)
+    // 材质数组
     const materials = [
       metalMaterial, // 右
       metalMaterial, // 左
@@ -76,7 +79,6 @@ export const keyboard108Model = {
       metalMaterial, // 后
     ]
 
-    // 4. Mesh (保持不变)
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), materials)
     mesh.position.y = p.height / 2
     group.add(mesh)
@@ -96,6 +98,7 @@ export const keyboard87Model = {
       height: 0.02,
       depth: 0.14,
       isBlack: true,
+      isMountable: true,
     },
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
@@ -109,14 +112,14 @@ export const keyboard87Model = {
     }
 
     const p = data.params
-    // 1. 侧面材质 (保持不变)
+    // 侧面材质
     const metalMaterial = new THREE.MeshStandardMaterial({
       color: p.isBlack ? 0x000000 : 0xffffff,
       metalness: 0.8,
       roughness: 0.4,
     })
 
-    // 2. 【修改】 顶部贴图材质
+    // 顶部贴图材质
     const topTexture = p.isBlack ? cachedKeyboard87BlackTexture! : cachedKeyboard87WhiteTexture!
     const textureMaterial = new THREE.MeshStandardMaterial({
       map: topTexture,
@@ -124,7 +127,7 @@ export const keyboard87Model = {
       roughness: 0.7,
     })
 
-    // 3. 材质数组 (保持不变)
+    // 材质数组
     const materials = [
       metalMaterial, // 右
       metalMaterial, // 左
@@ -134,7 +137,6 @@ export const keyboard87Model = {
       metalMaterial, // 后
     ]
 
-    // 4. Mesh (保持不变)
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), materials)
     mesh.position.y = p.height / 2
     group.add(mesh)
@@ -154,6 +156,7 @@ export const keyboard68Model = {
       height: 0.02,
       depth: 0.11,
       isBlack: true,
+      isMountable: true,
     },
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
@@ -167,14 +170,14 @@ export const keyboard68Model = {
     }
 
     const p = data.params
-    // 1. 侧面材质 (保持不变)
+    // 侧面材质
     const metalMaterial = new THREE.MeshStandardMaterial({
       color: p.isBlack ? 0x000000 : 0xffffff,
       metalness: 0.8,
       roughness: 0.4,
     })
 
-    // 2. 【修改】 顶部贴图材质
+    // 顶部贴图材质
     const topTexture = p.isBlack ? cachedKeyboard68BlackTexture! : cachedKeyboard68WhiteTexture!
     const textureMaterial = new THREE.MeshStandardMaterial({
       map: topTexture,
@@ -182,7 +185,7 @@ export const keyboard68Model = {
       roughness: 0.7,
     })
 
-    // 3. 材质数组 (保持不变)
+    // 材质数组
     const materials = [
       metalMaterial, // 右
       metalMaterial, // 左
@@ -192,7 +195,6 @@ export const keyboard68Model = {
       metalMaterial, // 后
     ]
 
-    // 4. Mesh (保持不变)
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), materials)
     mesh.position.y = p.height / 2
     group.add(mesh)
@@ -212,6 +214,7 @@ export const keyboard60Model = {
       height: 0.02,
       depth: 0.11,
       isBlack: true,
+      isMountable: true,
     },
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
@@ -225,14 +228,14 @@ export const keyboard60Model = {
     }
 
     const p = data.params
-    // 1. 侧面材质 (保持不变)
+    // 侧面材质
     const metalMaterial = new THREE.MeshStandardMaterial({
       color: p.isBlack ? 0x000000 : 0xffffff,
       metalness: 0.8,
       roughness: 0.4,
     })
 
-    // 2. 【修改】 顶部贴图材质
+    // 顶部贴图材质
     const topTexture = p.isBlack ? cachedKeyboard60BlackTexture! : cachedKeyboard60WhiteTexture!
     const textureMaterial = new THREE.MeshStandardMaterial({
       map: topTexture,
@@ -240,7 +243,7 @@ export const keyboard60Model = {
       roughness: 0.7,
     })
 
-    // 3. 材质数组 (保持不变)
+    // 材质数组
     const materials = [
       metalMaterial, // 右
       metalMaterial, // 左
@@ -250,7 +253,6 @@ export const keyboard60Model = {
       metalMaterial, // 后
     ]
 
-    // 4. Mesh (保持不变)
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(p.width, p.height, p.depth), materials)
     mesh.position.y = p.height / 2
     group.add(mesh)

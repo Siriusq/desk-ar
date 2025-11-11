@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
 // 透明玻璃杯
 export interface WaterGlassParams {

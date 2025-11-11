@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import type { BaseObject } from '@/models/deskObject'
 
+// 台灯
 // 圆形底座
 export interface RoundBaseTableLightParams {
   name: string | ''

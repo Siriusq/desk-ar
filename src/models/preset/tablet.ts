@@ -1,6 +1,7 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
+// 平板电脑
 export interface TabletParams {
   name: string | ''
   preset: TabletPresetKey | '' // 允许空字符串或预设名
@@ -55,7 +56,7 @@ export const tabletModel = {
 
     const p = data.params
 
-    // ✅ 应用预设尺寸（如果有）
+    // 应用预设尺寸（如果有）
     if (p.preset && tabletPresets[p.preset]) {
       const preset = tabletPresets[p.preset]
       p.width = preset.width

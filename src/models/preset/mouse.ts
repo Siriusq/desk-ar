@@ -1,6 +1,7 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
+// 鼠标
 export interface MouseParams {
   name: string | ''
   width: number

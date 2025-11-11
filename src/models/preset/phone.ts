@@ -1,6 +1,7 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
+// 手机
 export interface PhoneParams {
   name: string | ''
   preset: PhonePresetKey | '' // 允许空字符串或预设名
@@ -55,7 +56,7 @@ export const phoneModel = {
 
     const p = data.params
 
-    // ✅ 应用预设尺寸（如果有）
+    // 应用预设尺寸（如果有）
     if (p.preset && phonePresets[p.preset]) {
       const preset = phonePresets[p.preset]
       p.width = preset.width

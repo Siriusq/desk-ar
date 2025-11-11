@@ -1,3 +1,4 @@
+// 物品分类与目录
 // 定义 availableModels 的键的联合类型
 import type { DeskObjectType } from './deskObject'
 

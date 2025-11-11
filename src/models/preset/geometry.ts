@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import type { BaseObject } from '@/models/deskObject'
 
+// 自定义几何体
+
 // 自定义立方体
 export interface CustomBoxParams {
   name: string | ''
@@ -8,6 +10,7 @@ export interface CustomBoxParams {
   height: number
   depth: number
   color: string
+  isMountable: boolean
 }
 export interface CustomBoxObject extends BaseObject {
   type: 'custom-box'
@@ -27,6 +30,7 @@ export const customBoxModel = {
       height: 0.4,
       depth: 0.5,
       color: '#BEBEBE',
+      isMountable: true,
     },
   }),
   buildGeometry: (group: THREE.Group, data: CustomBoxObject) => {
@@ -45,6 +49,7 @@ export interface CustomCylinderParams {
   radiusBottom: number
   height: number
   color: string
+  isMountable: boolean
 }
 export interface CustomCylinderObject extends BaseObject {
   type: 'custom-cylinder'
@@ -64,6 +69,7 @@ export const customCylinderModel = {
       radiusBottom: 0.1,
       height: 0.3,
       color: '#BEBEBE',
+      isMountable: true,
     },
   }),
   buildGeometry: (group: THREE.Group, data: CustomCylinderObject) => {
@@ -83,6 +89,7 @@ export interface CustomSphereParams {
   name: string | ''
   radius: number
   color: string
+  isMountable: boolean
 }
 export interface CustomSphereObject extends BaseObject {
   type: 'custom-sphere'
@@ -100,6 +107,7 @@ export const customSphereModel = {
       name: '',
       radius: 0.15,
       color: '#BEBEBE',
+      isMountable: true,
     },
   }),
   buildGeometry: (group: THREE.Group, data: CustomSphereObject) => {

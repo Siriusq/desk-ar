@@ -1,6 +1,7 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
+// 笔记本电脑
 export interface MacbookParams {
   name: string | ''
   preset: MacbookPresetKey | '' // 允许空字符串或预设名
@@ -56,7 +57,7 @@ export const macbookModel = {
 
     const p = data.params
 
-    // ✅ 应用预设尺寸（如果有）
+    // 应用预设尺寸（如果有）
     if (p.preset && macbookPresets[p.preset]) {
       const preset = macbookPresets[p.preset]
       p.width = preset.width

@@ -1,6 +1,7 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
+// 通用支架
 // 圆形底座支架
 export interface RoundBaseStandParams {
   name: string | ''

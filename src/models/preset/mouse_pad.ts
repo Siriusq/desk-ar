@@ -2,6 +2,7 @@
 import * as THREE from 'three'
 import type { BaseObject } from '@/models/deskObject'
 
+// 鼠标垫
 export interface MousePadParams {
   name: string | ''
   preset: MousePadPresetKey | '' // 允许空字符串或预设名
@@ -47,7 +48,7 @@ export const mousePadModel = {
   }),
   buildGeometry: (group: THREE.Group, data: MousePadObject) => {
     const p = data.params
-    // ✅ 应用预设尺寸（如果有）
+    // 应用预设尺寸（如果有）
     if (p.preset && mousePadPresets[p.preset]) {
       const preset = mousePadPresets[p.preset]
       p.width = preset.width

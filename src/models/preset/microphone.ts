@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import type { BaseObject } from '../deskObject'
+import type { BaseObject } from '@/models/deskObject'
 
-// 话筒
+// 麦克风
 export interface MicrophoneParams {
   name: string | ''
   capsuleRadius: number
