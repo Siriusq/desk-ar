@@ -73,16 +73,16 @@ onMounted(() => {
         />
       </div>
     </div>
-  </div>
 
-  <footer class="footer text-center w-100 py-2">
-    <small>
-      Desk-AR © 2025 Siriusq · Built with Vue&nbsp;3 ·
-      <a href="https://github.com/Siriusq/desk-ar" target="_blank" rel="noopener">
-        Open&nbsp;Source&nbsp;on&nbsp;GitHub
-      </a>
-    </small>
-  </footer>
+    <footer class="footer text-center w-100 py-2">
+      <small>
+        Desk-AR © 2025 Siriusq · Built with Vue&nbsp;3 ·
+        <a href="https://github.com/Siriusq/desk-ar" target="_blank" rel="noopener">
+          Open&nbsp;Source&nbsp;on&nbsp;GitHub
+        </a>
+      </small>
+    </footer>
+  </div>
 </template>
 
 <style scoped>
