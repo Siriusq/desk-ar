@@ -7,10 +7,10 @@ import { delay, isLoading, isPreviewOptionModalOpen, useUIState } from '@/compos
 import HelpModal from '@/components/HelpModal.vue'
 import AddModelModal from '@/components/AddModelModal.vue'
 import { undo, redo, canUndo, canRedo } from '@/composables/useHistory'
-import { deleteSelectObject } from '@/composables/useObjects'
+import { deleteSelectObject, selectedObjectId } from '@/composables/useObjects'
 import PreviewOptionModal from '@/components/PreviewOptionModal.vue'
 import { measurementHint } from '@/composables/useMeasurement'
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 
 defineOptions({
   name: 'MainPage',
@@ -24,14 +24,63 @@ const {
   toggleAddModelModal,
 } = useUIState()
 
+// --- 快捷键处理 ---
+const handleKeydown = (event: KeyboardEvent) => {
+  // 检查是否正在输入框中打字，如果是，则忽略快捷键
+  const target = event.target as HTMLElement
+  if (
+    target &&
+    (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')
+  ) {
+    return
+  }
+
+  // 添加 (+)
+  if (event.key === '+') {
+    toggleAddModelModal()
+  }
+
+  // 删除 (Delete)
+  if (event.key === 'Delete') {
+    if (selectedObjectId.value) {
+      deleteSelectObject()
+    }
+  }
+
+  // 打开菜单 (+)
+  if (event.key === 'm') {
+    toggleControlPanel()
+  }
+
+  // 撤销 (Ctrl+Z / Cmd+Z)
+  if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
+    event.preventDefault()
+    undo()
+  }
+
+  // 重做 (Ctrl+Y / Cmd+Y)
+  if ((event.ctrlKey || event.metaKey) && event.key === 'y') {
+    event.preventDefault()
+    redo()
+  }
+}
+
 onMounted(async () => {
   // 设置加载状态
   isLoading.value = true
+
+  // 挂载快捷键监听器
+  window.addEventListener('keydown', handleKeydown)
 
   // 在此等待 300 毫秒
   await delay(300)
 
   //console.log('MainPage onMounted: Initializing Three.js...')
+})
+
+onUnmounted(() => {
+  // 移除监听器，防止内存泄漏
+  window.removeEventListener('keydown', handleKeydown)
 })
 </script>
 
