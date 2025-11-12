@@ -1,6 +1,6 @@
 export default {
   // 欢迎页面UI
-  welcomeTitle: '欢迎使用 DeskAR',
+  welcomeTitle: '欢迎使用 Desk AR',
   welcomeCreate: '创建新布局',
   welcomeOpen: '从文件打开',
   // 预览页面UI
