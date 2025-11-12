@@ -40,15 +40,16 @@ export const deskRectModel = {
       width: 1.2,
       depth: 0.6,
       height: 0.75,
-      color: '#8B4513',
+      color: '#8b5a2b',
     },
   }),
   buildGeometry: (group: THREE.Group, data: DeskRectObject) => {
     const p = data.params
     const mat = new THREE.MeshStandardMaterial({
-      color: p.color,
-      roughness: 0.7,
-      metalness: 0.0,
+      color: p.color, // 中等棕色，接近实木
+      metalness: 0.0, // 木材无金属特性
+      roughness: 0.6, // 略带粗糙，柔和反光
+      envMapIntensity: 0.4, // 环境反射适中
     })
     const top = new THREE.Mesh(new THREE.BoxGeometry(p.width, 0.04, p.depth), mat)
     top.position.y = p.height - 0.02
@@ -82,12 +83,17 @@ export const deskLModel = {
       widthB: 0.8,
       depthB: 0.5,
       height: 0.75,
-      color: '#8B4513',
+      color: '#8b5a2b',
     },
   }),
   buildGeometry: (group: THREE.Group, data: DeskLObject) => {
     const p = data.params
-    const mat = new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.7 })
+    const mat = new THREE.MeshStandardMaterial({
+      color: p.color, // 中等棕色，接近实木
+      metalness: 0.0, // 木材无金属特性
+      roughness: 0.6, // 略带粗糙，柔和反光
+      envMapIntensity: 0.4, // 环境反射适中
+    })
     const y = p.height - 0.02 // 桌板中心Y高度
 
     const deskGroup = new THREE.Group()
@@ -127,8 +133,8 @@ export const deskLModel = {
     legCorner.position.set(legThickness / 2, yLegMid, legThickness / 2)
     deskGroup.add(legCorner)
 
-    deskGroup.position.x = -p.depthB / 2
-    deskGroup.position.z = -p.depthA / 2
+    deskGroup.position.x = -p.widthA / 2
+    deskGroup.position.z = -p.widthB / 2
     group.add(deskGroup)
   },
 }
