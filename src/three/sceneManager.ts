@@ -12,7 +12,6 @@ import {
   renderMeasurement,
   resizeMeasurement,
   cleanupMeasurement,
-  // 【新增】 导入悬停逻辑
   isMeasuring,
   updateHoverMarker,
   hideHoverMarker,
@@ -20,7 +19,6 @@ import {
   point1,
   point2,
 } from '@/composables/useMeasurement'
-// 【新增】 导入 PMREMGenerator 和 RGBELoader
 import { PMREMGenerator } from 'three/src/extras/PMREMGenerator.js'
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js'
 import {
@@ -35,7 +33,7 @@ import {
 export let scene: any, camera: any, renderer: any
 export let orbitControls: any, transformControls: any, selectionBox: any
 
-// 【新增】 存储对两个相机的引用
+// 两个相机
 let perspectiveCamera: THREE.PerspectiveCamera
 let orthoCamera: THREE.OrthographicCamera
 
@@ -45,11 +43,11 @@ export let mouseDownInfo = { x: 0, y: 0, time: 0 }
 let domElement: HTMLDivElement | null = null
 let handleMouseDown: (e: any) => void
 let handleMouseUp: (e: any) => void
-// 【新增】 悬停事件处理
+// 悬停事件处理
 let handleMouseMove: (e: MouseEvent) => void
 let handleMouseOut: (e: MouseEvent) => void
 
-// 【新增】 HDR 相关的变量
+// HDR
 let pmremGenerator: PMREMGenerator | null = null
 let environmentTexture: THREE.DataTexture | null = null
 
@@ -70,16 +68,16 @@ export const handleResize = () => {
     camera.updateProjectionMatrix()
     renderer.setSize(container.clientWidth, container.clientHeight)
 
-    // 【新增】
     resizeMeasurement()
   }
 }
 
+// 初始化
 export const initThree = () => {
   const container = document.getElementById('scene-container')!
   scene = new THREE.Scene()
 
-  // 【修改】 1. 创建透视相机
+  // 创建透视相机
   perspectiveCamera = new THREE.PerspectiveCamera(
     70,
     container.clientWidth / container.clientHeight,
@@ -88,7 +86,7 @@ export const initThree = () => {
   )
   perspectiveCamera.position.set(2, 2, 3)
 
-  // 【新增】 2. 创建正交相机
+  // 创建正交相机
   const aspect = container.clientWidth / container.clientHeight
   const frustumSize = 5 // 视口高度
   orthoCamera = new THREE.OrthographicCamera(
@@ -99,11 +97,11 @@ export const initThree = () => {
     0.1,
     100,
   )
-  // 为正交相机设置一个良好的默认 3/4 视角
+  // 为正交相机设置默认 3/4 视角
   orthoCamera.position.set(5, 5, 5)
   orthoCamera.lookAt(0, 0, 0)
 
-  // 【修改】 3. 设置默认激活的相机
+  // 设置默认激活的相机
   camera = perspectiveCamera
 
   renderer = new THREE.WebGLRenderer({
@@ -111,8 +109,8 @@ export const initThree = () => {
     alpha: true,
   })
 
-  // 【新增】 PBR & HDR 渲染器设置
-  renderer.outputColorSpace = THREE.SRGBColorSpace // (或 outputEncoding = sRGBEncoding)
+  // PBR & HDR 渲染器设置
+  renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.ACESFilmicToneMapping
   renderer.toneMappingExposure = 1.0 // 调整曝光
 
@@ -124,31 +122,31 @@ export const initThree = () => {
   container.innerHTML = ''
   container.appendChild(domElement!)
 
-  // 【新增】 在此处初始化 CSS2DRenderer
+  // 初始化 CSS2DRenderer
   initMeasurement(container)
 
-  // 【新增】 初始化 PMREMGenerator 并加载 HDR
+  // 初始化 PMREMGenerator 并加载 HDR
   pmremGenerator = new PMREMGenerator(renderer)
   pmremGenerator.compileEquirectangularShader()
 
+  // public/ 目录下的 HDR 文件路径
   const hdriPath = isMobile
     ? '/hdri/qwantani_dusk_2_puresky_1k.hdr'
     : '/hdri/qwantani_dusk_2_puresky_2k.hdr'
 
   new HDRLoader().load(
-    hdriPath, // public/ 目录下的 HDR 文件路径
+    hdriPath,
     (texture) => {
-      // 1. 处理贴图以用于环境光
+      // 处理贴图以用于环境光
       environmentTexture = pmremGenerator!.fromEquirectangular(texture).texture as THREE.DataTexture
 
-      // 2. 设置为场景背景和环境光
+      // 设置为场景背景和环境光
       scene.background = environmentTexture
-      scene.environment = environmentTexture // 这将自动为所有 MeshStandardMaterial 提供光照
+      scene.environment = environmentTexture // 为所有 MeshStandardMaterial 提供光照
 
-      // 3. 清理原始贴图
+      // 清理原始贴图
       texture.dispose()
 
-      // 4. 【修复点】 贴图加载和环境光设置完成后，隐藏遮罩
       isLoading.value = false
     },
     undefined, // onProgress
@@ -156,16 +154,18 @@ export const initThree = () => {
       console.error('无法加载 HDR:', error)
       // 回退到纯色背景
       scene.background = new THREE.Color(0xf0f0f0)
-      isLoading.value = false // 无论成功还是失败，都应解除加载状态
+      isLoading.value = false // 解除加载状态
     },
   )
 
+  // 设置光源
   // scene.add(new THREE.AmbientLight(0xffffff, 0.7))
   const dLight = new THREE.DirectionalLight(0xffffff, 0.5)
   dLight.position.set(5, 10, 7.5)
   dLight.castShadow = true
   scene.add(dLight)
 
+  // 设置地面与阴影接收
   const ground = new THREE.Mesh(
     new THREE.PlaneGeometry(100, 100),
     new THREE.ShadowMaterial({ opacity: 0.3 }),
@@ -175,6 +175,7 @@ export const initThree = () => {
   scene.add(ground)
   //scene.add(new THREE.GridHelper(100, 100, 0x888888, 0x888888))
 
+  // 控制器初始化
   orbitControls = new OrbitControls(camera, domElement!)
   transformControls = new TransformControls(camera, domElement!)
   transformControls.addEventListener('dragging-changed', (event: { value: boolean }) => {
@@ -198,6 +199,7 @@ export const initThree = () => {
   const gizmo = transformControls.getHelper()
   scene.add(gizmo)
 
+  // 三维框初始化
   selectionBox = new THREE.BoxHelper(new THREE.Object3D())
   selectionBox.material.color.set(0x007bff)
   selectionBox.material.depthTest = false
@@ -206,7 +208,7 @@ export const initThree = () => {
   selectionBox.visible = false
   scene.add(selectionBox)
 
-  // 【修改】将事件处理函数保存到模块变量中
+  // 处理鼠标事件
   handleMouseDown = (e: { clientX: number; clientY: number }) => {
     mouseDownInfo = { x: e.clientX, y: e.clientY, time: Date.now() }
   }
@@ -218,7 +220,7 @@ export const initThree = () => {
     if (Date.now() - mouseDownInfo.time < 300 && dist < 5) handleSceneClick(e)
   }
 
-  // 【修改】 定义悬停事件处理
+  // 悬停事件处理
   handleMouseMove = (event: MouseEvent) => {
     if (!isMeasuring.value) return // 仅在测量时运行
 
@@ -235,7 +237,7 @@ export const initThree = () => {
     if (intersects.length > 0) {
       const intersect = intersects[0]!
 
-      // 【新增】 计算世界法线
+      // 计算世界法线
       if (intersect.face) {
         const worldNormal = intersect.face.normal
           .clone()
@@ -254,11 +256,10 @@ export const initThree = () => {
     hideHoverMarker()
   }
 
-  // 【修改】使用保存的处理函数
   domElement!.addEventListener('mousedown', handleMouseDown)
   domElement!.addEventListener('mouseup', handleMouseUp)
-  domElement!.addEventListener('mousemove', handleMouseMove) // 【新增】
-  domElement!.addEventListener('mouseout', handleMouseOut) // 【新增】
+  domElement!.addEventListener('mousemove', handleMouseMove)
+  domElement!.addEventListener('mouseout', handleMouseOut)
 
   renderer.setAnimationLoop(() => {
     if (
@@ -270,23 +271,22 @@ export const initThree = () => {
     }
     renderer.render(scene, camera)
 
-    // 【新增】 渲染 2D 标签
+    // 渲染 2D 标签
     renderMeasurement()
   })
 }
 
+// 重建场景
 export const rebuildSceneFromData = () => {
   if (!scene) return
   sceneObjects.forEach((obj) => {
     if (transformControls.object === obj) transformControls.detach()
     obj.parent?.remove(obj)
     obj.traverse((c) => {
-      // 2. 使用类型守卫（as）或属性检查
       if ((c as THREE.Mesh).isMesh) {
-        const mesh = c as THREE.Mesh // 将其断言为 Mesh
-        mesh.geometry?.dispose() // 安全地调用 geometry.dispose
+        const mesh = c as THREE.Mesh
+        mesh.geometry?.dispose()
 
-        // 3. 安全地处理 material
         if (mesh.material) {
           if (Array.isArray(mesh.material)) {
             mesh.material.forEach((mat) => mat.dispose())
@@ -299,14 +299,12 @@ export const rebuildSceneFromData = () => {
   })
   sceneObjects.clear()
 
-  // 【修改】 data 现在是强类型 DeskObject
   objects.value.forEach((data: DeskObject) => {
-    // 假设 objects 是 ref，使用 .value
     const obj3D = createObject3D(data)
     if (obj3D) sceneObjects.set(data.id, obj3D)
   })
 
-  // 【修改】 data 现在是强类型
+  // 桌子
   const deskData = objects.value.find((o: DeskObject) => o.type.startsWith('desk-'))
   const desk3D = deskData ? sceneObjects.get(deskData.id) : undefined
 
@@ -315,14 +313,13 @@ export const rebuildSceneFromData = () => {
     desk3D.userData.isDesk = true
   }
 
-  // 【修改】 data 现在是强类型
+  // 处理挂载
   objects.value.forEach((data: DeskObject) => {
     const obj3D = sceneObjects.get(data.id)
     if (!obj3D) return
     if (data.mountedToId) {
       const stand3D = sceneObjects.get(data.mountedToId)
       if (stand3D) {
-        // 【修改】 standData 现在是强类型
         const standData = objects.value.find((o) => o.id === data.mountedToId)
         // 支架类型：圆形底座支架
         if (standData && standData.type === 'round-base-stand') {
@@ -364,15 +361,16 @@ export const rebuildSceneFromData = () => {
   })
 }
 
+// 场景销毁与资源回收
 export const disposeScene = () => {
-  console.log('Disposing Three.js scene and controls...')
+  //console.log('Disposing Three.js scene and controls...')
 
-  // 1. 停止渲染循环
+  // 停止渲染循环
   if (renderer) {
     renderer.setAnimationLoop(null)
   }
 
-  //销毁测量相关
+  // 销毁测量相关
   if (isMeasuring.value) {
     clearMeasurementUI()
     point1.value = null
@@ -381,7 +379,7 @@ export const disposeScene = () => {
     isMeasuring.value = false
   }
 
-  // 2. 销毁 Controls 和移除它们的监听器
+  // 销毁 Controls 和移除它们的监听器
   if (orbitControls) {
     orbitControls.dispose()
     orbitControls = null
@@ -394,7 +392,7 @@ export const disposeScene = () => {
     transformControls = null
   }
 
-  // 3. 移除在 initThree 中添加的 DOM 监听器
+  // 移除在 initThree 中添加的 DOM 监听器
   if (domElement) {
     domElement.removeEventListener('mousedown', handleMouseDown)
     domElement.removeEventListener('mouseup', handleMouseUp)
@@ -402,7 +400,7 @@ export const disposeScene = () => {
     domElement.removeEventListener('mouseout', handleMouseOut) // 【新增】
   }
 
-  // 4. 清理和销毁场景中的所有对象（包括静态对象）
+  // 清理和销毁场景中的所有对象（包括静态对象）
   if (scene) {
     scene.traverse((object: any) => {
       if (object.isMesh) {
@@ -418,7 +416,7 @@ export const disposeScene = () => {
           }
         }
       } else if (object.isLight) {
-        // 灯光也可能需要 dispose (如果它们有 shadow map textures)
+        // 灯光
         object.dispose?.()
       }
     })
@@ -426,22 +424,22 @@ export const disposeScene = () => {
     scene = null
   }
 
-  // 5. 销毁 Renderer
+  // 销毁 Renderer
   if (renderer) {
     renderer.dispose()
     renderer = null
   }
 
-  // 6. 移除 DOM 元素
+  // 移除 DOM 元素
   if (domElement) {
     domElement.remove()
     domElement = null
   }
 
-  // 【新增】 清理 2D 渲染器
+  // 清理 2D 渲染器
   cleanupMeasurement()
 
-  // 【新增】 7. 清理 HDR 资源
+  // 清理 HDR 资源
   if (pmremGenerator) {
     pmremGenerator.dispose()
     pmremGenerator = null
@@ -451,7 +449,7 @@ export const disposeScene = () => {
     environmentTexture = null
   }
 
-  // 8. 置空其他变量
+  // 置空其他变量
   camera = null!
   perspectiveCamera = null!
   orthoCamera = null!
@@ -462,10 +460,10 @@ export const disposeScene = () => {
   isAddModelModalOpen.value = false
   isPreviewOptionModalOpen.value = false
 
-  console.log('Scene disposal complete.')
+  //console.log('Scene disposal complete.')
 }
 
-// 【新增】 切换投影模式
+// 切换相机投影模式
 export const setCameraProjection = (projection: 'perspective' | 'orthographic') => {
   if (projection === 'perspective' && camera !== perspectiveCamera) {
     // 切换到透视
@@ -488,13 +486,10 @@ export const setCameraProjection = (projection: 'perspective' | 'orthographic') 
   orbitControls.update()
 }
 
-// 【新增】 切换预设视图（仅限透视）
+// 切换预设视图（仅限透视）
 export const setCameraView = (view: 'default' | 'top' | 'front' | 'side') => {
   // 切换视图时，强制恢复到透视模式
   setCameraProjection('perspective')
-
-  // (这里可以使用补间动画库如 TWEEN.js 来实现平滑过渡)
-  // (为简单起见，我们直接设置位置)
 
   switch (view) {
     case 'top':

@@ -7,6 +7,8 @@ import { isLoading } from '@/composables/useUIState'
 import { previewModelUrl } from '@/composables/usePreview'
 import router from '@/router'
 
+// --- 将场景中的模型打包并传入到预览页面 ---
+
 export const exportForAR = async (includeDesk: boolean) => {
   isLoading.value = true
 
@@ -17,10 +19,9 @@ export const exportForAR = async (includeDesk: boolean) => {
     return
   }
 
-  // This whole group will be exported.
   const objectToExport = new THREE.Group()
 
-  // Clone and add the desk if requested.
+  // 是否包含桌子
   if (includeDesk && deskData) {
     const desk3D = sceneObjects.get(deskData.id)
     if (desk3D) {
@@ -29,22 +30,19 @@ export const exportForAR = async (includeDesk: boolean) => {
   } else {
     let deskHeight = 0
     if (deskData && (deskData.type === 'desk-rect' || deskData.type === 'desk-l')) {
-      deskHeight = deskData.params.height + (deskData.position.y || 0) // 类型安全
+      deskHeight = deskData.params.height + (deskData.position.y || 0)
     }
-    // If no desk is included, we add all non-desk items.
-    // Their positions must be adjusted relative to the floor (y=0).
+    // 如果不含桌子，遍历其他模型并将y坐标设置为零
     objects.value.forEach((data) => {
       if (!data.type.startsWith('desk-')) {
         const item3D = sceneObjects.get(data.id)
         if (item3D) {
           const clone = item3D.clone(true)
 
-          // Get world transforms, as items might be nested.
           const worldPosition = item3D.getWorldPosition(new THREE.Vector3())
           const worldQuaternion = item3D.getWorldQuaternion(new THREE.Quaternion())
           const worldScale = item3D.getWorldScale(new THREE.Vector3())
 
-          // Adjust position relative to the desk height.
           worldPosition.y -= deskHeight
 
           clone.position.copy(worldPosition)
@@ -57,9 +55,8 @@ export const exportForAR = async (includeDesk: boolean) => {
     })
   }
 
-  // Use a short timeout to let the UI update (show loading spinner)
+  // UI 延时
   setTimeout(async () => {
-    // 【优化】 统一创建 Exporter
     const exporter = new GLTFExporter()
     const options = { binary: true }
 
@@ -68,10 +65,8 @@ export const exportForAR = async (includeDesk: boolean) => {
     document.body.appendChild(a)
 
     try {
-      // 【优化】 统一使用 parseAsync
       const result = await exporter.parseAsync(objectToExport, options)
 
-      // 【修复】 使用类型断言
       const glbBlob = new Blob([result as ArrayBuffer], {
         type: 'model/gltf-binary',
       })
@@ -80,11 +75,11 @@ export const exportForAR = async (includeDesk: boolean) => {
       if (previewModelUrl.value) {
         URL.revokeObjectURL(previewModelUrl.value)
       }
-      // 1. 创建新的 Blob URL 并存入共享状态
+      // 创建新的 Blob URL 并存入共享状态
       const glbUrl = URL.createObjectURL(glbBlob)
       previewModelUrl.value = glbUrl
 
-      // 2. 使用 Vue Router 导航到预览页
+      // 导航到预览页
       router.push({ name: 'preview' })
     } catch (error) {
       console.error('An error happened during AR export:', error)

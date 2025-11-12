@@ -8,7 +8,7 @@ import { rebuildSceneFromData, scene } from './sceneManager'
 import { modelRegistry } from '../models/modelRegistry'
 const gltfLoader = new GLTFLoader()
 
-// 【新增】 用于从 useModelImporter 调用的函数
+// 添加导入的物品
 export const addImportedObject = (fileName: string, dataUrl: string) => {
   const desk = objects.value.find((o) => o.type.startsWith('desk-'))
   let yPos = 0
@@ -16,7 +16,7 @@ export const addImportedObject = (fileName: string, dataUrl: string) => {
     yPos = desk.params.height + (desk.position.y || 0)
   }
 
-  // 1. 创建数据对象
+  // 创建数据对象
   const data: DeskObject = {
     id: THREE.MathUtils.generateUUID(),
     type: 'imported-model',
@@ -26,24 +26,23 @@ export const addImportedObject = (fileName: string, dataUrl: string) => {
     params: {
       fileName: fileName,
       dataUrl: dataUrl,
-      color: '#FFFFFF', // 占位符颜色，满足 TS 类型
+      color: '#FFFFFF', // 占位符颜色
     },
   }
 
-  // 2. 更新数据层
-  objects.value.push(data)
+  // 更新数据层
+  objects.value.push(data as DeskObject)
 
-  // 3. 更新 UI 和历史记录
+  // 更新 UI 和历史记录
   selectedObjectId.value = data.id
   expandedObjectId.value = data.id
   saveState() // 保存状态
 
-  // 4. 【重要】 触发场景重建
-  // GLTFLoader 是异步的，rebuild 是最稳妥的集成方式
+  // 触发场景重建
   rebuildSceneFromData()
 }
 
-// 辅助函数：根据数据将3D对象添加到场景
+// 根据数据将3D对象添加到场景
 export const add3DObjectToScene = (obj3D: THREE.Group, data: DeskObject) => {
   if (!scene) return
   sceneObjects.set(data.id, obj3D)
@@ -55,8 +54,7 @@ export const add3DObjectToScene = (obj3D: THREE.Group, data: DeskObject) => {
   if (data.mountedToId) {
     const stand3D = sceneObjects.get(data.mountedToId)
     if (stand3D) {
-      // (挂载逻辑将在 mountObject 中处理，这里暂时跳过)
-      // (或者，如果 createObject3D 已经处理了挂载，这里就更简单)
+      // 挂载逻辑将在 mountObject 中处理
     }
   } else if (!data.type.startsWith('desk-')) {
     // 如果不是桌子，尝试添加到桌子；如果桌子不存在，添加到场景
@@ -69,7 +67,7 @@ export const add3DObjectToScene = (obj3D: THREE.Group, data: DeskObject) => {
   }
 }
 
-// 【修改】 addObject - 现在使用注册表
+// 添加物品，使用注册表
 export const addObject = (type: DeskObjectType) => {
   if (type.startsWith('desk-') && isDeskInScene.value) return
   const desk = objects.value.find((o) => o.type.startsWith('desk-'))
@@ -79,32 +77,31 @@ export const addObject = (type: DeskObjectType) => {
     yPos = desk.params.height + (desk.position.y || 0)
   }
 
-  // 【优化】 替换
   const definition = modelRegistry[type]
   if (!definition) {
     console.error(`No model definition found for type: ${type}`)
     return
   }
 
-  // 1. 从注册表创建数据
+  // 从注册表创建数据
   const data = definition.createData(THREE.MathUtils.generateUUID(), yPos)
 
-  // 2. 更新数据层
-  objects.value.push(data)
+  // 更新数据层
+  objects.value.push(data as DeskObject)
 
-  // 3. 【优化】立即创建并添加 3D 视图
-  const obj3D = createObject3D(data)
+  // 立即创建并添加 3D 视图
+  const obj3D = createObject3D(data as DeskObject)
   if (obj3D) {
-    add3DObjectToScene(obj3D, data)
+    add3DObjectToScene(obj3D, data as DeskObject)
   }
 
-  // 4. 更新 UI 和历史记录
+  // 更新 UI 和历史记录
   selectedObjectId.value = data.id
   expandedObjectId.value = data.id
   saveState() // 保存状态
 }
 
-// 【新增】 辅助函数：彻底销毁一个 3D 对象
+// 彻底销毁一个 3D 对象
 export const disposeObject3D = (obj3D: THREE.Object3D) => {
   if (!obj3D) return
   obj3D.parent?.remove(obj3D)
@@ -123,7 +120,7 @@ export const disposeObject3D = (obj3D: THREE.Object3D) => {
   })
 }
 
-// 【新增】 辅助函数：用新数据替换一个 3D 对象
+// 用新数据替换一个 3D 对象
 export const replaceObject3D = (data: DeskObject) => {
   const oldObj3D = sceneObjects.get(data.id)
   if (oldObj3D) {
@@ -138,14 +135,13 @@ export const replaceObject3D = (data: DeskObject) => {
   return null
 }
 
-// 【修改】 createObject3D - 现在使用注册表
+// 创建3D对象
 export const createObject3D = (data: DeskObject): THREE.Group | null => {
   const group = new THREE.Group()
   group.userData.id = data.id
 
-  // 【优化】 替换
   if (data.type === 'imported-model') {
-    // 1. 特殊处理 'imported-model' (异步加载)
+    // 特殊处理 'imported-model' (异步加载)
     const { dataUrl } = data.params
     gltfLoader.load(
       dataUrl,
@@ -164,17 +160,19 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       },
     )
   } else {
-    // 2. 从注册表构建所有预设模型
+    // 从注册表构建所有预设模型
     const definition = modelRegistry[data.type as DeskObjectType]
     if (definition) {
-      definition.buildGeometry(group, data)
+      // data 的具体类型在 modelRegistry 中各不相同，显式断言为 any 以避免将所有具体类型交叉为 never 的问题
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      definition.buildGeometry(group, data as any)
     } else {
       console.warn(`No geometry builder found for type: ${data.type}`)
       return null
     }
   }
 
-  // 3. 通用设置 (位置, 旋转, 阴影)
+  // 通用设置 (位置, 旋转, 阴影)
   if (group.children.length > 0 || data.type === 'imported-model') {
     if (!data.mountedToId) {
       group.position.set(data.position.x, data.position.y, data.position.z)
