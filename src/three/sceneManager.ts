@@ -79,16 +79,16 @@ export const initThree = () => {
 
   // 创建透视相机
   perspectiveCamera = new THREE.PerspectiveCamera(
-    70,
+    45,
     container.clientWidth / container.clientHeight,
     0.01,
     100,
   )
-  perspectiveCamera.position.set(2, 2, 3)
+  perspectiveCamera.position.set(0, 1.7, 1.5)
 
   // 创建正交相机
   const aspect = container.clientWidth / container.clientHeight
-  const frustumSize = 5 // 视口高度
+  const frustumSize = 2 // 视口高度
   orthoCamera = new THREE.OrthographicCamera(
     (-frustumSize * aspect) / 2,
     (frustumSize * aspect) / 2,
@@ -98,8 +98,8 @@ export const initThree = () => {
     100,
   )
   // 为正交相机设置默认 3/4 视角
-  orthoCamera.position.set(5, 5, 5)
-  orthoCamera.lookAt(0, 0, 0)
+  orthoCamera.position.set(2, 2, 2)
+  orthoCamera.lookAt(0, 0.95, 0)
 
   // 设置默认激活的相机
   camera = perspectiveCamera
@@ -198,6 +198,10 @@ export const initThree = () => {
 
   const gizmo = transformControls.getHelper()
   scene.add(gizmo)
+
+  // 确保控制器看向桌面上方
+  orbitControls.target.set(0, 0.75, 0)
+  orbitControls.update()
 
   // 三维框初始化
   selectionBox = new THREE.BoxHelper(new THREE.Object3D())
@@ -493,21 +497,21 @@ export const setCameraView = (view: 'default' | 'top' | 'front' | 'side') => {
 
   switch (view) {
     case 'top':
-      perspectiveCamera.position.set(0, 5, 0.01) // 避免万向节锁
+      perspectiveCamera.position.set(0, 2, 0.01) // 避免万向节锁
       break
     case 'front':
-      perspectiveCamera.position.set(0, 1.5, 5)
+      perspectiveCamera.position.set(0, 1.2, 1)
       break
     case 'side':
-      perspectiveCamera.position.set(5, 1.5, 0)
+      perspectiveCamera.position.set(2, 1.2, 0)
       break
     case 'default':
     default:
-      perspectiveCamera.position.set(2, 2, 3)
+      perspectiveCamera.position.set(0, 1.7, 1.5)
       break
   }
 
-  // 确保控制器看向原点
-  orbitControls.target.set(0, 0, 0)
+  // 确保控制器看向桌面上方
+  orbitControls.target.set(0, 0.95, 0)
   orbitControls.update()
 }
