@@ -4,48 +4,60 @@ export default {
   welcomeCreate: 'Create New Layout',
   welcomeOpen: 'Open Layout File',
   // 预览页面UI
-  modelFileNotFound:
-    'The model file was not found. Please return to the editing page and try accessing the preview page again.',
-  noModelViewerInstance: 'The AR button is unresponsive; no model-viewer instance was found.',
+  modelFileNotFound: 'Model not found. Please return to the editing page and try again.',
+  noModelViewerInstance: 'No model-viewer instance was found.',
   arMode: 'AR Mode',
   warning: 'Warning!',
   // 预览前模型导出选项
   previewOptionTitle: 'Should the desk be included?',
   includeDesk: 'Includes desk',
   noDeskIncluded: 'No desk included',
-  // 场景UI
-  sceneNamePlaceholder: 'Desk Setup Layout',
-  addModel: 'Add Model',
-  saveLayout: 'Save Layout',
-  arPreview: 'AR Preview',
-  exitPreview: 'Back to Editor',
-  exit: 'Exit',
-  exitConfirm: 'Are you sure you want to exit? All unsaved changes will be lost.',
-  emptyScene: 'Scene is empty. Click "Add Model" to start.',
-  transformTip: 'Tip: Click the selected model again in the scene to toggle Translate/Rotate mode.',
-  name: 'Name',
-  unknown: 'Unknown',
-  item: 'Item',
-  // 测量UI
-  selectStartPoint: 'Please select the starting point for measurement',
-  selectEndPoint: 'Please select the endpoint for measurement',
-  reselectStartPoint: 'Click again to reselect the starting point of the measurement',
+  // 添加模型
+  addItem: 'Add Item',
   // 导入模型
   unableToReadFile: 'Unable to read the file',
   failedToAddImportedModel: 'Failed to add imported model: ',
   fileReadError: 'File read error: ',
   importModelFailed: 'Failed to import model: {error}',
   invalidFileType: 'The file type is invalid. Please select a .glb file.',
-  // 编辑面板操作UI
-  translate: 'Translate',
-  rotate: 'Rotate',
-  position: 'Position',
-  rotation: 'Rotation',
+  // 场景UI
+  menu: 'Menu',
+  add: 'Add',
+  back: 'Back',
+  cancel: 'Cancel',
+  // 场景标题
+  layoutNamePlaceholder: 'Desk Setup Layout',
+  saveLayoutName: 'Save Layout Name',
+  editLayoutName: 'Edit Layout Name',
+  // 按钮组合
+  help: 'Help',
+  save: 'Save',
+  exit: 'Exit',
+  exitConfirm: 'Are you sure you want to exit? All unsaved changes will be lost.',
+  preview: 'Preview',
+  camera: 'Camera',
+  default: 'Defalut',
+  top: 'Top',
+  front: 'Front',
+  left: 'Left Side',
+  orthographic: 'Orthographic',
+  measure: 'Measure',
+  stop: 'Stop',
+  // 测量UI
+  selectStartPoint: 'Please select the starting point for measurement',
+  selectEndPoint: 'Please select the endpoint for measurement',
+  reselectStartPoint: 'Click again to reselect the starting point of the measurement',
+  // 物品列表
+  sceneItems: 'Scene Items',
+  emptyScene: 'Scene is empty. Click the + in the upper left corner to add items.',
+  // 物品详情
+  // 变换
+  position: 'Position (mm)',
+  rotation: 'Rotation (°)',
   dropToSurface: 'Drop to Surface',
   // 编辑面板参数UI
-  unit: 'mm',
-  mountedTip: 'This item is mounted. Its position and rotation are controlled by the stand.',
   // 通用参数
+  name: 'Name',
   length: 'Length',
   width: 'Width',
   thickness: 'Thickness',
@@ -60,13 +72,13 @@ export default {
   widthB: 'Width (B)',
   depthB: 'Depth (B)',
   // 支架
-  mounted: 'Mounted',
+  mountedItem: 'Mounted Item: ',
   unmount: 'Unmount',
-  mountObject: 'Mount Item',
+  mountItem: 'Mount an Item',
   noMountableItems: 'No mountable items in scene',
   // 话筒
-  capsuleRadius: 'Capsule Radius',
-  capsuleHeight: 'Capsule Height',
+  capsuleRadius: 'Grille Radius',
+  capsuleHeight: 'Grille Height',
   standRadius: 'Stand Radius',
   // 键盘
   isBlack: 'White/Black',
@@ -145,10 +157,7 @@ export default {
   openAngle: 'Open Angle',
   // 路由器
   antennaHeight: 'Antenna Height',
-  // 通用
-  back: 'Back',
-  add: 'Add',
-  selectCategory: 'Select Category',
+  // 帮助
   helpTitle: 'Help',
   helpCamera: 'Camera Controls',
   helpRotate: 'Rotate View',
@@ -161,16 +170,6 @@ export default {
   helpSelectDesc1: 'Click an object in the scene to select it.',
   helpSelectDesc2: 'Click the selected object again to toggle between Translate and Rotate modes.',
   helpSelectDesc3: 'Click on the ground to deselect.',
-  arModalTitle: 'AR Preview Options',
-  arModalDesc:
-    'Choose whether to include the desk in the AR scene. If not, only the items on the desk will be shown.',
-  arIncludeDesk: 'Include Desk',
-  arExcludeDesk: 'Items Only',
-  cancel: 'Cancel',
-  loadingAR: 'Preparing AR Scene...',
-  noDeskError: 'There is no desk in the scene to export.',
-  more: 'More',
-  history: 'History',
 
   // 模型分类目录
   categories: {
@@ -184,6 +183,8 @@ export default {
   },
 
   // 模型名称
+  unknown: 'Unknown',
+  item: 'Item',
   models: {
     'desk-rect': 'Rectangle Desk',
     'desk-l': 'L-Shape Desk',

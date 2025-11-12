@@ -40,9 +40,7 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
           <!--动态标题-->
           <h5 class="modal-title my-0">
             {{
-              addModalCategory
-                ? `${t('add')} ${t('categories.' + addModalCategory)}`
-                : t('selectCategory')
+              addModalCategory ? `${t('add')} ${t('categories.' + addModalCategory)}` : t('addItem')
             }}
           </h5>
         </div>

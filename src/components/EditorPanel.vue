@@ -23,10 +23,9 @@ import {
   mountableItems,
 } from '@/composables/useObjects'
 import type { DeskObject } from '@/models/deskObject'
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
+import i18n from '@/locales'
+const { t } = i18n.global
 import { setCameraView, setCameraProjection } from '@/three/sceneManager'
-// 【新增】 导入测量状态和切换函数
 import { isMeasuring, toggleMeasurementMode } from '@/composables/useMeasurement'
 import { MathUtils } from 'three'
 import { macbookPresets } from '@/models/preset/laptop'
@@ -36,7 +35,6 @@ import { phonePresets } from '@/models/preset/phone'
 import { pcCasePresets } from '@/models/preset/pc_case'
 import { mousePadPresets } from '@/models/preset/mouse_pad'
 
-// 使用 Composable 共享状态
 const {
   isControlPanelOpen,
   toggleControlPanel,
@@ -46,10 +44,10 @@ const {
 } = useUIState()
 
 const { width } = useWindowSize()
-// 定义宽屏断点 (Bootstrap lg 断点是 992px)
+// 定义宽屏断点
 const LG_BREAKPOINT = 992
 
-// 计算属性，决定 OffCanvas 的弹出位置
+// 决定 OffCanvas 的弹出位置
 const placement = computed(() => {
   return width.value >= LG_BREAKPOINT ? 'end' : 'bottom'
 })
@@ -58,26 +56,26 @@ watch(isAddModelModalOpen, (isOpen) => {
   if (!isOpen) addModalCategory.value = undefined
 })
 
-// 1. 计算选中的对象数据
+// 计算选中的对象数据
 const selectedObject = computed(() => {
   if (!selectedObjectId.value) return null
   return objects.value.find((o: DeskObject) => o.id === selectedObjectId.value)
 })
 
-// 2. 简单的名称转换
+// 获取物品显示名称
 const getDisplayName = (obj: DeskObject | undefined) => {
-  if (!obj) return 'Unknown'
+  if (!obj) return t('unknown')
   const type = obj.type
-  if (!type) return 'Item'
+  if (!type) return t('item')
   if (obj.params.name) return obj.params.name
   if (type == 'imported-model') return obj.params.fileName
   return t('models.' + type)
 }
 
-// 3. 辅助函数，用于 v-for 循环 params
+// 获取物品可调节参数
 const getEditableParams = (obj: DeskObject | null) => {
   if (!obj || !obj.params) return []
-  // 过滤掉不希望用户编辑的参数
+  // 过滤掉是否可挂载参数
   return Object.entries(obj.params).filter(
     ([key]) => key !== 'isMountable' && key !== 'mountedObjectId',
   )
@@ -107,15 +105,16 @@ const adjustValue = (key: string, delta: number) => {
   const current = inputValues[key] ?? 0
   let stepAdjusted = current + delta
 
-  // 对角度参数使用不同步进（例如 ±1° 或 ±5°）
+  // 对角度参数使用不同步进
   if (angles.includes(key)) {
-    stepAdjusted = current + delta / 10 // 例如按钮的 ±10 表示 ±1°
+    stepAdjusted = current + delta / 10
   }
 
   inputValues[key] = stepAdjusted
   fromInputToThreeUnit(key, stepAdjusted)
 }
 
+// 长按参数调整按钮的响应时间间隔
 let adjustInterval: ReturnType<typeof setInterval> | null = null
 
 const startAdjust = (key: string, delta: number) => {
@@ -127,6 +126,7 @@ const stopAdjust = () => {
   adjustInterval = null
 }
 
+// 角度相关参数 key
 const angles = [
   'standRotationY',
   'screenTiltX',
@@ -173,7 +173,7 @@ const fromThreeUnitToInput = (key: string, value: number) => {
   }
 }
 
-// 下拉菜单支持
+// 预设参数，下拉菜单
 function getPresetOptions(type: string) {
   switch (type) {
     case 'macbook':
@@ -209,7 +209,7 @@ function getPresetOptions(type: string) {
           text: t(k),
         })),
       ]
-    case 'pc_case':
+    case 'pc-case':
       return [
         { value: '', text: t('custom') },
         ...Object.keys(pcCasePresets).map((k) => ({
@@ -257,7 +257,7 @@ function getPresetOptions(type: string) {
           class="ms-2"
           style="cursor: pointer"
           @click="handleEditNameToggle"
-          :title="isEditingName ? '保存名称' : '编辑名称'"
+          :title="isEditingName ? t('saveLayoutName') : t('editLayoutName')"
         >
           <i v-if="isEditingName" class="bi bi-check2-square" />
           <i v-else class="bi bi-pencil-square" />
@@ -271,49 +271,49 @@ function getPresetOptions(type: string) {
       <div class="col-4">
         <BButton variant="primary" class="w-100" @click="toggleHelpModal">
           <i class="bi bi-question-lg" />
-          帮助
+          {{ t('help') }}
         </BButton>
       </div>
       <!--保存按钮-->
       <div class="col-4">
         <BButton variant="warning" class="w-100" @click="saveLayoutToFile()">
           <i class="bi bi-save" />
-          保存
+          {{ t('save') }}
         </BButton>
       </div>
       <!--退出按钮-->
       <div class="col-4">
         <BButton variant="danger" class="w-100" @click="confirmExit">
           <i class="bi bi-escape" />
-          退出
+          {{ t('exit') }}
         </BButton>
       </div>
       <!--预览按钮-->
       <div class="col-4">
         <BButton variant="success" class="w-100" @click="togglePreviewOptionModal">
           <i class="bi bi-badge-ar" />
-          预览
+          {{ t('preview') }}
         </BButton>
       </div>
       <!--视角按钮-->
       <div class="col-4">
-        <BDropdown variant="info" class="w-100" toggle-class="w-100" text="视角">
-          <template #button-content> <i class="bi bi-camera" /> 视角 </template>
+        <BDropdown variant="info" class="w-100" toggle-class="w-100" text="{{ t('camera') }}">
+          <template #button-content> <i class="bi bi-camera" /> {{ t('camera') }} </template>
           <BDropdownItem @click="setCameraView('default')">
-            <i class="bi bi-camera-video" /> 默认透视
+            <i class="bi bi-camera-video" /> {{ t('default') }}
           </BDropdownItem>
           <BDropdownItem @click="setCameraView('top')">
-            <i class="bi bi-arrow-down-square" /> 鸟瞰 (顶)
+            <i class="bi bi-arrow-down-square" /> {{ t('top') }}
           </BDropdownItem>
           <BDropdownItem @click="setCameraView('front')">
-            <i class="bi bi-aspect-ratio" /> 正面 (前)
+            <i class="bi bi-aspect-ratio" /> {{ t('front') }}
           </BDropdownItem>
           <BDropdownItem @click="setCameraView('side')">
-            <i class="bi bi-layout-sidebar-inset" /> 侧面 (左)
+            <i class="bi bi-layout-sidebar-inset" /> {{ t('left') }}
           </BDropdownItem>
           <BDropdownDivider />
           <BDropdownItem @click="setCameraProjection('orthographic')">
-            <i class="bi bi-box" /> 切换正交
+            <i class="bi bi-box" /> {{ t('orthographic') }}
           </BDropdownItem>
         </BDropdown>
       </div>
@@ -328,20 +328,21 @@ function getPresetOptions(type: string) {
             <i v-if="isMeasuring" key="close-icon" class="bi bi-x-lg" />
             <i v-else key="measure-icon" class="bi bi-rulers" />
           </Transition>
-          {{ isMeasuring ? '结束' : '测量' }}
+          {{ isMeasuring ? t('stop') : t('measure') }}
         </BButton>
       </div>
     </div>
 
     <hr />
 
+    <!-- 物品列表与详情 -->
     <div class="dynamic-content">
       <div v-if="selectedObject">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h5 class="mb-0">{{ getDisplayName(selectedObject) }}</h5>
           <BButton size="sm" variant="secondary" @click="selectedObjectId = null">
             <i class="bi bi-x-lg" />
-            返回列表
+            {{ t('back') }}
           </BButton>
         </div>
 
@@ -349,8 +350,8 @@ function getPresetOptions(type: string) {
         <div class="transform-section">
           <!--标题-->
           <BRow class="mb-2">
-            <BCol>位置 (mm)</BCol>
-            <BCol>旋转 (°)</BCol>
+            <BCol>{{ t('position') }}</BCol>
+            <BCol>{{ t('rotation') }}</BCol>
           </BRow>
 
           <!--x轴-->
@@ -483,7 +484,7 @@ function getPresetOptions(type: string) {
             :disabled="!!selectedObject.mountedToId"
           >
             <i class="bi bi-arrow-down-short" />
-            下落至表面
+            {{ t('dropToSurface') }}
           </BButton>
         </div>
 
@@ -613,19 +614,26 @@ function getPresetOptions(type: string) {
             "
           >
             <p>
-              已挂载:
+              {{ t('mountedItem') }}
               <strong
                 >{{ getDisplayName(getMountedItem(selectedObject.params.mountedObjectId)) }}
               </strong>
             </p>
             <BButton variant="outline-danger" size="sm" @click="unmountObject(selectedObject.id)">
-              卸载物品
+              {{ t('unmount') }}
             </BButton>
           </div>
-          <BFormGroup v-else label="挂载物品">
+          <BFormGroup v-else :label="t('mountItem')">
             <BFormSelect @change="mountObject(selectedObject.id, $event.target.value)" size="sm">
-              <BFormSelectOption :value="null">-- 未挂载 --</BFormSelectOption>
-              <BFormSelectOption v-for="item in mountableItems" :key="item.id" :value="item.id">
+              <BFormSelectOption v-if="mountableItems.length == 0" :value="null">{{
+                t('noMountableItems')
+              }}</BFormSelectOption>
+              <BFormSelectOption
+                v-else
+                v-for="item in mountableItems"
+                :key="item.id"
+                :value="item.id"
+              >
                 {{ getDisplayName(item) }} (ID: {{ item.id.substring(0, 4) }})
               </BFormSelectOption>
             </BFormSelect>
@@ -634,7 +642,7 @@ function getPresetOptions(type: string) {
       </div>
 
       <div v-else>
-        <h5 class="mb-3">场景对象</h5>
+        <h5 class="mb-3">{{ t('sceneItems') }}</h5>
         <BListGroup v-if="objects.length > 0">
           <BListGroupItem
             v-for="obj in objects"
@@ -649,14 +657,14 @@ function getPresetOptions(type: string) {
             </BButton>
           </BListGroupItem>
         </BListGroup>
-        <BAlert v-else :model-value="true" variant="info">场景为空，请在主菜单中添加物品。</BAlert>
+        <BAlert v-else :model-value="true" variant="info">{{ t('emptyScene') }}</BAlert>
       </div>
     </div>
   </BOffcanvas>
 </template>
 
 <style scoped>
-/* 可选：为平滑切换添加一点过渡 */
+/* 为平滑切换添加一点过渡 */
 .dynamic-content {
   transition: opacity 0.2s ease;
 }

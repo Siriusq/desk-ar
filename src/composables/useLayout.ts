@@ -23,7 +23,7 @@ export const createNewLayout = () => {
   resetApplicationState()
   layoutLoaded.value = true
   isNewlyCreated.value = true
-  sceneName.value = t('sceneNamePlaceholder')
+  sceneName.value = t('layoutNamePlaceholder')
   objects.value.splice(0)
   nextTick(() => {
     router.push('/main')
@@ -49,7 +49,7 @@ export const loadLayoutFromFile = (event: Event) => {
         resetApplicationState()
 
         const data = JSON.parse(result)
-        sceneName.value = data.sceneName || t('sceneNamePlaceholder')
+        sceneName.value = data.sceneName || t('layoutNamePlaceholder')
         objects.value.splice(0, objects.value.length, ...data.objects)
         layoutLoaded.value = true
         isNewlyCreated.value = false
@@ -76,7 +76,7 @@ export const loadAutoSaveData = () => {
   }
   try {
     const data = JSON.parse(autoSaveData)
-    sceneName.value = data.sceneName || t('sceneNamePlaceholder')
+    sceneName.value = data.sceneName || t('layoutNamePlaceholder')
     objects.value.splice(0, objects.value.length, ...data.objects)
     layoutLoaded.value = true // 标记为已加载
     isNewlyCreated.value = false

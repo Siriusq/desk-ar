@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import SceneCanvas from '@/components/SceneCanvas.vue'
 import EditorPanel from '@/components/EditorPanel.vue'
 import { delay, isLoading, isPreviewOptionModalOpen, useUIState } from '@/composables/useUIState'
@@ -50,7 +52,7 @@ onMounted(async () => {
           <i v-if="!isControlPanelOpen" key="menu-icon" class="bi bi-list" />
           <i v-else key="close-icon" class="bi bi-x-lg" />
         </Transition>
-        菜单
+        {{ t('menu') }}
       </BButton>
       <!--添加按钮-->
       <BButton variant="success" @click="toggleAddModelModal">

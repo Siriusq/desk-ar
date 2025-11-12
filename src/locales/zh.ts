@@ -5,46 +5,59 @@ export default {
   welcomeOpen: '从文件打开',
   // 预览页面UI
   modelFileNotFound: '未找到模型文件。请返回编辑页面并尝试重新进入预览页面。',
-  noModelViewerInstance: 'AR 按钮点击无效，未找到 model-viewer 实例。',
+  noModelViewerInstance: '未找到 model-viewer 实例。',
   arMode: 'AR 模式',
   warning: '错误！',
   // 预览前模型导出选项
   previewOptionTitle: '是否需要包含桌子？',
   includeDesk: '包含桌子',
   noDeskIncluded: '不含桌子',
-  // 场景UI
-  sceneNamePlaceholder: '桌面布局',
-  addModel: '添加模型',
-  saveLayout: '保存方案',
-  arPreview: 'AR 预览',
-  exitPreview: '返回编辑',
-  exit: '退出',
-  exitConfirm: '您确定要退出吗？所有未保存的更改将丢失。',
-  emptyScene: '场景为空，请点击 "添加模型"',
-  transformTip: '提示：再次点击场景中的模型可切换移动/旋转模式。',
-  name: '名称',
-  unknown: '未知',
-  item: '物品',
-  // 测量UI
-  selectStartPoint: '请选择测量的起点',
-  selectEndPoint: '请选择测量的终点',
-  reselectStartPoint: '再次单击以重新选择测量的起点',
+  // 添加模型
+  addItem: '添加物品',
   // 导入模型
   unableToReadFile: '无法读取文件',
   failedToAddImportedModel: '添加导入的模型失败：',
   fileReadError: '文件读取错误：',
   importModelFailed: '导入模型失败：{error}',
   invalidFileType: '文件类型无效。请选择 .glb 文件。',
-  // 编辑面板操作UI
-  translate: '移动',
-  rotate: '旋转',
-  position: '位置',
-  rotation: '旋转',
+  // 场景UI
+  menu: '菜单',
+  add: '添加',
+  back: '返回',
+  cancel: '取消',
+  // 场景标题
+  layoutNamePlaceholder: '桌面布局',
+  saveLayoutName: '保存布局名称',
+  editLayoutName: '编辑布局名称',
+  // 按钮组合
+  help: '帮助',
+  save: '保存',
+  exit: '退出',
+  exitConfirm: '您确定要退出吗？所有未保存的更改将丢失。',
+  preview: '预览',
+  camera: '相机',
+  default: '默认',
+  top: '顶部',
+  front: '正前',
+  left: '左侧',
+  orthographic: '正交',
+  measure: '测量',
+  stop: '停止',
+  // 测量UI
+  selectStartPoint: '请选择测量的起点',
+  selectEndPoint: '请选择测量的终点',
+  reselectStartPoint: '再次单击以重新选择测量的起点',
+  // 物品列表
+  sceneItems: '物品清单',
+  emptyScene: '场景为空，请点击左上角的 + 添加物品',
+  // 物品详情
+  // 变换
+  position: '位置 (mm)',
+  rotation: '旋转 (°)',
   dropToSurface: '垂直下落',
   // 编辑面板参数UI
-  unit: 'mm',
-  mountedTip: '此物品已挂载，位置和旋转由支架决定。',
   // 通用参数
+  name: '名称',
   length: '长度',
   width: '宽度',
   thickness: '厚度',
@@ -59,15 +72,15 @@ export default {
   widthB: '宽度 (B)',
   depthB: '进深 (B)',
   // 支架
-  mounted: '已挂载',
+  mountedItem: '已挂载：',
   unmount: '卸载',
-  mountObject: '挂载物品',
-  noMountableItems: '场景中无可用挂载物品',
+  mountItem: '挂载物品',
+  noMountableItems: '场景中没有可以被挂载的物品',
   // 话筒
-  capsuleRadius: '胶囊体半径',
-  capsuleHeight: '胶囊体高度',
+  capsuleRadius: '拾音头半径',
+  capsuleHeight: '拾音头高度',
   standRadius: '支架半径',
-  // 键盘颜色
+  // 键盘
   isBlack: '白色/黑色',
   // 显示器
   baseWidth: '底座宽度',
@@ -144,10 +157,7 @@ export default {
   openAngle: '开合角度',
   // 路由器
   antennaHeight: '天线高度',
-  // 通用
-  back: '返回',
-  add: '添加',
-  selectCategory: '选择分类',
+  // 帮助
   helpTitle: '操作帮助',
   helpCamera: '视角控制',
   helpRotate: '旋转视角',
@@ -160,15 +170,6 @@ export default {
   helpSelectDesc1: '单击场景中的物品以选中。',
   helpSelectDesc2: '再次单击选中的物品可在移动/旋转模式间切换。',
   helpSelectDesc3: '单击场景空白处取消选中。',
-  arModalTitle: 'AR 预览选项',
-  arModalDesc: '请选择是否在 AR 场景中包含桌子。若不包含，则只会显示桌面上的物品。',
-  arIncludeDesk: '包含桌子',
-  arExcludeDesk: '仅显示物品',
-  cancel: '取消',
-  loadingAR: '正在准备AR场景...',
-  noDeskError: '场景中没有桌子可供导出。',
-  more: '更多',
-  history: '操作历史',
 
   // 模型分类目录
   categories: {
@@ -182,6 +183,8 @@ export default {
   },
 
   // 模型名称
+  unknown: '未知',
+  item: '物品',
   models: {
     'desk-rect': '矩形桌',
     'desk-l': 'L形转角桌',

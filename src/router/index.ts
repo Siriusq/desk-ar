@@ -25,7 +25,7 @@ router.beforeEach((to, from, next) => {
   if (requiresLayout && !layoutLoaded.value) {
     // 如果需要布局，但状态中未加载 (例如刷新页面)
     // 尝试从 localStorage 加载
-    console.log('Router guard: Layout not loaded, trying auto-save...')
+    //console.log('Router guard: Layout not loaded, trying auto-save...')
     loadAutoSaveData()
   }
 
@@ -33,7 +33,7 @@ router.beforeEach((to, from, next) => {
     // 如果尝试加载后，状态 *仍然* 是未加载
     // (意味着没有自动保存文件或文件已损坏)
     // 重定向到欢迎页
-    console.log('Router guard: No layout found, redirecting to welcome.')
+    // console.log('Router guard: No layout found, redirecting to welcome.')
     next({ name: 'welcome' })
   } else {
     // 允许导航
