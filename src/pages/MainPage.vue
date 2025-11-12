@@ -11,6 +11,7 @@ import { deleteSelectObject, selectedObjectId } from '@/composables/useObjects'
 import PreviewOptionModal from '@/components/PreviewOptionModal.vue'
 import { measurementHint } from '@/composables/useMeasurement'
 import { onMounted, onUnmounted } from 'vue'
+import { saveLayoutToFile } from '@/composables/useLayout'
 
 defineOptions({
   name: 'MainPage',
@@ -22,6 +23,9 @@ const {
   isAddModelModalOpen,
   toggleControlPanel,
   toggleAddModelModal,
+  toggleHelpModal,
+  togglePreviewOptionModal,
+  confirmExit,
 } = useUIState()
 
 // --- 快捷键处理 ---
@@ -33,6 +37,18 @@ const handleKeydown = (event: KeyboardEvent) => {
     (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')
   ) {
     return
+  }
+
+  // 撤销 (Ctrl+Z / Cmd+Z)
+  if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
+    event.preventDefault()
+    undo()
+  }
+
+  // 重做 (Ctrl+Y / Cmd+Y)
+  if ((event.ctrlKey || event.metaKey) && event.key === 'y') {
+    event.preventDefault()
+    redo()
   }
 
   // 添加 (+)
@@ -47,21 +63,31 @@ const handleKeydown = (event: KeyboardEvent) => {
     }
   }
 
-  // 打开菜单 (+)
+  // 打开菜单 (m)
   if (event.key === 'm') {
     toggleControlPanel()
   }
 
-  // 撤销 (Ctrl+Z / Cmd+Z)
-  if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
+  // 退出 (Backspace)
+  if (event.key === 'Backspace') {
     event.preventDefault()
-    undo()
+    confirmExit()
   }
 
-  // 重做 (Ctrl+Y / Cmd+Y)
-  if ((event.ctrlKey || event.metaKey) && event.key === 'y') {
+  // 打开帮助 (h)
+  if (event.key === 'h') {
+    toggleHelpModal()
+  }
+
+  // 预览 (p)
+  if (event.key === 'p') {
+    togglePreviewOptionModal()
+  }
+
+  // 保存 (Ctrl+S / Cmd+S)
+  if ((event.ctrlKey || event.metaKey) && event.key === 's') {
     event.preventDefault()
-    redo()
+    saveLayoutToFile()
   }
 }
 
