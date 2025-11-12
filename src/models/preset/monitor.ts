@@ -34,7 +34,7 @@ export const monitorPresets = {
     depth: 0.035,
     height: 0.359,
     standHeight: 0.4,
-    baseWidth: 0.323,
+    baseWidth: 0.31,
     baseDepth: 0.24,
   },
   '40-inch': {
@@ -42,7 +42,7 @@ export const monitorPresets = {
     depth: 0.035,
     height: 0.419,
     standHeight: 0.46,
-    baseWidth: 0.391,
+    baseWidth: 0.33,
     baseDepth: 0.252,
   },
   '43-inch': {
@@ -50,7 +50,7 @@ export const monitorPresets = {
     depth: 0.035,
     height: 0.56,
     standHeight: 0.7,
-    baseWidth: 0.38,
+    baseWidth: 0.34,
     baseDepth: 0.256,
   },
   '49-inch': {
@@ -58,7 +58,7 @@ export const monitorPresets = {
     depth: 0.035,
     height: 0.366,
     standHeight: 0.41,
-    baseWidth: 0.42,
+    baseWidth: 0.35,
     baseDepth: 0.269,
   },
 } as const
@@ -175,7 +175,7 @@ export const monitorModel = {
     group.add(rotatingBaseGroup)
 
     // 旋转圆盘（可视化）——不要旋转它自身的旋转.x
-    const discRadius = p.baseWidth * 0.35
+    const discRadius = Math.min(p.baseWidth * 0.35, p.baseDepth * 0.5)
     const discThickness = 0.001
     const rotationDisc = new THREE.Mesh(
       new THREE.CylinderGeometry(discRadius, discRadius, discThickness, 32),
