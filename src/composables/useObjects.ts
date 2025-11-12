@@ -173,6 +173,8 @@ export const deleteObject = (id: string) => {
     const i = objects.value.findIndex((o) => o.id === id)
     if (i > -1) objects.value.splice(i, 1)
   }
+
+  saveState()
 }
 
 // 计算底部位置，模拟物品下落并叠放到最近的平面
