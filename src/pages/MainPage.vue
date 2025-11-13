@@ -160,7 +160,7 @@ onUnmounted(() => {
 .canvas-container {
   /* 确保容器占据整个所需的空间 */
   width: 100vw;
-  height: 100vh;
+  height: 100svh;
   position: relative;
 }
 
