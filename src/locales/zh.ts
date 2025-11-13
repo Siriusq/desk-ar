@@ -1,6 +1,7 @@
 export default {
   // 欢迎页面UI
   welcomeTitle: '欢迎使用 Desk AR',
+  welcomeSubtitle: '案 上 乾 坤　·　虚 构 有 形　·　实 境 相 呈',
   welcomeCreate: '创建新布局',
   welcomeOpen: '从文件打开',
   // 预览页面UI

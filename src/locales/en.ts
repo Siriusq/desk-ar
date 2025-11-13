@@ -1,6 +1,7 @@
 export default {
   // 欢迎页面UI
   welcomeTitle: 'Welcome to Desk AR',
+  welcomeSubtitle: 'Your Ideal Desk · Built Virtually · Seen in Reality',
   welcomeCreate: 'Create New Layout',
   welcomeOpen: 'Open Layout File',
   // 预览页面UI

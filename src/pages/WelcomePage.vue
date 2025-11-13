@@ -52,7 +52,12 @@ onMounted(() => {
     <div class="absolute-fill dashed-grid-overlay"></div>
 
     <div class="welcome-container w-100 p-3 mx-auto text-center z-index-content">
-      <h1 class="mb-4 mt-3">{{ t('welcomeTitle') }}</h1>
+      <!-- 标题 -->
+      <h1 class="mt-3">{{ t('welcomeTitle') }}</h1>
+      <!-- 副标题 -->
+      <p class="text-muted">{{ t('welcomeSubtitle') }}</p>
+
+      <!-- 按钮 -->
       <!--创建新布局-->
       <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mb-3">
         <BButton size="lg" class="fw-bold w-auto" variant="primary" @click="createNewLayout">
@@ -86,6 +91,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.large-spacing {
+  letter-spacing: 5px;
+}
 /* ---------------------------------- */
 /* 内容容器样式 */
 /* ---------------------------------- */
