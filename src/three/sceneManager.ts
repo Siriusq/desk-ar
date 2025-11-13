@@ -131,8 +131,8 @@ export const initThree = () => {
 
   // public/ 目录下的 HDR 文件路径
   const hdriPath = isMobile
-    ? '/hdri/qwantani_dusk_2_puresky_1k.hdr'
-    : '/hdri/qwantani_dusk_2_puresky_2k.hdr'
+    ? './hdri/qwantani_dusk_2_puresky_1k.hdr'
+    : './hdri/qwantani_dusk_2_puresky_2k.hdr'
 
   new HDRLoader().load(
     hdriPath,
