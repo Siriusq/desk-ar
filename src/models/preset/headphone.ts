@@ -19,7 +19,7 @@ export const headphoneModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'headphone',
-    position: { x: 0, y: yPos, z: 0 },
+    position: { x: 0, y: yPos + 0.3, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {

@@ -20,7 +20,7 @@ export const webcamModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'webcam',
-    position: { x: 0, y: yPos, z: 0 },
+    position: { x: 0, y: yPos + 0.034, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
@@ -48,35 +48,29 @@ export const webcamModel = {
       roughness: 0.5,
     })
 
-    const lensGlassMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x202020,
-      metalness: 0.0, // 非金属
-      roughness: 0.02, // 非常光滑
-      transmission: 0.95, // 高透光率
-      thickness: 0.8, // 稍厚，增强折射感
-      ior: 1.52, // 光学玻璃常见折射率
-      reflectivity: 0.9, // 强反射
-      clearcoat: 1.0, // 表面镀膜层
-      clearcoatRoughness: 0.05,
-      envMapIntensity: 1.2, // 环境反射稍强
+    const lensGlassMaterial = new THREE.MeshStandardMaterial({
+      color: 0x202020, // 基础深色
+      metalness: 0.0,
+      roughness: 0.02, // 保持极光滑，模拟镜面反射
+      envMapIntensity: 1.2,
       transparent: true,
-      opacity: 1.0,
+      opacity: 0.5, // 假设 0.5 透明度即可模拟玻璃感
+      // 增加一个微弱的蓝色自发光，模拟镜头上的"镀膜眩光"
+      emissive: 0x001144, // 略微的深蓝光
+      emissiveIntensity: 0.1, // 强度要非常低，仅用于视觉欺骗
       side: THREE.DoubleSide, // 前后两面都可见
     })
 
-    const lensMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x587569, // 略带深色，模拟镀膜后的镜片
-      metalness: 0.0, // 非金属
-      roughness: 0.02, // 非常光滑
-      transmission: 0.95, // 高透光率
-      thickness: 0.8, // 稍厚，增强折射感
-      ior: 1.52, // 光学玻璃常见折射率
-      reflectivity: 0.9, // 强反射
-      clearcoat: 1.0, // 表面镀膜层
-      clearcoatRoughness: 0.05,
-      envMapIntensity: 1.2, // 环境反射稍强
+    const lensMaterial = new THREE.MeshStandardMaterial({
+      color: 0x587569, // 基础颜色，略带深绿色
+      metalness: 0.0,
+      roughness: 0.02, // 保持极光滑
+      envMapIntensity: 1.2,
       transparent: true,
-      opacity: 1.0,
+      opacity: 0.3, // 比前玻璃更透明一些
+      // 增加略强的绿/青色自发光，进一步模拟镀膜的颜色
+      emissive: 0x335544,
+      emissiveIntensity: 0.2,
       side: THREE.DoubleSide, // 前后两面都可见
     })
 

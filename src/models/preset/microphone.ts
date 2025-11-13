@@ -24,7 +24,7 @@ export const microphoneModel = {
   createData: (id: string, yPos: number) => ({
     id: id,
     type: 'microphone',
-    position: { x: 0, y: yPos, z: 0 },
+    position: { x: 0, y: yPos + 0.015, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {

@@ -51,19 +51,16 @@ export const roundBaseTableLightModel = {
       color: p.color,
       metalness: 0.5,
       roughness: 0.4,
-      side: THREE.DoubleSide,
     })
-    const lightShellMat = new THREE.MeshPhysicalMaterial({
-      color: 0xfff8e7, // 暖白色灯罩
-      metalness: 0.0, // 无金属成分
-      roughness: 0.2, // 略微粗糙，柔和漫反射
-      transmission: 0.7, // 高透光度
-      thickness: 0.4, // 模拟灯罩厚度
-      ior: 1.45, // 折射率接近塑料或玻璃
-      transparent: true, // 启用透明
-      opacity: 0.9, // 允许部分光线通过
-      envMapIntensity: 0.6, // 环境反射适中
-      side: THREE.DoubleSide, // 内外都可见
+    const lightShellMat = new THREE.MeshStandardMaterial({
+      color: 0xfff8e7, // 基础颜色
+      metalness: 0.0,
+      roughness: 1.0, // 让光线更柔和地散开，近似透光效果。
+      // emissive 模拟灯泡的发光效果，提升视觉上的“亮”感
+      emissive: 0xfff8e7,
+      emissiveIntensity: 1.5, // 强度可调整，让它亮起来
+      transparent: true, // 仍然需要透明度来模拟半透
+      opacity: 0.9, // 略微不透明
     })
 
     //底座
@@ -186,19 +183,16 @@ export const rectangleBaseTableLightModel = {
       color: p.color,
       metalness: 0.5,
       roughness: 0.4,
-      side: THREE.DoubleSide,
     })
-    const lightShellMat = new THREE.MeshPhysicalMaterial({
-      color: 0xfff8e7, // 暖白色灯罩
-      metalness: 0.0, // 无金属成分
-      roughness: 0.2, // 略微粗糙，柔和漫反射
-      transmission: 0.7, // 高透光度
-      thickness: 0.4, // 模拟灯罩厚度
-      ior: 1.45, // 折射率接近塑料或玻璃
-      transparent: true, // 启用透明
-      opacity: 0.9, // 允许部分光线通过
-      envMapIntensity: 0.6, // 环境反射适中
-      side: THREE.DoubleSide, // 内外都可见
+    const lightShellMat = new THREE.MeshStandardMaterial({
+      color: 0xfff8e7, // 基础颜色
+      metalness: 0.0,
+      roughness: 1.0, // 让光线更柔和地散开，近似透光效果。
+      // emissive 模拟灯泡的发光效果，提升视觉上的“亮”感
+      emissive: 0xfff8e7,
+      emissiveIntensity: 1.5, // 强度可调整，让它亮起来
+      transparent: true, // 仍然需要透明度来模拟半透
+      opacity: 0.9, // 略微不透明
     })
 
     //底座

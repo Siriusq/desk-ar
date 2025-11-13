@@ -34,19 +34,13 @@ export const waterGlassModel = {
     const p = data.params
     const c = new THREE.Color(0xffffff)
 
-    const glassCupMaterial = new THREE.MeshPhysicalMaterial({
+    const glassCupMaterial = new THREE.MeshStandardMaterial({
       color: c.lerp(new THREE.Color(p.color), 1),
-      metalness: 0.0, // 非金属
-      roughness: 0.05, // 微微粗糙，柔和反光
-      transmission: 1.0, // 完全透光
-      thickness: 0.05, // 玻璃厚度（可调节透射折射强度）
-      ior: 1.52, // 普通玻璃折射率
-      reflectivity: 0.5, // 高反射率，表现出玻璃光泽
-      clearcoat: 1.0, // 表面光滑镀膜
-      clearcoatRoughness: 0.02,
-      envMapIntensity: 0.1, // 环境反射适中
-      transparent: true, // 启用透明
-      opacity: 1.0,
+      metalness: 0.0,
+      roughness: 0.05, // 保持低粗糙度，模拟玻璃的高光泽
+      envMapIntensity: 0.1,
+      transparent: true,
+      opacity: 0.3, // 将不透明度设置为一个低值，实现透明玻璃感
       side: THREE.DoubleSide, // 让杯壁内外都能正确渲染
     })
 

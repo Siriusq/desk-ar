@@ -293,7 +293,7 @@ export const monitorWithoutStandModel = {
   createData: (id: string, yPos: number) => ({
     id,
     type: 'monitor-without-stand',
-    position: { x: 0, y: yPos, z: 0 },
+    position: { x: 0, y: yPos + 0.16, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     mountedToId: null,
     params: {
@@ -370,7 +370,7 @@ export const monitorWithoutStandModel = {
     )
     deformGeometry(panelGeo)
     const panel = new THREE.Mesh(panelGeo, matPanel)
-    panel.position.y = p.height / 2
+    //panel.position.y = p.height / 2
     // 位于外框前表面
     panel.position.z = p.depth - panelDepth / 2 + 0.001
     screenGroup.add(panel)
@@ -379,7 +379,7 @@ export const monitorWithoutStandModel = {
     const frameGeo = new THREE.BoxGeometry(p.width, p.height, p.depth, widthSeg, heightSeg, 1)
     deformGeometry(frameGeo)
     const frame = new THREE.Mesh(frameGeo, matBody)
-    frame.position.y = p.height / 2
+    //frame.position.y = p.height / 2
     frame.position.z = p.depth / 2
     screenGroup.add(frame)
 

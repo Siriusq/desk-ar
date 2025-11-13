@@ -43,7 +43,7 @@ export const macbookModel = {
       width: 0.3,
       height: 0.015,
       depth: 0.21,
-      lidAngle: 0,
+      lidAngle: Math.PI * 0.5,
       color: '#CCCCCC',
       isMountable: true,
     },

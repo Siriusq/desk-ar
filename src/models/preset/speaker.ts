@@ -44,14 +44,11 @@ export const speakerModel = {
     })
 
     // 发声单元（扬声器振膜）
-    const speakerDriverMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x3a3a3a, // 深灰偏黑的振膜
-      metalness: 0.1, // 振膜通常非金属，但带少许反光
-      roughness: 0.3, // 光滑但非镜面
-      reflectivity: 0.6, // 有一定反射感
-      clearcoat: 0.5, // 薄层反光膜
-      clearcoatRoughness: 0.2,
-      side: THREE.DoubleSide,
+    const speakerDriverMaterial = new THREE.MeshStandardMaterial({
+      color: 0x3a3a3a, // 深灰偏黑
+      metalness: 0.1, // 略微反光
+      roughness: 0.3, // 保持光滑但非镜面
+      side: THREE.BackSide,
     })
     const speakerRubberRingMaterial = new THREE.MeshStandardMaterial({
       color: 0x1b1b1b, // 深黑偏灰的橡胶色

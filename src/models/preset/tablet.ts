@@ -65,28 +65,17 @@ export const tabletModel = {
     }
 
     // === 材质 ===
-    const metalMat = new THREE.MeshPhysicalMaterial({
+    const metalMat = new THREE.MeshStandardMaterial({
       color: p.color,
-      metalness: 1.0,
-      roughness: 0.25,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.1,
-      reflectivity: 1.0,
-      sheen: 0.3,
-      sheenRoughness: 0.5,
-      envMapIntensity: 1.2,
+      metalness: 1.0, // 高金属感
+      roughness: 0.25, // 略微粗糙，保持较高的光泽度
+      envMapIntensity: 1.2, // 保持环境反射强度
     })
 
-    const screenMat = new THREE.MeshPhysicalMaterial({
-      map: cachedScreenShotTexture,
+    const screenMat = new THREE.MeshStandardMaterial({
+      map: cachedScreenShotTexture, // 贴图显示屏幕内容
       metalness: 0.0,
-      roughness: 0.05,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.0,
-      transmission: 0.04,
-      thickness: 0.001,
-      ior: 1.52,
-      reflectivity: 0.9,
+      roughness: 0.05, // 极低粗糙度模拟高光玻璃表面的尖锐反射
       envMapIntensity: 1.0,
     })
 

@@ -43,7 +43,7 @@ export const stylusModel = {
       color: c.lerp(new THREE.Color(0x888888), 0.5),
       metalness: 0.5,
       roughness: 0.3,
-      side: THREE.DoubleSide,
+      side: THREE.FrontSide,
     })
 
     const stylusGroup = new THREE.Group()
