@@ -9,8 +9,6 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // base 在本地测试时注释掉
-  base: '/desk-ar/',
   plugins: [
     vue({
       template: {
