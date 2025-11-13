@@ -39,55 +39,50 @@ const handleKeydown = (event: KeyboardEvent) => {
     return
   }
 
-  // 撤销 (Ctrl+Z / Cmd+Z)
-  if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
-    event.preventDefault()
-    undo()
-  }
-
-  // 重做 (Ctrl+Y / Cmd+Y)
-  if ((event.ctrlKey || event.metaKey) && event.key === 'y') {
-    event.preventDefault()
-    redo()
-  }
-
-  // 添加 (+)
-  if (event.key === '+') {
-    toggleAddModelModal()
-  }
-
-  // 删除 (Delete)
-  if (event.key === 'Delete') {
-    if (selectedObjectId.value) {
-      deleteSelectObject()
+  // 1. 检查组合键 (Ctrl/Cmd)
+  if (event.ctrlKey || event.metaKey) {
+    if (event.key === 'z') {
+      // 撤销 (Ctrl/Cmd+Z)
+      event.preventDefault()
+      undo()
+    } else if (event.key === 'y') {
+      // 重做 (Ctrl/Cmd+Y)
+      event.preventDefault()
+      redo()
+    } else if (event.key === 's') {
+      // 保存 (Ctrl/Cmd+S)
+      event.preventDefault()
+      saveLayoutToFile()
     }
+    return
   }
 
-  // 打开菜单 (m)
-  if (event.key === 'm') {
-    toggleControlPanel()
-  }
-
-  // 退出 (Backspace)
-  if (event.key === 'Backspace') {
-    event.preventDefault()
-    confirmExit()
-  }
-
-  // 打开帮助 (h)
-  if (event.key === 'h') {
-    toggleHelpModal()
-  }
-
-  // 预览 (p)
-  if (event.key === 'p') {
-    togglePreviewOptionModal()
-  }
-
-  // 保存 (Ctrl+S / Cmd+S)
-  if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-    event.preventDefault()
-    saveLayoutToFile()
+  // 2. 检查独立按键（非组合键）
+  // 我们可以使用一个 switch 语句来处理这些，更简洁
+  switch (event.key) {
+    case '+': // 添加
+      toggleAddModelModal()
+      break
+    case 'Delete': // 删除
+      if (selectedObjectId.value) {
+        deleteSelectObject()
+      }
+      break
+    case 'm': // 打开菜单
+      toggleControlPanel()
+      break
+    case 'Backspace': // 退出
+      event.preventDefault() // 在 switch 中处理 preventDefault
+      confirmExit()
+      break
+    case 'h': // 打开帮助
+      toggleHelpModal()
+      break
+    case 'p': // 预览
+      togglePreviewOptionModal()
+      break
+    default:
+      break
   }
 }
 
