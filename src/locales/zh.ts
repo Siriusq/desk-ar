@@ -25,12 +25,13 @@ export default {
   add: '添加',
   back: '返回',
   cancel: '取消',
+  ok: '好的',
   // 场景标题
   layoutNamePlaceholder: '桌面布局',
   saveLayoutName: '保存布局名称',
   editLayoutName: '编辑布局名称',
   // 按钮组合
-  help: '帮助',
+  helps: '帮助',
   save: '保存',
   exit: '退出',
   exitConfirm: '您确定要退出吗？所有未保存的更改将丢失。',
@@ -157,19 +158,6 @@ export default {
   openAngle: '开合角度',
   // 路由器
   antennaHeight: '天线高度',
-  // 帮助
-  helpTitle: '操作帮助',
-  helpCamera: '视角控制',
-  helpRotate: '旋转视角',
-  helpRotateDesc: '按住鼠标左键 / 单指触摸滑动',
-  helpPan: '平移视角',
-  helpPanDesc: '按住鼠标右键 / 双指触摸滑动',
-  helpZoom: '缩放视角',
-  helpZoomDesc: '滚动鼠标滚轮 / 双指缩放',
-  helpSelect: '物品操作',
-  helpSelectDesc1: '单击场景中的物品以选中。',
-  helpSelectDesc2: '再次单击选中的物品可在移动/旋转模式间切换。',
-  helpSelectDesc3: '单击场景空白处取消选中。',
 
   // 模型分类目录
   categories: {
@@ -219,5 +207,125 @@ export default {
     'custom-box': '自定义立方体',
     'custom-cylinder': '自定义圆柱体',
     'custom-sphere': '自定义球体',
+  },
+
+  // --- 集中管理链接 (Links) ---
+  link: {
+    sketchfab: 'https://sketchfab.com/feed',
+    githubRepo: 'https://github.com/Siriusq/desk-ar',
+    githubPages: 'https://pages.github.com/',
+    vue: 'https://cn.vuejs.org/',
+    three: 'https://threejs.org/',
+    modelViewer: 'https://modelviewer.dev/',
+    bvNext: 'https://github.com/bootstrap-vue-next/bootstrap-vue-next',
+    bootswatch: 'https://bootswatch.com/brite/',
+    polyHaven: 'https://polyhaven.com/a/qwantani_dusk_2_puresky',
+    patternCraft: 'https://patterncraft.fun/',
+    freepikSpeaker:
+      'https://www.freepik.com/free-photo/background-with-metallic-mesh-round-holes_40199170.htm#fromView=search&page=1&position=7&uuid=e8a75a42-32e5-4663-9001-07de579e2018&query=Metal+circular+grid+texture',
+    freepikMic:
+      'https://www.freepik.com/free-vector/net-shape-texture-design_853770.htm#fromView=search&page=1&position=0&uuid=d55db6e8-61a6-4741-aa90-654865721a6e&query=microphone+texture',
+    githubCorner: 'https://tholman.com/github-corners/',
+  },
+
+  help: {
+    // --- 🕹 操作 (Controls) ---
+    controls: {
+      title: '🕹 操作',
+      list: {
+        rotate: '<strong>鼠标左键 / 单指拖动</strong>：旋转相机',
+        zoom: '<strong>鼠标滚轮 / 双指捏合</strong>：缩放相机远近',
+        pan: '<strong>鼠标右键 / 双指拖动</strong>：平移相机',
+        select: '<strong>左键单击 / 单指轻触物体</strong>：选中物品',
+        toggleGizmo:
+          '<strong>选中状态下，再次左键单击 / 单指轻触该物体</strong>：切换移动 / 旋转 Gizmo',
+        deselect: '<strong>左键单击 / 单指轻触空白处</strong>：取消选中',
+      },
+    },
+
+    // --- ⌨️ 快捷键 (Shortcuts) ---
+    shortcuts: {
+      title: '⌨️ 快捷键',
+      list: {
+        undo: '<strong>Ctrl / Command + Z</strong>：撤销',
+        redo: '<strong>Ctrl / Command + Y</strong>：重做',
+        save: '<strong>Ctrl / Command + S</strong>：保存场景为 JSON 文件',
+        add: '<strong>Add / +</strong>：添加物品',
+        delete: '<strong>Del</strong>：删除选中物品',
+        exit: '<strong>Backspace</strong>：退出',
+        help: '<strong>H</strong>：打开帮助',
+        menu: '<strong>M</strong>：打开菜单',
+        preview: '<strong>P</strong>：进入（AR）预览模式',
+      },
+    },
+
+    // --- 🌐 AR 预览 (AR Preview) ---
+    arPreview: {
+      title: '🌐 AR 预览',
+      list: {
+        step1:
+          '点击菜单中的<strong>预览</strong>按钮，选择导出模型中是否包含桌子，然后跳转到预览页面。',
+        step2:
+          '若当前设备支持 AR，将在右上角显示 <strong>AR 模式</strong> 按钮，点击后即可调用相机进行 AR 预览。',
+        step3: '若设备不支持 AR，则可进行普通的 3D 预览。',
+      },
+    },
+
+    // --- 🧭 菜单功能 (Menu Features) ---
+    menu: {
+      title: '🧭 菜单功能',
+      list: {
+        itemSelect:
+          '可在场景中选中物品，或通过<strong>物品清单</strong>选择物品，打开其详情菜单以调整更多参数。',
+        sceneName:
+          '<strong>场景名称</strong>：点击菜单顶部场景名称后的按钮可修改名称。保存场景时，JSON 文件将使用此名称。',
+        positionRotation:
+          '<strong>位置与旋转</strong>：Gizmo 颜色与坐标轴对应关系：X 轴 = 红色、Y 轴 = 绿色、Z 轴 = 蓝色。',
+        verticalDrop: '<strong>垂直下落按钮</strong>：可使物品自动贴合至最近物体的顶面。',
+        name: '<strong>名称</strong>：部分物品支持自定义名称；留空则使用默认名称。',
+        preset: '<strong>预设</strong>：部分物品带有尺寸预设，启用后预设中的数值不可单独调整。',
+        numericInput:
+          '<strong>数值输入</strong>：数字框右侧按钮可快速加减数值，支持长按。默认长度单位为毫米（mm），角度单位为度（°）。',
+        mounting:
+          '<strong>挂载物品</strong>：部分模型支持挂载到自定义支架上。支持的物品会显示在支架详情页的<strong>挂载物品</strong>下拉列表中。挂载后，部分位置与旋转参数可能不会生效。',
+      },
+    },
+
+    // --- 📦 模型导入 (Model Import) ---
+    import: {
+      title: '📦 模型导入',
+      list: {
+        format: '支持导入 <strong>GLB</strong> 格式的模型文件。',
+        download:
+          '可前往 <a href="{sketchfabLink}" target="_blank">Sketchfab</a> 等模型网站下载模型。',
+        scale:
+          '下载的模型比例可能与场景不一致，可使用 <strong>Blender</strong> 等软件进行缩放后再导入。',
+      },
+    },
+
+    // --- ℹ️ 关于 (About) ---
+    about: {
+      title: 'ℹ️ 关于',
+      intro: '本项目的基础信息：',
+      list: {
+        github:
+          '本项目开源于 <a href="{githubLink}" target="_blank">GitHub - Siriusq/desk-ar</a>，基于 <strong>MIT License</strong>',
+        githubPages: '网站托管于 <a href="{ghPagesLink}" target="_blank">GitHub Pages</a>',
+        vue: '前端框架： <a href="{vueLink}" target="_blank">Vue.js</a>',
+        three: '3D 场景： <a href="{threeLink}" target="_blank">Three.js</a>',
+        modelViewer: 'AR 预览： <a href="{modelViewerLink}" target="_blank">model-viewer</a>',
+        bootstrap:
+          'UI 框架与主题： <a href="{bvNextLink}" target="_blank">Bootstrap Vue Next</a> + <a href="{bootswatchLink}" target="_blank">Bootswatch: Brite</a>',
+        hdr: '场景 HDR 背景来自 <a href="{polyHavenLink}" target="_blank">Qwantani Dusk 2 (Pure Sky) HDRI • Poly Haven</a>',
+        pattern:
+          '欢迎页背景图案来自 <a href="{patternCraftLink}" target="_blank">Pattern Craft - Modern Background Patterns & Gradients Snippets</a>',
+        speakerMesh:
+          '条形音响铁网材质来自 <a href="{freepikSpeakerLink}" target="_blank">Image by freepik</a>',
+        micMesh:
+          '话筒铁网材质来自 <a href="{freepikMicLink}" target="_blank">Image by dotstudio on Freepik</a>',
+        githubCorner:
+          'GitHub 角标来自 <a href="{githubCornerLink}" target="_blank">GitHub Corners</a>',
+      },
+    },
   },
 }

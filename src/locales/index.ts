@@ -25,6 +25,7 @@ const i18n = createI18n({
     en,
     zh,
   },
+  warnHtmlMessage: false, // 禁用 HTML 警告
 })
 
 export default i18n

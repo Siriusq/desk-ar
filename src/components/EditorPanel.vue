@@ -271,7 +271,7 @@ function getPresetOptions(type: string) {
       <div class="col-4">
         <BButton variant="primary" class="w-100" @click="toggleHelpModal">
           <i class="bi bi-question-lg" />
-          {{ t('help') }}
+          {{ t('helps') }}
         </BButton>
       </div>
       <!--保存按钮-->

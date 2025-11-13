@@ -9,6 +9,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AddModelModal: typeof import('./src/components/AddModelModal.vue')['default']
+    BAccordion: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordion']
+    BAccordionItem: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordionItem']
     BAlert: typeof import('bootstrap-vue-next/components/BAlert')['BAlert']
     BButton: typeof import('bootstrap-vue-next/components/BButton')['BButton']
     BButtonGroup: typeof import('bootstrap-vue-next/components/BButton')['BButtonGroup']
