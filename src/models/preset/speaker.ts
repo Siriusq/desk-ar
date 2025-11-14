@@ -131,7 +131,7 @@ export const soundBarModel = {
   buildGeometry: (group: THREE.Group, data: SoundBarObject) => {
     if (!cachedSoundBarTexture) {
       const loader = new THREE.TextureLoader()
-      cachedSoundBarTexture = loader.load('/textures/speaker/soundbar-front.jpg')
+      cachedSoundBarTexture = loader.load('./textures/speaker/soundbar-front.jpg')
       cachedSoundBarTexture.colorSpace = THREE.SRGBColorSpace
       // cachedSoundBarTexture.wrapS = THREE.RepeatWrapping
       // cachedSoundBarTexture.wrapT = THREE.RepeatWrapping

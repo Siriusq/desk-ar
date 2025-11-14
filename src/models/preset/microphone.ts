@@ -40,7 +40,7 @@ export const microphoneModel = {
   buildGeometry: (group: THREE.Group, data: MicrophoneObject) => {
     if (!cachedMicrophoneTexture) {
       const loader = new THREE.TextureLoader()
-      cachedMicrophoneTexture = loader.load('/textures/microphone/microphone-mesh.jpg')
+      cachedMicrophoneTexture = loader.load('./textures/microphone/microphone-mesh.jpg')
       cachedMicrophoneTexture.colorSpace = THREE.SRGBColorSpace
     }
 

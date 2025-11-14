@@ -45,11 +45,11 @@ export const keyboard108Model = {
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
     if (!cachedKeyboard108WhiteTexture) {
-      cachedKeyboard108WhiteTexture = textureLoader.load('/textures/keyboard/108w.jpg')
+      cachedKeyboard108WhiteTexture = textureLoader.load('./textures/keyboard/108w.jpg')
       cachedKeyboard108WhiteTexture.colorSpace = THREE.SRGBColorSpace
     }
     if (!cachedKeyboard108BlackTexture) {
-      cachedKeyboard108BlackTexture = textureLoader.load('/textures/keyboard/108b.jpg')
+      cachedKeyboard108BlackTexture = textureLoader.load('./textures/keyboard/108b.jpg')
       cachedKeyboard108BlackTexture.colorSpace = THREE.SRGBColorSpace
     }
 
@@ -103,11 +103,11 @@ export const keyboard87Model = {
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
     if (!cachedKeyboard87WhiteTexture) {
-      cachedKeyboard87WhiteTexture = textureLoader.load('/textures/keyboard/87w.jpg')
+      cachedKeyboard87WhiteTexture = textureLoader.load('./textures/keyboard/87w.jpg')
       cachedKeyboard87WhiteTexture.colorSpace = THREE.SRGBColorSpace
     }
     if (!cachedKeyboard87BlackTexture) {
-      cachedKeyboard87BlackTexture = textureLoader.load('/textures/keyboard/87b.jpg')
+      cachedKeyboard87BlackTexture = textureLoader.load('./textures/keyboard/87b.jpg')
       cachedKeyboard87BlackTexture.colorSpace = THREE.SRGBColorSpace
     }
 
@@ -161,11 +161,11 @@ export const keyboard68Model = {
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
     if (!cachedKeyboard68WhiteTexture) {
-      cachedKeyboard68WhiteTexture = textureLoader.load('/textures/keyboard/68w.jpg')
+      cachedKeyboard68WhiteTexture = textureLoader.load('./textures/keyboard/68w.jpg')
       cachedKeyboard68WhiteTexture.colorSpace = THREE.SRGBColorSpace
     }
     if (!cachedKeyboard68BlackTexture) {
-      cachedKeyboard68BlackTexture = textureLoader.load('/textures/keyboard/68b.jpg')
+      cachedKeyboard68BlackTexture = textureLoader.load('./textures/keyboard/68b.jpg')
       cachedKeyboard68BlackTexture.colorSpace = THREE.SRGBColorSpace
     }
 
@@ -219,11 +219,11 @@ export const keyboard60Model = {
   }),
   buildGeometry: (group: THREE.Group, data: KeyboardObject) => {
     if (!cachedKeyboard60WhiteTexture) {
-      cachedKeyboard60WhiteTexture = textureLoader.load('/textures/keyboard/60w.jpg')
+      cachedKeyboard60WhiteTexture = textureLoader.load('./textures/keyboard/60w.jpg')
       cachedKeyboard60WhiteTexture.colorSpace = THREE.SRGBColorSpace
     }
     if (!cachedKeyboard60BlackTexture) {
-      cachedKeyboard60BlackTexture = textureLoader.load('/textures/keyboard/60b.jpg')
+      cachedKeyboard60BlackTexture = textureLoader.load('./textures/keyboard/60b.jpg')
       cachedKeyboard60BlackTexture.colorSpace = THREE.SRGBColorSpace
     }
 

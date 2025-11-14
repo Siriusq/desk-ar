@@ -51,7 +51,7 @@ export const macbookModel = {
   buildGeometry: (group: THREE.Group, data: MacbookObject) => {
     if (!cachedkeyboardTexture) {
       const loader = new THREE.TextureLoader()
-      cachedkeyboardTexture = loader.load('/textures/laptop/macbook_keyboard.jpg')
+      cachedkeyboardTexture = loader.load('./textures/laptop/macbook_keyboard.jpg')
       cachedkeyboardTexture.colorSpace = THREE.SRGBColorSpace
     }
 

@@ -48,7 +48,7 @@ export const phoneModel = {
   buildGeometry: (group: THREE.Group, data: PhoneObject) => {
     if (!cachedScreenShotTexture) {
       const loader = new THREE.TextureLoader()
-      cachedScreenShotTexture = loader.load('/textures/phone/phone_screenshot.jpg')
+      cachedScreenShotTexture = loader.load('./textures/phone/phone_screenshot.jpg')
       cachedScreenShotTexture.colorSpace = THREE.SRGBColorSpace
     }
     // 清空旧内容
