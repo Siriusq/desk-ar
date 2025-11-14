@@ -111,7 +111,7 @@ export const initThree = () => {
 
   // PBR & HDR 渲染器设置
   renderer.outputColorSpace = THREE.SRGBColorSpace
-  renderer.toneMapping = THREE.ACESFilmicToneMapping
+  renderer.toneMapping = THREE.NeutralToneMapping
   renderer.toneMappingExposure = 1.0 // 调整曝光
 
   // 保存 DOM 元素引用
@@ -131,8 +131,8 @@ export const initThree = () => {
 
   // public/ 目录下的 HDR 文件路径
   const hdriPath = isMobile
-    ? './hdri/qwantani_dusk_2_puresky_1k.hdr'
-    : './hdri/qwantani_dusk_2_puresky_2k.hdr'
+    ? './hdri/kloofendal_misty_morning_puresky_1k.hdr'
+    : './hdri/kloofendal_misty_morning_puresky_2k.hdr'
 
   new HDRLoader().load(
     hdriPath,
@@ -141,7 +141,7 @@ export const initThree = () => {
       environmentTexture = pmremGenerator!.fromEquirectangular(texture).texture as THREE.DataTexture
 
       // 设置为场景背景和环境光
-      scene.background = environmentTexture
+      scene.background = new THREE.Color(0xf0f0f0)
       scene.environment = environmentTexture // 为所有 MeshStandardMaterial 提供光照
 
       // 清理原始贴图
@@ -159,11 +159,11 @@ export const initThree = () => {
   )
 
   // 设置光源
-  // scene.add(new THREE.AmbientLight(0xffffff, 0.7))
-  const dLight = new THREE.DirectionalLight(0xffffff, 0.5)
-  dLight.position.set(5, 10, 7.5)
-  dLight.castShadow = true
-  scene.add(dLight)
+  scene.add(new THREE.AmbientLight(0xffffff, 1))
+  // const dLight = new THREE.DirectionalLight(0xffffff, 0.5)
+  // dLight.position.set(5, 10, 7.5)
+  // dLight.castShadow = true
+  // scene.add(dLight)
 
   // 设置地面与阴影接收
   const ground = new THREE.Mesh(
@@ -171,7 +171,7 @@ export const initThree = () => {
     new THREE.ShadowMaterial({ opacity: 0.3 }),
   )
   ground.rotation.x = -Math.PI / 2
-  ground.receiveShadow = true
+  //ground.receiveShadow = true
   scene.add(ground)
   //scene.add(new THREE.GridHelper(100, 100, 0x888888, 0x888888))
 
