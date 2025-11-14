@@ -317,7 +317,7 @@ export default {
         modelViewer: 'AR 预览： <a href="{modelViewerLink}" target="_blank">model-viewer</a>',
         bootstrap:
           'UI 框架与主题： <a href="{bvNextLink}" target="_blank">Bootstrap Vue Next</a> + <a href="{bootswatchLink}" target="_blank">Bootswatch: Brite</a>',
-        hdr: '场景 HDR 背景来自 <a href="{polyHavenLink}" target="_blank">Qwantani Dusk 2 (Pure Sky) HDRI • Poly Haven</a>',
+        hdr: '场景 HDR 背景来自 <a href="https://polyhaven.com/a/kloofendal_misty_morning_puresky" target="_blank">Kloofendal Misty Morning (Pure Sky) HDRI • Poly Haven</a>',
         pattern:
           '欢迎页背景图案来自 <a href="{patternCraftLink}" target="_blank">Pattern Craft - Modern Background Patterns & Gradients Snippets</a>',
         speakerMesh:

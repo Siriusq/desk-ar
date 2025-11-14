@@ -1,7 +1,7 @@
 import { computed, ref, type Ref } from 'vue'
 import { autoSave, sceneName } from './useLayout'
 import { objects } from './useObjects'
-import { rebuildSceneFromData } from '@/three/sceneManager'
+import { rebuildSceneFromData, requestRender } from '@/three/sceneManager'
 import type { DeskObject } from '@/models/deskObject'
 
 // --- 历史记录 ---
@@ -31,6 +31,8 @@ export const saveState = (shouldAutoSave = true) => {
   history.value.push(currentState)
   historyIndex.value++
   if (shouldAutoSave) autoSave()
+
+  requestRender()
 }
 
 export const loadState = (state: HistoryState) => {

@@ -5,6 +5,7 @@ import {
   camera,
   rebuildSceneFromData,
   renderer,
+  requestRender,
   selectionBox,
   transformControls,
 } from '@/three/sceneManager'
@@ -60,6 +61,8 @@ export const updateObjectValue = (
     saveState() // 保存历史
 
     transformControls.attach(obj3D)
+
+    requestRender()
   }
 }
 
@@ -138,6 +141,7 @@ export const deleteSelectObject = () => {
     deleteObject(selectedObjectId.value)
     selectedObjectId.value = null
   }
+  requestRender()
 }
 
 // 删除物品，销毁 3D 对象
@@ -234,6 +238,8 @@ export const dropObject = (id: string) => {
 
     saveState()
   }
+
+  requestRender()
 }
 
 // 处理场景中的点击事件
@@ -312,4 +318,6 @@ watch(selectedObjectId, (newId) => {
     if (selectionBox) selectionBox.visible = false
     expandedObjectId.value = null
   }
+
+  requestRender()
 })

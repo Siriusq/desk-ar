@@ -4,7 +4,7 @@ import { expandedObjectId } from '@/composables/useUIState'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import type { DeskObject, DeskObjectType } from '@/models/deskObject'
-import { rebuildSceneFromData, scene } from './sceneManager'
+import { rebuildSceneFromData, requestRender, scene } from './sceneManager'
 import { modelRegistry } from '../models/modelRegistry'
 const gltfLoader = new GLTFLoader()
 
@@ -65,6 +65,8 @@ export const add3DObjectToScene = (obj3D: THREE.Group, data: DeskObject) => {
     scene.add(obj3D)
     if (obj3D.userData) obj3D.userData.isDesk = true
   }
+
+  requestRender()
 }
 
 // 添加物品，使用注册表
@@ -99,6 +101,8 @@ export const addObject = (type: DeskObjectType) => {
   selectedObjectId.value = data.id
   expandedObjectId.value = data.id
   saveState() // 保存状态
+
+  requestRender()
 }
 
 // 彻底销毁一个 3D 对象
@@ -172,6 +176,8 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
     }
   }
 
+  requestRender()
+
   // 通用设置 (位置, 旋转, 阴影)
   if (group.children.length > 0 || data.type === 'imported-model') {
     if (!data.mountedToId) {
@@ -186,6 +192,7 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
       c.castShadow = true
       c.receiveShadow = true
     })
+    requestRender()
     return group
   }
   return null

@@ -3,7 +3,7 @@ const { t } = i18n.global
 import { ref, watch, computed } from 'vue'
 import * as THREE from 'three'
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js'
-import { scene, camera, renderer, transformControls } from '@/three/sceneManager'
+import { scene, camera, renderer, transformControls, requestRender } from '@/three/sceneManager'
 import { selectedObjectId } from './useObjects'
 
 // --- 距离测量 ---
@@ -141,6 +141,8 @@ export const clearMeasurementUI = () => {
   // 隐藏选中的标记
   if (point1Marker) point1Marker.visible = false
   if (point2Marker) point2Marker.visible = false
+
+  requestRender()
 }
 
 /**
@@ -227,6 +229,8 @@ export const handleMeasurementClick = (point: THREE.Vector3, normal: THREE.Vecto
       point1Marker.visible = true
     }
   }
+
+  requestRender()
 }
 
 /**
@@ -235,6 +239,8 @@ export const handleMeasurementClick = (point: THREE.Vector3, normal: THREE.Vecto
  */
 export const toggleMeasurementMode = () => {
   isMeasuring.value = !isMeasuring.value
+
+  requestRender()
 }
 
 /**

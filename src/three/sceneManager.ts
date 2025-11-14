@@ -51,6 +51,33 @@ let handleMouseOut: (e: MouseEvent) => void
 let pmremGenerator: PMREMGenerator | null = null
 let environmentTexture: THREE.DataTexture | null = null
 
+// 按需渲染
+// 按需渲染的状态，确保每帧只渲染一次。
+let isRenderScheduled = false
+export const requestRender = () => {
+  if (!renderer || !scene || !camera) return // 安全检查
+  if (isRenderScheduled) return // 如果已经计划了渲染，则跳过
+  isRenderScheduled = true
+
+  requestAnimationFrame(() => {
+    if (
+      selectedObjectId.value &&
+      selectionBox.visible &&
+      sceneObjects.has(selectedObjectId.value)
+    ) {
+      selectionBox.setFromObject(sceneObjects.get(selectedObjectId.value))
+    }
+    // 1. 渲染 3D 场景
+    renderer.render(scene, camera)
+
+    // 2. 渲染 2D 标签
+    renderMeasurement()
+
+    // 重置标志，允许下一帧的渲染请求
+    isRenderScheduled = false
+  })
+}
+
 export const handleResize = () => {
   const container = document.getElementById('scene-container')
   if (camera && renderer && container) {
@@ -69,6 +96,9 @@ export const handleResize = () => {
     renderer.setSize(container.clientWidth, container.clientHeight)
 
     resizeMeasurement()
+
+    // 【新增】 调整大小后需要重新渲染
+    requestRender()
   }
 }
 
@@ -148,6 +178,9 @@ export const initThree = () => {
       texture.dispose()
 
       isLoading.value = false
+
+      // 【新增】 HDR 加载完成后渲染
+      requestRender()
     },
     undefined, // onProgress
     (error) => {
@@ -155,6 +188,9 @@ export const initThree = () => {
       // 回退到纯色背景
       scene.background = new THREE.Color(0xf0f0f0)
       isLoading.value = false // 解除加载状态
+
+      // 【新增】 出错后也要渲染
+      requestRender()
     },
   )
 
@@ -177,11 +213,16 @@ export const initThree = () => {
 
   // 控制器初始化
   orbitControls = new OrbitControls(camera, domElement!)
+  // 【新增】 1. OrbitControls (相机) 发生变化时请求渲染
+  orbitControls.addEventListener('change', requestRender)
+
   transformControls = new TransformControls(camera, domElement!)
   transformControls.addEventListener('dragging-changed', (event: { value: boolean }) => {
     isTransformDragging.value = event.value
     orbitControls.enabled = !event.value
     if (!event.value) saveState() // Save state on drag end
+
+    requestRender()
   })
   transformControls.addEventListener('objectChange', () => {
     const obj = transformControls.object
@@ -194,6 +235,9 @@ export const initThree = () => {
     dataObj.rotation.x = THREE.MathUtils.radToDeg(obj.rotation.x)
     dataObj.rotation.y = THREE.MathUtils.radToDeg(obj.rotation.y)
     dataObj.rotation.z = THREE.MathUtils.radToDeg(obj.rotation.z)
+
+    // 【新增】 拖动时实时渲染
+    requestRender()
   })
 
   const gizmo = transformControls.getHelper()
@@ -215,6 +259,7 @@ export const initThree = () => {
   // 处理鼠标事件
   handleMouseDown = (e: { clientX: number; clientY: number }) => {
     mouseDownInfo = { x: e.clientX, y: e.clientY, time: Date.now() }
+    requestRender()
   }
 
   handleMouseUp = (e: { clientX: number; clientY: number }) => {
@@ -222,10 +267,13 @@ export const initThree = () => {
     const dy = e.clientY - mouseDownInfo.y
     const dist = Math.sqrt(dx * dx + dy * dy)
     if (Date.now() - mouseDownInfo.time < 300 && dist < 5) handleSceneClick(e)
+
+    requestRender()
   }
 
   // 悬停事件处理
   handleMouseMove = (event: MouseEvent) => {
+    requestRender()
     if (!isMeasuring.value) return // 仅在测量时运行
 
     // 射线检测逻辑
@@ -253,11 +301,17 @@ export const initThree = () => {
       // 没找到，隐藏
       hideHoverMarker()
     }
+
+    // 【新增】 悬停时需要渲染
+    requestRender()
   }
 
   handleMouseOut = () => {
     // 鼠标移出画布，隐藏
     hideHoverMarker()
+
+    // 【新增】 悬停结束时需要渲染
+    requestRender()
   }
 
   domElement!.addEventListener('mousedown', handleMouseDown)
@@ -265,19 +319,22 @@ export const initThree = () => {
   domElement!.addEventListener('mousemove', handleMouseMove)
   domElement!.addEventListener('mouseout', handleMouseOut)
 
-  renderer.setAnimationLoop(() => {
-    if (
-      selectedObjectId.value &&
-      selectionBox.visible &&
-      sceneObjects.has(selectedObjectId.value)
-    ) {
-      selectionBox.setFromObject(sceneObjects.get(selectedObjectId.value))
-    }
-    renderer.render(scene, camera)
+  // renderer.setAnimationLoop(() => {
+  //   if (
+  //     selectedObjectId.value &&
+  //     selectionBox.visible &&
+  //     sceneObjects.has(selectedObjectId.value)
+  //   ) {
+  //     selectionBox.setFromObject(sceneObjects.get(selectedObjectId.value))
+  //   }
+  //   renderer.render(scene, camera)
 
-    // 渲染 2D 标签
-    renderMeasurement()
-  })
+  //   // 渲染 2D 标签
+  //   renderMeasurement()
+  // })
+
+  // 【新增】 4. 在 initThree 结束时, 手动执行第一次渲染
+  requestRender()
 }
 
 // 重建场景
@@ -363,6 +420,9 @@ export const rebuildSceneFromData = () => {
       else scene.add(obj3D)
     }
   })
+
+  // 【新增】 场景重建后需要渲染
+  requestRender()
 }
 
 // 场景销毁与资源回收
@@ -488,6 +548,7 @@ export const setCameraProjection = (projection: 'perspective' | 'orthographic') 
   // 更新相机投影矩阵
   handleResize()
   orbitControls.update()
+  requestRender()
 }
 
 // 切换预设视图（仅限透视）
@@ -514,4 +575,5 @@ export const setCameraView = (view: 'default' | 'top' | 'front' | 'side') => {
   // 确保控制器看向桌面上方
   orbitControls.target.set(0, 0.95, 0)
   orbitControls.update()
+  requestRender()
 }

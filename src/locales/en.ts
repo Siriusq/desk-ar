@@ -315,7 +315,7 @@ export default {
         modelViewer: 'AR Preview: <a href="{modelViewerLink}" target="_blank">model-viewer</a>',
         bootstrap:
           'UI Framework & Theme: <a href="{bvNextLink}" target="_blank">Bootstrap Vue Next</a> + <a href="{bootswatchLink}" target="_blank">Bootswatch: Brite</a>',
-        hdr: 'Scene HDR background from <a href="https://polyhaven.com/a/qwantani_dusk_2_puresky" target="_blank">Qwantani Dusk 2 (Pure Sky) HDRI • Poly Haven</a>',
+        hdr: 'Scene HDR background from <a href="https://polyhaven.com/a/kloofendal_misty_morning_puresky" target="_blank">Kloofendal Misty Morning (Pure Sky) HDRI • Poly Haven</a>',
         pattern:
           'Welcome page background pattern from <a href="https://patterncraft.fun/" target="_blank">Pattern Craft - Modern Background Patterns & Gradients Snippets</a>',
         speakerMesh:
