@@ -1,7 +1,7 @@
 export default {
   // 欢迎页面UI
   welcomeTitle: 'Welcome to Desk AR',
-  welcomeSubtitle: 'Your Ideal Desk · Built Virtually · Seen in Reality',
+  welcomeSubtitle: 'Your Ideal Desk · Built Rapidly · Seen in Reality',
   welcomeCreate: 'Create New Layout',
   welcomeOpen: 'Open Layout File',
   // 预览页面UI
@@ -16,6 +16,7 @@ export default {
   // 添加模型
   addItem: 'Add Item',
   // 导入模型
+  import: 'Import',
   unableToReadFile: 'Unable to read the file',
   failedToAddImportedModel: 'Failed to add imported model: ',
   fileReadError: 'File read error: ',
@@ -203,8 +204,8 @@ export default {
     'rectangle-base-stand': 'Rectangle Base Stand',
     'monitor-riser': 'Desk Riser',
     'monitor-light': 'Monitor Light',
-    'round-base-table-light': 'Round Base Table Light',
-    'rectangle-base-table-light': 'Rectangle Base Table Light',
+    'round-base-table-light': 'Round Base Lamp',
+    'rectangle-base-table-light': 'Rectangle Base Lamp',
     'water-glass': 'Water Glass',
     'wireless-router': 'Wireless Router',
     'custom-box': 'Custom Box',

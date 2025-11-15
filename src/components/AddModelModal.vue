@@ -71,14 +71,14 @@ const handleImportModelClick = async () => {
           :disabled="category === 'desks' && isDeskInScene"
         >
           <div class="model-icon mb-3">{{ models.icon }}</div>
-          <div>{{ t('categories.' + category) }}</div>
+          <div class="model-name">{{ t('categories.' + category) }}</div>
         </BButton>
       </div>
 
       <div class="model-item-wrapper">
         <BButton class="fw-bold model-button" variant="secondary" @click="handleImportModelClick">
           <div class="model-icon mb-3">📥</div>
-          <div>导入</div>
+          <div class="model-name">{{ t('import') }}</div>
         </BButton>
       </div>
     </div>
@@ -95,7 +95,7 @@ const handleImportModelClick = async () => {
           @click="(addObject(model.type), (isAddModelModalOpen = false))"
         >
           <div class="model-icon mb-3">{{ model.icon }}</div>
-          <div>{{ t('models.' + model.type) }}</div>
+          <div class="model-name">{{ t('models.' + model.type) }}</div>
         </BButton>
       </div>
     </div>
@@ -152,7 +152,7 @@ const handleImportModelClick = async () => {
   align-items: center; /* 图标和文本水平居中 */
   /* 强制按钮宽度自适应，这里使用 max-width 限制按钮太宽 */
   min-width: 120px;
-  max-width: 150px;
+  max-width: 180px;
   height: 100px; /* 统一高度，使网格整齐 */
   padding: 10px;
 }
@@ -165,8 +165,8 @@ const handleImportModelClick = async () => {
 
 /* 按钮名称样式 */
 .model-name {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 500;
   text-align: center;
   /* 确保文本不溢出 */
   overflow: hidden;

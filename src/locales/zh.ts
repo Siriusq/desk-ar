@@ -1,7 +1,7 @@
 export default {
   // 欢迎页面UI
   welcomeTitle: '欢迎使用 Desk AR',
-  welcomeSubtitle: '案 上 乾 坤　·　虚 构 有 形　·　实 境 相 呈',
+  welcomeSubtitle: '快速布置你的理想桌面  ·  支持 AR 实景预览',
   welcomeCreate: '创建新布局',
   welcomeOpen: '从文件打开',
   // 预览页面UI
@@ -16,6 +16,7 @@ export default {
   // 添加模型
   addItem: '添加物品',
   // 导入模型
+  import: '导入',
   unableToReadFile: '无法读取文件',
   failedToAddImportedModel: '添加导入的模型失败：',
   fileReadError: '文件读取错误：',
