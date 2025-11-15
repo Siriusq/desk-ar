@@ -489,7 +489,7 @@ function getPresetOptions(type: string) {
         </div>
 
         <!--物品参数调整-->
-        <div v-if="selectedObject.type !== 'imported-model'">
+        <div v-if="selectedObject.type !== 'imported-model' && selectedObject.mountedToId == null">
           <hr />
           <BFormGroup
             v-for="[key, value] in getEditableParams(selectedObject)"
@@ -599,6 +599,11 @@ function getPresetOptions(type: string) {
               @change="updateObjectParam(selectedObject.id, key, $event.target.value)"
             />
           </BFormGroup>
+        </div>
+
+        <div v-if="selectedObject.mountedToId">
+          <hr />
+          <BAlert :model-value="true" variant="warning">{{ t('mountedItemCannotAdjust') }}</BAlert>
         </div>
 
         <div

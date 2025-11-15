@@ -78,6 +78,8 @@ export default {
   unmount: 'Unmount',
   mountItem: 'Mount an Item',
   noMountableItems: 'No mountable items in scene',
+  mountedItemCannotAdjust:
+    'Mounted items cannot be adjusted. Please unmount them before making adjustments.',
   // 话筒
   capsuleRadius: 'Grille Radius',
   capsuleHeight: 'Grille Height',

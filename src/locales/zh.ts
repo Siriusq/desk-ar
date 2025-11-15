@@ -78,6 +78,7 @@ export default {
   unmount: '卸载',
   mountItem: '挂载物品',
   noMountableItems: '场景中没有可以被挂载的物品',
+  mountedItemCannotAdjust: '被挂载的物品无法进行调整，请卸载后再进行调整',
   // 话筒
   capsuleRadius: '拾音头半径',
   capsuleHeight: '拾音头高度',
