@@ -150,12 +150,12 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
     gltfLoader.load(
       dataUrl,
       (gltf) => {
-        gltf.scene.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            child.castShadow = true
-            child.receiveShadow = true
-          }
-        })
+        // gltf.scene.traverse((child) => {
+        //   if ((child as THREE.Mesh).isMesh) {
+        //     child.castShadow = true
+        //     //child.receiveShadow = true
+        //   }
+        // })
         group.add(gltf.scene)
 
         requestRender()
@@ -190,10 +190,10 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
         THREE.MathUtils.degToRad(data.rotation.z),
       )
     }
-    group.traverse((c) => {
-      c.castShadow = true
-      c.receiveShadow = true
-    })
+    // group.traverse((c) => {
+    //   c.castShadow = true
+    //   c.receiveShadow = isShadowReceiver
+    // })
     requestRender()
     return group
   }

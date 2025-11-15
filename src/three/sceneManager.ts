@@ -147,7 +147,8 @@ export const initThree = () => {
   domElement = renderer.domElement
   renderer.setSize(container.clientWidth, container.clientHeight)
   renderer.setPixelRatio(window.devicePixelRatio)
-  renderer.shadowMap.enabled = true
+  // renderer.shadowMap.enabled = true
+  // renderer.shadowMap.type = THREE.PCFSoftShadowMap // 更柔和的阴影边缘
   container.innerHTML = ''
   container.appendChild(domElement!)
 
@@ -192,21 +193,20 @@ export const initThree = () => {
   )
 
   // 设置光源
-  scene.add(new THREE.AmbientLight(0xffffff, 1))
-  // const dLight = new THREE.DirectionalLight(0xffffff, 0.5)
-  // dLight.position.set(5, 10, 7.5)
-  // dLight.castShadow = true
-  // scene.add(dLight)
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5))
+  // const dLight = new THREE.DirectionalLight(0xffffff, 1)
+  // dLight.position.set(3, 5, 3)
+  //scene.add(dLight)
 
   // 设置地面与阴影接收
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(100, 100),
-    new THREE.ShadowMaterial({ opacity: 0.3 }),
-  )
-  ground.rotation.x = -Math.PI / 2
-  //ground.receiveShadow = true
-  scene.add(ground)
-  //scene.add(new THREE.GridHelper(100, 100, 0x888888, 0x888888))
+  // const ground = new THREE.Mesh(
+  //   new THREE.PlaneGeometry(100, 100),
+  //   new THREE.ShadowMaterial({ opacity: 0.3 }),
+  // )
+  // ground.rotation.x = -Math.PI / 2
+  // ground.receiveShadow = true
+  //scene.add(ground)
+  //scene.add(new THREE.GridHelper(10, 100, 0x888888, 0x888888))
 
   // 控制器初始化
   orbitControls = new OrbitControls(camera, domElement!)
