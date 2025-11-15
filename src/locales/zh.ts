@@ -235,6 +235,7 @@ export default {
     // --- 🕹 操作 (Controls) ---
     controls: {
       title: '🕹 操作',
+      intro: '鉴于 3D 操作的复杂性，强烈建议在桌面端布置场景，在移动端使用 AR 预览',
       list: {
         rotate: '<strong>鼠标左键 / 单指拖动</strong>：旋转相机',
         zoom: '<strong>鼠标滚轮 / 双指捏合</strong>：缩放相机远近',
@@ -266,6 +267,8 @@ export default {
     arPreview: {
       title: '🌐 AR 预览',
       list: {
+        warning:
+          'AR 预览功能需要操作系统与浏览器支持，iOS 请使用 <strong>Safari</strong> 浏览器，安卓请使用 <strong>Chrome</strong> 浏览器，非原生安卓系统可能缺少 AR 服务，无法使用',
         step1:
           '点击菜单中的<strong>预览</strong>按钮，选择导出模型中是否包含桌子，然后跳转到预览页面。',
         step2:
@@ -309,7 +312,6 @@ export default {
     // --- ℹ️ 关于 (About) ---
     about: {
       title: 'ℹ️ 关于',
-      intro: '本项目的基础信息：',
       list: {
         github:
           '本项目开源于 <a href="{githubLink}" target="_blank">GitHub - Siriusq/desk-ar</a>，基于 <strong>MIT License</strong>',

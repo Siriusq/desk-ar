@@ -230,7 +230,9 @@ export default {
   help: {
     // --- 🕹 Controls ---
     controls: {
-      title: '&#x1F579; Controls',
+      title: '🕹 Controls',
+      intro:
+        'Considering the complexity of 3D operations, it is strongly recommended to set up scenes on desktop devices and use AR previews on mobile devices.',
       list: {
         rotate: '<strong>Left Mouse / Single-finger Drag</strong>: Rotate Camera',
         zoom: '<strong>Mouse Wheel / Two-finger Pinch</strong>: Zoom Camera In/Out',
@@ -244,7 +246,7 @@ export default {
 
     // --- ⌨️ Shortcuts ---
     shortcuts: {
-      title: '&#x2328; Shortcuts',
+      title: '⌨️ Shortcuts',
       list: {
         undo: '<strong>Ctrl / Command + Z</strong>: Undo',
         redo: '<strong>Ctrl / Command + Y</strong>: Redo',
@@ -260,8 +262,10 @@ export default {
 
     // --- 🌐 AR Preview ---
     arPreview: {
-      title: '&#x1F310; AR Preview',
+      title: '🌐 AR Preview',
       list: {
+        warning:
+          'The AR preview feature requires support from both the operating system and the browser. For iOS, please use the <strong>Safari</strong> browser. For Android, please use the <strong>Chrome</strong> browser. Non-native Android systems may lack required AR services and may not be able to use this feature.',
         step1:
           'Click the <strong>Preview</strong> button in the menu, choose whether to include the desk in the exported model, and proceed to the preview page.',
         step2:
@@ -272,7 +276,7 @@ export default {
 
     // --- 🧭 Menu Features ---
     menu: {
-      title: '&#x1F9ED; Menu Features',
+      title: '🧭 Menu Features',
       list: {
         itemSelect:
           'Select items in the scene or via the <strong>Item List</strong> to open their detail menu and adjust parameters.',
@@ -294,7 +298,7 @@ export default {
 
     // --- 📦 Model Import ---
     import: {
-      title: '&#x1F4E6; Model Import',
+      title: '📦 Model Import',
       list: {
         format: 'Supports importing <strong>GLB</strong> format model files.',
         download:
@@ -306,8 +310,7 @@ export default {
 
     // --- ℹ️ About ---
     about: {
-      title: '&#x2139;&#xFE0F; About',
-      intro: 'Basic information about this project:',
+      title: 'ℹ️ About',
       list: {
         github:
           'This project is open source on <a href="{githubLink}" target="_blank">GitHub - Siriusq/desk-ar</a>, under the <strong>MIT License</strong>',

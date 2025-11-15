@@ -18,6 +18,7 @@ const { isHelpModalOpen, toggleHelpModal } = useUIState()
     <!-- 操作 -->
     <BAccordion id="help-accordion">
       <BAccordionItem :title="$t('help.controls.title')" body-class="text-start">
+        <p>{{ $t('help.controls.intro') }}</p>
         <ul class="i18n-list">
           <li v-html="$t('help.controls.list.rotate')"></li>
           <li v-html="$t('help.controls.list.zoom')"></li>
@@ -46,6 +47,7 @@ const { isHelpModalOpen, toggleHelpModal } = useUIState()
       <!-- AR 预览 -->
       <BAccordionItem :title="$t('help.arPreview.title')" body-class="text-start">
         <ul class="i18n-list">
+          <li v-html="$t('help.arPreview.list.warning')"></li>
           <li v-html="$t('help.arPreview.list.step1')"></li>
           <li v-html="$t('help.arPreview.list.step2')"></li>
           <li v-html="$t('help.arPreview.list.step3')"></li>
@@ -79,7 +81,6 @@ const { isHelpModalOpen, toggleHelpModal } = useUIState()
 
       <!-- 关于 -->
       <BAccordionItem :title="$t('help.about.title')" body-class="text-start">
-        <p>{{ $t('help.about.intro') }}</p>
         <ul class="i18n-list">
           <li v-html="$t('help.about.list.github', { githubLink: $t('link.githubRepo') })"></li>
           <li
