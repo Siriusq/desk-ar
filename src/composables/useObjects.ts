@@ -71,31 +71,21 @@ export const updateObjectParam = (id: string, key: string, value: any) => {
   const obj = objects.value.find((o) => o.id === id)
   if (obj) {
     // 更新数据
-    ;(obj.params as any)[key] = value // 使用 any 来允许动态键
+    ;(obj.params as any)[key] = value
 
     // 保存状态
     saveState()
 
-    // 替换模型，而不是重建场景
-    replaceObject3D(obj)
-    //rebuildSceneFromData()
-
-    const obj3D = sceneObjects.get(id)
-    transformControls.attach(obj3D)
-
-    // 3. 【重要】 区分重建策略
+    // 重建
     if (obj.type.startsWith('desk-')) {
-      // 对于桌子（容器）或异步加载的模型，
-      // 我们必须重建整个场景来保证子对象被正确挂载。
+      // 对于桌子，必须重建整个场景来保证子对象被正确挂载。
       rebuildSceneFromData()
     } else {
-      // 对于简单的、同步的模型（显示器、键盘等），
-      // 我们可以只替换这一个模型，性能更高。
+      // 否则只替换这一个模型
       replaceObject3D(obj)
     }
 
-    // 4. 【重要】 在 nextTick 中重新附加控制器
-    //    (因为 rebuildSceneFromData 是异步的)
+    // 重新附加控制器
     nextTick(() => {
       const newObj3D = sceneObjects.get(id)
       if (newObj3D) {
