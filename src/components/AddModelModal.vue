@@ -6,8 +6,18 @@ import { useI18n } from 'vue-i18n'
 import { addObject } from '@/three/objectFactory'
 const { t } = useI18n()
 import { useModelImporter } from '@/composables/useModelImporter'
-const { fileInput, openImportDialog, handleFileChange } = useModelImporter()
+const { fileInput, importModel, handleFileChange } = useModelImporter()
 const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIState()
+
+// 异步处理模型导入，然后关闭Modal
+const handleImportModelClick = async () => {
+  try {
+    await importModel()
+    isAddModelModalOpen.value = false
+  } catch (e) {
+    console.error('导入失败:', e)
+  }
+}
 </script>
 
 <template>
@@ -66,7 +76,7 @@ const { isAddModelModalOpen, toggleAddModelModal, addModalCategory } = useUIStat
       </div>
 
       <div class="model-item-wrapper">
-        <BButton class="fw-bold model-button" variant="secondary" @click="openImportDialog">
+        <BButton class="fw-bold model-button" variant="secondary" @click="handleImportModelClick">
           <div class="model-icon mb-3">📥</div>
           <div>导入</div>
         </BButton>

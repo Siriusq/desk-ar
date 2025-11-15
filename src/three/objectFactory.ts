@@ -157,6 +157,8 @@ export const createObject3D = (data: DeskObject): THREE.Group | null => {
           }
         })
         group.add(gltf.scene)
+
+        requestRender()
       },
       undefined,
       (error) => {
