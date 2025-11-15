@@ -67,10 +67,10 @@ export const requestRender = () => {
     ) {
       selectionBox.setFromObject(sceneObjects.get(selectedObjectId.value))
     }
-    // 1. 渲染 3D 场景
+    // 渲染 3D 场景
     renderer.render(scene, camera)
 
-    // 2. 渲染 2D 标签
+    // 渲染 2D 标签
     renderMeasurement()
 
     // 重置标志，允许下一帧的渲染请求
@@ -97,7 +97,6 @@ export const handleResize = () => {
 
     resizeMeasurement()
 
-    // 【新增】 调整大小后需要重新渲染
     requestRender()
   }
 }
@@ -179,7 +178,6 @@ export const initThree = () => {
 
       isLoading.value = false
 
-      // 【新增】 HDR 加载完成后渲染
       requestRender()
     },
     undefined, // onProgress
@@ -189,7 +187,6 @@ export const initThree = () => {
       scene.background = new THREE.Color(0xf0f0f0)
       isLoading.value = false // 解除加载状态
 
-      // 【新增】 出错后也要渲染
       requestRender()
     },
   )
@@ -213,7 +210,7 @@ export const initThree = () => {
 
   // 控制器初始化
   orbitControls = new OrbitControls(camera, domElement!)
-  // 【新增】 1. OrbitControls (相机) 发生变化时请求渲染
+  // 相机发生变化时请求渲染
   orbitControls.addEventListener('change', requestRender)
 
   transformControls = new TransformControls(camera, domElement!)
@@ -236,7 +233,7 @@ export const initThree = () => {
     dataObj.rotation.y = THREE.MathUtils.radToDeg(obj.rotation.y)
     dataObj.rotation.z = THREE.MathUtils.radToDeg(obj.rotation.z)
 
-    // 【新增】 拖动时实时渲染
+    // 拖动时实时渲染
     requestRender()
   })
 
@@ -302,7 +299,7 @@ export const initThree = () => {
       hideHoverMarker()
     }
 
-    // 【新增】 悬停时需要渲染
+    // 悬停时需要渲染
     requestRender()
   }
 
@@ -310,7 +307,7 @@ export const initThree = () => {
     // 鼠标移出画布，隐藏
     hideHoverMarker()
 
-    // 【新增】 悬停结束时需要渲染
+    // 悬停结束时需要渲染
     requestRender()
   }
 
@@ -319,21 +316,7 @@ export const initThree = () => {
   domElement!.addEventListener('mousemove', handleMouseMove)
   domElement!.addEventListener('mouseout', handleMouseOut)
 
-  // renderer.setAnimationLoop(() => {
-  //   if (
-  //     selectedObjectId.value &&
-  //     selectionBox.visible &&
-  //     sceneObjects.has(selectedObjectId.value)
-  //   ) {
-  //     selectionBox.setFromObject(sceneObjects.get(selectedObjectId.value))
-  //   }
-  //   renderer.render(scene, camera)
-
-  //   // 渲染 2D 标签
-  //   renderMeasurement()
-  // })
-
-  // 【新增】 4. 在 initThree 结束时, 手动执行第一次渲染
+  // 在 initThree 结束时, 手动执行第一次渲染
   requestRender()
 }
 
@@ -421,7 +404,7 @@ export const rebuildSceneFromData = () => {
     }
   })
 
-  // 【新增】 场景重建后需要渲染
+  // 场景重建后需要渲染
   requestRender()
 }
 
