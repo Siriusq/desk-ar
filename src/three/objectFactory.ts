@@ -127,14 +127,78 @@ export const disposeObject3D = (obj3D: THREE.Object3D) => {
 // 用新数据替换一个 3D 对象
 export const replaceObject3D = (data: DeskObject) => {
   const oldObj3D = sceneObjects.get(data.id)
+
+  // 在销毁前保存子对象
+  let mountedItem3D: THREE.Object3D | undefined = undefined
+
+  if (oldObj3D && (data.type === 'round-base-stand' || data.type === 'rectangle-base-stand')) {
+    const mountedId = data.params.mountedObjectId
+    if (mountedId) {
+      mountedItem3D = sceneObjects.get(mountedId)
+      if (mountedItem3D) {
+        // 从旧 stand 中移除，避免被一起销毁
+        oldObj3D.remove(mountedItem3D)
+      }
+    }
+  }
+
+  // 销毁旧对象
   if (oldObj3D) {
     disposeObject3D(oldObj3D)
   }
 
+  // 创建新对象
   const newObj3D = createObject3D(data)
+
   if (newObj3D) {
+    // 将新对象添加到场景
     add3DObjectToScene(newObj3D, data)
-    return newObj3D // 返回新对象，以便 transformControls 可以附加
+
+    // 如果有保存的子对象，重新挂载并定位
+    if (
+      mountedItem3D &&
+      (data.type === 'round-base-stand' || data.type === 'rectangle-base-stand')
+    ) {
+      // 重新挂载
+      newObj3D.add(mountedItem3D)
+
+      // 重新定位
+      // 支架类型：圆形底座支架
+      if (data && data.type === 'round-base-stand') {
+        const { poleHeight, poleRadius, baseHeight, tilterAngleX, tilterAngleY, tilterAngleZ } =
+          data.params
+        // 偏移被挂载物品Y轴至倾斜面顶部
+        const objGroup = new THREE.Group()
+        mountedItem3D.position.y = poleRadius * 1.5
+        objGroup.add(mountedItem3D)
+        objGroup.position.set(0, poleHeight + baseHeight, 0)
+        objGroup.rotation.set(tilterAngleX, tilterAngleY, tilterAngleZ)
+        newObj3D.add(objGroup)
+      }
+      // 支架类型：方形底座支架
+      if (data && data.type === 'rectangle-base-stand') {
+        const {
+          poleHeight,
+          poleWidth,
+          poleDepth,
+          baseHeight,
+          tilterAngleX,
+          tilterAngleY,
+          tilterAngleZ,
+        } = data.params
+        // 偏移被挂载物品Y轴至倾斜面顶部
+        const objGroup = new THREE.Group()
+        const tilterPivotSize = Math.max(poleWidth, poleDepth) * 0.6
+        mountedItem3D.position.y = tilterPivotSize * 1.5
+        objGroup.add(mountedItem3D)
+        objGroup.position.set(0, poleHeight + baseHeight, 0)
+        objGroup.rotation.set(tilterAngleX, tilterAngleY, tilterAngleZ)
+        newObj3D.add(objGroup)
+      }
+    }
+
+    requestRender() // 确保新模型被渲染
+    return newObj3D
   }
   return null
 }

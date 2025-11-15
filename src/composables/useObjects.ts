@@ -13,7 +13,7 @@ import { isTransformDragging, transformMode } from './useScene'
 import { saveState } from './useHistory'
 import { expandedObjectId } from './useUIState'
 import type { DeskObject } from '@/models/deskObject'
-import { disposeObject3D } from '@/three/objectFactory'
+import { disposeObject3D, replaceObject3D } from '@/three/objectFactory'
 import { isMeasuring, handleMeasurementClick } from './useMeasurement'
 
 // --- 物品管理，此文件已禁用any类型报错 ---
@@ -76,11 +76,35 @@ export const updateObjectParam = (id: string, key: string, value: any) => {
     // 保存状态
     saveState()
 
-    // 重建整个场景，防止出现物品消失的问题
-    rebuildSceneFromData()
+    // 替换模型，而不是重建场景
+    replaceObject3D(obj)
+    //rebuildSceneFromData()
 
     const obj3D = sceneObjects.get(id)
     transformControls.attach(obj3D)
+
+    // 3. 【重要】 区分重建策略
+    if (obj.type.startsWith('desk-')) {
+      // 对于桌子（容器）或异步加载的模型，
+      // 我们必须重建整个场景来保证子对象被正确挂载。
+      rebuildSceneFromData()
+    } else {
+      // 对于简单的、同步的模型（显示器、键盘等），
+      // 我们可以只替换这一个模型，性能更高。
+      replaceObject3D(obj)
+    }
+
+    // 4. 【重要】 在 nextTick 中重新附加控制器
+    //    (因为 rebuildSceneFromData 是异步的)
+    nextTick(() => {
+      const newObj3D = sceneObjects.get(id)
+      if (newObj3D) {
+        transformControls.attach(newObj3D)
+      } else {
+        transformControls.detach() // 安全起见
+      }
+      requestRender() // 确保控制器 gizmo 被渲染
+    })
   }
 }
 
@@ -125,7 +149,7 @@ export const unmountObject = (standId: string) => {
         deskHeight = desk.params.height
       }
       item.position.x = stand.position.x
-      item.position.y = deskHeight
+      item.position.y = deskHeight + stand.params.poleHeight + stand.params.baseHeight
       item.position.z = stand.position.z
     }
     stand.params.mountedObjectId = null
