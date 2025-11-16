@@ -313,7 +313,7 @@ export default {
       title: 'ℹ️ About',
       list: {
         github:
-          'This project is open source on <a href="{githubLink}" target="_blank">GitHub - Siriusq/desk-ar</a>, under the <strong>MIT License</strong>',
+          'This project is open source on <a href="{githubLink}" target="_blank">GitHub - Siriusq/desk-ar</a>, under the <strong>GPL-3.0 License</strong>',
         githubPages:
           'The website is hosted on <a href="{ghPagesLink}" target="_blank">GitHub Pages</a>',
         vue: 'Frontend Framework: <a href="{vueLink}" target="_blank">Vue.js</a>',

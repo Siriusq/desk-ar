@@ -314,7 +314,7 @@ export default {
       title: 'ℹ️ 关于',
       list: {
         github:
-          '本项目开源于 <a href="{githubLink}" target="_blank">GitHub - Siriusq/desk-ar</a>，基于 <strong>MIT License</strong>',
+          '本项目开源于 <a href="{githubLink}" target="_blank">GitHub - Siriusq/desk-ar</a>，基于 <strong>GPL-3.0 License</strong>',
         githubPages: '网站托管于 <a href="{ghPagesLink}" target="_blank">GitHub Pages</a>',
         vue: '前端框架： <a href="{vueLink}" target="_blank">Vue.js</a>',
         three: '3D 场景： <a href="{threeLink}" target="_blank">Three.js</a>',
