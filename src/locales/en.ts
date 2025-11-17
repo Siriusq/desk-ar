@@ -309,6 +309,16 @@ export default {
       },
     },
 
+    // --- 📦 Known Issues ---
+    issues: {
+      title: '⚠️ Known Issues',
+      list: {
+        ar: 'Clicking the AR preview button on browsers or systems that do not support AR preview will cause the page to get stuck in loading state.',
+        camera:
+          'Orthographic cameras cannot adjust their field of view, including rotation, pan, and zoom.',
+      },
+    },
+
     // --- ℹ️ About ---
     about: {
       title: 'ℹ️ About',

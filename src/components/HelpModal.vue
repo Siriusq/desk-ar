@@ -79,6 +79,14 @@ const { isHelpModalOpen, toggleHelpModal } = useUIState()
         </ul>
       </BAccordionItem>
 
+      <!-- 已知问题 -->
+      <BAccordionItem :title="$t('help.issues.title')" body-class="text-start">
+        <ul class="i18n-list">
+          <li v-html="$t('help.issues.list.ar')"></li>
+          <li v-html="$t('help.issues.list.camera')"></li>
+        </ul>
+      </BAccordionItem>
+
       <!-- 关于 -->
       <BAccordionItem :title="$t('help.about.title')" body-class="text-start">
         <ul class="i18n-list">

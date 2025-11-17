@@ -147,6 +147,7 @@ Desk AR is available online but can also be run locally. Notes:
 - AR may not work on some devices because:
   - Browser lacks WebXR support
   - Android ROM does not include ARCore services
+- Orthographic cameras cannot adjust their field of view, including rotation, pan, and zoom.
 
 ## ©️ Credits
 
