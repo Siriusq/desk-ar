@@ -108,7 +108,7 @@ export const initThree = () => {
 
   // 创建透视相机
   perspectiveCamera = new THREE.PerspectiveCamera(
-    45,
+    50,
     container.clientWidth / container.clientHeight,
     0.01,
     100,
