@@ -500,6 +500,10 @@ export const setCameraProjection = (projection: 'perspective' | 'orthographic') 
   if (projection === 'perspective' && camera !== perspectiveCamera) {
     // 切换到透视
     camera = perspectiveCamera
+    // 恢复透视相机的全部控制
+    orbitControls.enableRotate = true
+    orbitControls.enablePan = true
+    orbitControls.enableZoom = true
   } else if (projection === 'orthographic' && camera !== orthoCamera) {
     // 切换到正交
     // 从当前透视相机的角度同步位置
@@ -507,6 +511,13 @@ export const setCameraProjection = (projection: 'perspective' | 'orthographic') 
     orthoCamera.quaternion.copy(perspectiveCamera.quaternion)
     orthoCamera.zoom = 1 // 重置缩放
     camera = orthoCamera
+
+    // 正交模式下锁定视角
+    orbitControls.enableRotate = false
+    orbitControls.enablePan = false
+    orbitControls.enableZoom = false
+  } else {
+    return
   }
 
   // 更新控制器

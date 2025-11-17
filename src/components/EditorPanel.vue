@@ -312,6 +312,10 @@ function getPresetOptions(type: string) {
             <i class="bi bi-layout-sidebar-inset" /> {{ t('left') }}
           </BDropdownItem>
           <BDropdownDivider />
+          <!--切换相机-->
+          <BDropdownItem @click="setCameraProjection('perspective')">
+            <i class="bi bi-camera-video" /> {{ t('perspective') }}
+          </BDropdownItem>
           <BDropdownItem @click="setCameraProjection('orthographic')">
             <i class="bi bi-box" /> {{ t('orthographic') }}
           </BDropdownItem>

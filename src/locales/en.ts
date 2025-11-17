@@ -44,6 +44,7 @@ export default {
   front: 'Front',
   left: 'Left Side',
   orthographic: 'Orthographic',
+  perspective: 'Perspective',
   measure: 'Measure',
   stop: 'Stop',
   // 测量UI
