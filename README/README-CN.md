@@ -14,6 +14,10 @@
     <img alt="Bootstrap" src="./badge/bootstrap.svg">
 </p>
 
+<p align="center">
+  <img alt="Header" src="./images/header.webp">
+</p>
+
 ## 📖 简介
 
 **Desk AR** 是一款帮助你快速规划理想桌面布局的 Web App。
@@ -39,6 +43,10 @@ Fine，那我自己写一个吧。
 最终在浪费了一周时间后，我只能屎里淘金，从零开始重构，于是，**Desk AR** 就这样诞生了。
 
 ## ✨ 特性
+
+<p align="center">
+  <img alt="Header" src="./images/editor_preview_cn.png">
+</p>
 
 - 🎛 **高度可自定义的模型**：内置模型均支持尺寸、颜色、名称等高度自定义，包含大量可调节参数，例如：
   - **显示器**：可调整屏幕尺寸、支架底座大小、升降高度、俯仰角、支架旋转角等
@@ -79,6 +87,10 @@ Fine，那我自己写一个吧。
 - **P**：进入（AR）预览模式
 
 ### 🔮 AR 预览
+
+<p align="center">
+  <img alt="Header" src="./images/ar_preview.webp">
+</p>
 
 - 点击菜单中的**预览**按钮 → 选择是否包含桌子 → 进入预览页面
 - 若设备支持 AR，将在右上角显示 **AR 模式** 按钮，可调用相机进行 AR 预览

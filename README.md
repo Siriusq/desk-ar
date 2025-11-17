@@ -14,6 +14,10 @@ Rapidly plan your ideal desk layout in 3D, then bring it into reality with AR.
   <img alt="Bootstrap" src="./README/badge/bootstrap.svg">
 </p>
 
+<p align="center">
+  <img alt="Header" src="./README/images/header.webp">
+</p>
+
 ## 📖 Overview
 
 **Desk AR** is a web app designed to help you plan your ideal desk layout—quickly, visually, and without lifting a single piece of hardware.
@@ -43,6 +47,10 @@ After digging out the few usable bits, I rebuilt the entire project from scratch
 That’s how **Desk AR** was born.
 
 ## ✨ Features
+
+<p align="center">
+  <img alt="Header" src="./README/images/editor_preview_en.png">
+</p>
 
 - 🎛 **Highly customizable models**: All built-in models support extensive customization of size, color, name, and more. Many offer detailed adjustable parameters, such as:
   - **Monitor**: Adjustable screen size, stand base size, height, tilt angle, swivel angle, etc.
@@ -83,6 +91,10 @@ That’s how **Desk AR** was born.
 - **P**: Enter (AR) Preview mode
 
 ### 🔮 AR Preview
+
+<p align="center">
+  <img alt="Header" src="./README/images/ar_preview.webp">
+</p>
 
 - Click the **Preview** button in the menu → choose whether to include the desk → go to the preview page
 - If the device supports AR, an **AR Mode** button will appear in the top-right corner; tap it to invoke the camera and start AR preview
