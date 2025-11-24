@@ -79,6 +79,18 @@ onMounted(() => {
       </div>
     </div>
 
+    <!-- SEO -->
+    <div class="sr-only-seo">
+      Desk AR is a web app designed to help you plan your ideal desk layout—quickly, visually, and
+      without lifting a single piece of hardware. Powered by a large collection of highly
+      customizable preset models and the rendering capabilities of Three.js, you can freely place,
+      adjust, and experiment with items in a virtual desk environment. Build your setup exactly the
+      way you imagine it. When you're satisfied with the layout, use the AR Preview to project your
+      virtual setup into the real world. View it in actual scale, check proportions, spot potential
+      issues, and jump back into the 3D editor to make adjustments—all without unplugging cables,
+      moving heavy equipment, or second-guessing measurements.
+    </div>
+
     <footer class="footer text-center w-100 py-2">
       <small>
         Desk-AR © 2025 Siriusq · Built with Vue&nbsp;3 ·
@@ -243,5 +255,13 @@ onMounted(() => {
 
 .footer a:hover {
   color: #007bff;
+}
+
+.sr-only-seo {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 </style>
