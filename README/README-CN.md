@@ -6,7 +6,7 @@
 
 <p align="center">
 	<a href="https://github.com/Siriusq/desk-ar/blob/master/README.md"><img src="./badge/en-readme.svg"/></a>
-	<a href="https://siriusq.top/desk-ar/"><img alt="GitHub Pages" src="./badge/ghpages.svg"></a>
+	<a href="https://deskar.siriusq.top//"><img alt="GitHub Pages" src="./badge/ghpages.svg"></a>
     <img alt="License" src="./badge/license.svg">
     <img alt="Vue" src="./badge/vue.svg">
     <img alt="Three.js" src="./badge/three.svg">
@@ -27,7 +27,7 @@
 无需来回搬动显示器、机箱，也不必在购买设备前反复测量和纠结 —— 动动手指，即可高效完成桌面规划。
 
 <h3 align="center">
-	<a href="https://siriusq.top/desk-ar/">🔗 在线体验 Desk AR</a>
+	<a href="https://deskar.siriusq.top//">🔗 在线体验 Desk AR</a>
 </h3>
 
 ## 🧠 开发动机

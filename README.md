@@ -6,7 +6,7 @@ Rapidly plan your ideal desk layout in 3D, then bring it into reality with AR.
 
 <p align="center">
 	<a href="https://github.com/Siriusq/desk-ar/blob/master/README/README-CN.md"><img src="./README/badge/cn-readme.svg"/></a>
-  <a href="https://siriusq.top/desk-ar/"><img alt="GitHub Pages" src="./README/badge/ghpages.svg"></a>
+  <a href="https://deskar.siriusq.top/"><img alt="GitHub Pages" src="./README/badge/ghpages.svg"></a>
   <img alt="License" src="./README/badge/license.svg">
   <img alt="Vue" src="./README/badge/vue.svg">
   <img alt="Three.js" src="./README/badge/three.svg">
@@ -27,7 +27,7 @@ Powered by a large collection of highly customizable preset models and the rende
 When you're satisfied with the layout, use the **AR Preview** to project your virtual setup into the real world. View it in actual scale, check proportions, spot potential issues, and jump back into the 3D editor to make adjustments—all without unplugging cables, moving heavy equipment, or second-guessing measurements.
 
 <h3 align="center">
-	<a href="https://siriusq.top/desk-ar/">🔗 Try Desk AR Online</a>
+	<a href="https://deskar.siriusq.top/">🔗 Try Desk AR Online</a>
 </h3>
 
 ## 🧠 Why I Built This
